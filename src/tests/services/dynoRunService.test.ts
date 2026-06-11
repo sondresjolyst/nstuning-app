@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { coverImageSrc, DynoRun } from '@/services/dynoRunService';
 
 const base: DynoRun = {
-    id: 1, slug: 'golf-r', title: 'Golf R', published: true, sortOrder: 0, hasReport: false,
+    id: 1, slug: 'volvo-242-turbo', title: 'Volvo 242 Turbo', published: true, sortOrder: 0, hasReport: false,
     createdAt: '', updatedAt: '',
 };
 
