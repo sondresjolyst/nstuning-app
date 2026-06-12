@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
 import { TrashIcon, ArrowUpTrayIcon } from '@heroicons/react/24/outline';
 import BrandingService, { toDataUrl } from '@/services/brandingService';
@@ -17,7 +17,19 @@ function Slot({
     hint: string;
 }) {
     const inputRef = useRef<HTMLInputElement>(null);
-    const preview = file ? URL.createObjectURL(file) : currentUrl;
+    const [objectUrl, setObjectUrl] = useState<string | null>(null);
+
+    useEffect(() => {
+        if (!file) {
+            setObjectUrl(null);
+            return;
+        }
+        const url = URL.createObjectURL(file);
+        setObjectUrl(url);
+        return () => URL.revokeObjectURL(url);
+    }, [file]);
+
+    const preview = objectUrl ?? currentUrl;
     return (
         <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
