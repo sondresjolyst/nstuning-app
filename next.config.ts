@@ -33,6 +33,11 @@ const nextConfig: NextConfig = {
             ? "script-src 'self' 'unsafe-eval' 'unsafe-inline'"
             : "script-src 'self' 'unsafe-inline'";
 
+        const objectSrc = ['self', apiOrigin, 'blob:']
+            .filter(Boolean)
+            .map(s => s === 'self' ? "'self'" : s)
+            .join(' ');
+
         const csp = [
             "default-src 'self'",
             scriptSrc,
@@ -40,6 +45,7 @@ const nextConfig: NextConfig = {
             "img-src 'self' data: blob:",
             `connect-src ${connectSrc}`,
             `frame-src ${frameSrc}`,
+            `object-src ${objectSrc}`,
             "font-src 'self'",
             "frame-ancestors 'none'",
         ].join('; ');
