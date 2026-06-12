@@ -58,7 +58,17 @@ const nextConfig: NextConfig = {
             { key: 'Content-Security-Policy', value: csp },
         ];
 
-        return [{ source: '/(.*)', headers }];
+        const proxyHeaders = [
+            { key: 'X-Content-Type-Options', value: 'nosniff' },
+            { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
+            { key: 'X-Frame-Options', value: 'SAMEORIGIN' },
+            { key: 'Content-Security-Policy', value: "frame-ancestors 'self'" },
+        ];
+
+        return [
+            { source: '/api/report/:path*', headers: proxyHeaders },
+            { source: '/((?!api/report/).*)', headers },
+        ];
     },
 };
 
