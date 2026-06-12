@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Markdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeSanitize from 'rehype-sanitize';
-import DynoRunService, { DynoRun, reportUrl } from '@/services/dynoRunService';
+import DynoRunService, { DynoRun, reportUrl, reportProxyUrl } from '@/services/dynoRunService';
 
 function Stat({ label, before, after, unit }: { label: string; before?: number | null; after?: number | null; unit: string }) {
     if (after == null) return null;
@@ -75,7 +75,7 @@ export default function DynoRunDetail({ params }: { params: Promise<{ slug: stri
                         </a>
                     </div>
                     <iframe
-                        src={reportUrl(run.id)}
+                        src={reportProxyUrl(run.id)}
                         title={`${run.title} dyno report`}
                         className="w-full h-[80vh] rounded-xl border border-gray-200"
                     />

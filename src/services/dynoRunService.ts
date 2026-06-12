@@ -30,6 +30,8 @@ const publicClient = axios.create({ baseURL: process.env.NEXT_PUBLIC_API_URL });
 export const reportUrl = (id: number) =>
     `${process.env.NEXT_PUBLIC_API_URL}/dyno-runs/${id}/report`;
 
+export const reportProxyUrl = (id: number) => `/api/report/${id}`;
+
 export const coverImageSrc = (run: DynoRun): string | null =>
     run.coverImageData && run.coverImageContentType
         ? `data:${run.coverImageContentType};base64,${run.coverImageData}`
