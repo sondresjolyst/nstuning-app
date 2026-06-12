@@ -3,23 +3,32 @@
 import Link from 'next/link';
 import { signOut, useSession } from 'next-auth/react';
 import { ArrowRightStartOnRectangleIcon } from '@heroicons/react/24/outline';
+import { useBranding } from '@/components/BrandingProvider';
 
 export default function Navbar() {
     const { data: session, status } = useSession();
     const isAuthenticated = status === 'authenticated';
     const isAdmin = (session?.user?.roles ?? []).includes('Admin');
+    const { logoUrl } = useBranding();
 
     return (
         <header className="sticky top-0 z-40 bg-white/90 backdrop-blur-xl border-b border-gray-200">
             <div className="px-4 sm:px-6 py-3 flex items-center justify-between max-w-7xl mx-auto">
 
                 <Link href="/" className="flex items-center gap-2.5">
-                    <span className="inline-flex items-center justify-center h-8 px-2.5 rounded-md bg-primary text-primary-foreground font-extrabold tracking-tight">
-                        NS
-                    </span>
-                    <span className="text-sm font-bold tracking-wide text-gray-900 hidden sm:block">
-                        NS Tuning
-                    </span>
+                    {logoUrl ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img src={logoUrl} alt="NS Tuning" className="h-8 w-auto" />
+                    ) : (
+                        <>
+                            <span className="inline-flex items-center justify-center h-8 px-2.5 rounded-md bg-primary text-primary-foreground font-extrabold tracking-tight">
+                                NS
+                            </span>
+                            <span className="text-sm font-bold tracking-wide text-gray-900 hidden sm:block">
+                                NS Tuning
+                            </span>
+                        </>
+                    )}
                 </Link>
 
                 <nav className="flex items-center gap-1 sm:gap-2">

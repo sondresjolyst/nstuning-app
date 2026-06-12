@@ -47,7 +47,7 @@ export default function ContactForm() {
                 <TextInput label="Name" name="name" value={form.name} onChange={update('name')} error={errors.name} />
                 <TextInput label="Email" name="email" type="email" value={form.email} onChange={update('email')} error={errors.email} />
                 <TextInput label="Phone" name="phone" value={form.phone ?? ''} onChange={update('phone')} error={errors.phone} />
-                <TextInput label="Car" name="car" value={form.car ?? ''} onChange={update('car')} error={errors.car} placeholder="e.g. VW Golf R" />
+                <TextInput label="Car" name="car" value={form.car ?? ''} onChange={update('car')} error={errors.car} placeholder="e.g. Volvo 242 Turbo" />
             </div>
             <div>
                 <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-1">Message</label>
