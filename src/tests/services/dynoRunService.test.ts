@@ -7,9 +7,9 @@ const base: DynoRun = {
 };
 
 describe('coverImageSrc', () => {
-    it('builds a data URL when cover image present', () => {
-        const src = coverImageSrc({ ...base, coverImageData: 'AAAA', coverImageContentType: 'image/png' });
-        expect(src).toBe('data:image/png;base64,AAAA');
+    it('builds a content-image URL when cover image present', () => {
+        const src = coverImageSrc({ ...base, coverImageId: 'abc123' });
+        expect(src).toContain('/content-images/abc123');
     });
 
     it('returns null when no cover image', () => {

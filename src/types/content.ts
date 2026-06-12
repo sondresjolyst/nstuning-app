@@ -1,4 +1,4 @@
-export type SectionType = 'hero' | 'feature' | 'text' | 'dynoRuns' | 'contact';
+export type SectionType = 'hero' | 'feature' | 'text' | 'feed' | 'contact' | 'cta' | 'stats' | 'image';
 
 export interface BaseSection {
     id: string;
@@ -29,8 +29,8 @@ export interface TextSection extends BaseSection {
     body: string;
 }
 
-export interface DynoRunsSection extends BaseSection {
-    type: 'dynoRuns';
+export interface FeedSection extends BaseSection {
+    type: 'feed';
     heading: string;
     limit: number;
 }
@@ -41,14 +41,56 @@ export interface ContactSection extends BaseSection {
     text: string;
 }
 
-export type Section = HeroSection | FeatureSection | TextSection | DynoRunsSection | ContactSection;
+export interface CtaSection extends BaseSection {
+    type: 'cta';
+    heading: string;
+    text: string;
+    primaryLabel: string;
+    primaryHref: string;
+}
+
+export interface StatItem {
+    source: 'static' | 'dynoRuns' | 'brandsTuned';
+    value: string;
+    label: string;
+}
+
+export interface StatsSection extends BaseSection {
+    type: 'stats';
+    heading: string;
+    items: StatItem[];
+}
+
+export type ImageLayout = 'standard' | 'full' | 'left' | 'right' | 'overlay' | 'overlayFull';
+
+export interface ImageSection extends BaseSection {
+    type: 'image';
+    imageId: string | null;
+    alt: string;
+    caption: string;
+    layout: ImageLayout;
+    text: string;
+}
+
+export type Section =
+    | HeroSection
+    | FeatureSection
+    | TextSection
+    | FeedSection
+    | ContactSection
+    | CtaSection
+    | StatsSection
+    | ImageSection;
 
 export const SECTION_LABELS: Record<SectionType, string> = {
     hero: 'Hero',
     feature: 'Feature',
     text: 'Text',
-    dynoRuns: 'Dyno runs feed',
+    feed: 'Feed',
     contact: 'Contact form',
+    cta: 'Call to action',
+    stats: 'Stats band',
+    image: 'Image',
 };
 
 let counter = 0;
@@ -63,9 +105,19 @@ export function createSection(type: SectionType): Section {
             return { ...base, type, heading: 'Feature', text: '', bullets: [''] };
         case 'text':
             return { ...base, type, heading: 'Heading', body: '' };
-        case 'dynoRuns':
+        case 'feed':
             return { ...base, type, heading: 'Dyno runs', limit: 3 };
         case 'contact':
             return { ...base, type, heading: 'Get in touch', text: '' };
+        case 'cta':
+            return { ...base, type, heading: 'Ready to find your power?', text: '', primaryLabel: 'Book a dyno run', primaryHref: '#contact' };
+        case 'stats':
+            return { ...base, type, heading: '', items: [{ source: 'dynoRuns', value: '', label: 'Dyno runs published' }] };
+        case 'image':
+            return { ...base, type, imageId: null, alt: '', caption: '', layout: 'standard', text: '' };
     }
+}
+
+export function cloneSection(section: Section): Section {
+    return { ...structuredClone(section), id: newId() };
 }

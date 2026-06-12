@@ -1,12 +1,31 @@
-"use client";
-
-import { use, useEffect, useState } from 'react';
+import type { Metadata } from 'next';
 import Link from 'next/link';
+import { notFound } from 'next/navigation';
 import Markdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeSanitize from 'rehype-sanitize';
-import DynoRunService, { DynoRun, reportUrl, reportProxyUrl } from '@/services/dynoRunService';
+import { DynoRun, reportUrl, reportProxyUrl } from '@/services/dynoRunService';
+import { publicGet } from '@/lib/publicApi';
+import { COMPANY } from '@/lib/company';
 import PdfViewer from '@/components/PdfViewer';
+
+export const revalidate = 60;
+
+const getRun = (slug: string) => publicGet<DynoRun>(`/dyno-runs/${slug}`);
+
+const carLineOf = (run: DynoRun) =>
+    [run.carMake, run.carModel, run.trim, run.year].filter(Boolean).join(' ');
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+    const { slug } = await params;
+    const run = await getRun(slug);
+    if (!run) return { title: `Dyno run — ${COMPANY.name}` };
+    const carLine = carLineOf(run);
+    return {
+        title: `${run.title} — ${COMPANY.name}`,
+        description: [carLine, run.powerAfterHp ? `${run.powerAfterHp} hp` : null].filter(Boolean).join(' · ') || undefined,
+    };
+}
 
 function Stat({ label, before, after, unit }: { label: string; before?: number | null; after?: number | null; unit: string }) {
     if (after == null) return null;
@@ -24,37 +43,19 @@ function Stat({ label, before, after, unit }: { label: string; before?: number |
     );
 }
 
-export default function DynoRunDetail({ params }: { params: Promise<{ slug: string }> }) {
-    const { slug } = use(params);
-    const [run, setRun] = useState<DynoRun | null>(null);
-    const [status, setStatus] = useState<'loading' | 'ready' | 'notfound'>('loading');
+export default async function DynoRunDetail({ params }: { params: Promise<{ slug: string }> }) {
+    const { slug } = await params;
+    const run = await getRun(slug);
+    if (!run) notFound();
 
-    useEffect(() => {
-        DynoRunService.getBySlug(slug)
-            .then(r => { setRun(r); setStatus('ready'); })
-            .catch(() => setStatus('notfound'));
-    }, [slug]);
-
-    if (status === 'loading') {
-        return <div className="max-w-5xl mx-auto px-4 sm:px-6 py-12"><div className="h-64 rounded-2xl bg-gray-100 animate-pulse" /></div>;
-    }
-
-    if (status === 'notfound' || !run) {
-        return (
-            <div className="max-w-5xl mx-auto px-4 sm:px-6 py-20 text-center">
-                <p className="text-gray-600">Dyno run not found.</p>
-                <Link href="/dyno-runs" className="mt-4 inline-block text-sm font-semibold text-gray-900">← Back to dyno runs</Link>
-            </div>
-        );
-    }
-
-    const carLine = [run.carMake, run.carModel, run.year].filter(Boolean).join(' ');
+    const carLine = [carLineOf(run), run.engine && `Engine ${run.engine}`, run.fuelType && `Fuel ${run.fuelType}`]
+        .filter(Boolean).join(' · ');
 
     return (
         <div className="max-w-5xl mx-auto px-4 sm:px-6 py-12">
             <Link href="/dyno-runs" className="text-sm font-semibold text-gray-500 hover:text-gray-900">← Dyno runs</Link>
             <h1 className="mt-3 text-3xl font-black text-gray-900">{run.title}</h1>
-            {carLine && <p className="mt-1 text-gray-600">{carLine}{run.engine ? ` · ${run.engine}` : ''}{run.fuelType ? ` · ${run.fuelType}` : ''}</p>}
+            {carLine && <p className="mt-1 text-gray-600">{carLine}</p>}
 
             <div className="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-4">
                 <Stat label="Power" before={run.powerBeforeHp} after={run.powerAfterHp} unit="hp" />
