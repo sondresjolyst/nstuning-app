@@ -1,6 +1,8 @@
 import axios from 'axios';
 import axiosInstance from './axiosInstance';
 import { formatApiError } from '@/lib/errors';
+import { revalidateTarget } from '@/lib/revalidate';
+import { REVALIDATE_TARGETS } from '@/lib/cacheTags';
 import { Section } from '@/types/content';
 
 const publicClient = axios.create({ baseURL: process.env.NEXT_PUBLIC_API_URL });
@@ -18,6 +20,7 @@ const ContentService = {
     async updateHome(sections: Section[]): Promise<Section[]> {
         try {
             const response = await axiosInstance.put<Section[]>('/content/home', sections);
+            await revalidateTarget(REVALIDATE_TARGETS.home);
             return response.data;
         } catch (error: unknown) {
             throw new Error(formatApiError(error, 'Failed to save content'));
