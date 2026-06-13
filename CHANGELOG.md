@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.0](https://github.com/sondresjolyst/nstuning-app/compare/v1.1.0...v1.2.0) (2026-06-13)
+
+
+### Features
+
+* password reset and change password ([#12](https://github.com/sondresjolyst/nstuning-app/issues/12)) ([04c5722](https://github.com/sondresjolyst/nstuning-app/commit/04c572299d738421cae725e6bb699384c1ad1b50))
+
 ## [1.1.0](https://github.com/sondresjolyst/nstuning-app/compare/v1.0.0...v1.1.0) (2026-06-13)
 
 
