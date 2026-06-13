@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { COMPANY } from "@/lib/company";
+import { getCompanyInfo } from "@/lib/companyInfo";
 
 export const metadata: Metadata = {
     title: "Terms of Service",
@@ -8,7 +9,8 @@ export const metadata: Metadata = {
     alternates: { canonical: "/terms" },
 };
 
-export default function TermsPage() {
+export default async function TermsPage() {
+    const company = await getCompanyInfo();
     return (
         <div className="max-w-2xl mx-auto px-4 sm:px-6 py-12 space-y-6">
             <h1 className="text-3xl font-black text-gray-900">Terms of Service</h1>
@@ -21,7 +23,7 @@ export default function TermsPage() {
                     <ul className="list-none space-y-0.5 pl-2">
                         <li><span className="text-gray-900">Company name:</span> {COMPANY.legalName}</li>
                         {COMPANY.orgNumber && <li><span className="text-gray-900">Organisation number:</span> {COMPANY.orgNumber}</li>}
-                        {COMPANY.address && <li><span className="text-gray-900">Address:</span> {COMPANY.address}</li>}
+                        {company.address && <li><span className="text-gray-900">Address:</span> {company.address}</li>}
                         {COMPANY.email && <li><span className="text-gray-900">Email:</span> {COMPANY.email}</li>}
                     </ul>
                 </section>

@@ -8,12 +8,13 @@ import BrandingManager from '@/components/BrandingManager';
 
 export default function AdminSettingsPage() {
     const [email, setEmail] = useState('');
+    const [address, setAddress] = useState('');
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
 
     useEffect(() => {
         SettingsService.get()
-            .then(s => setEmail(s.contactRecipientEmail))
+            .then(s => { setEmail(s.contactRecipientEmail); setAddress(s.address); })
             .catch(() => toast.error('Failed to load settings'))
             .finally(() => setLoading(false));
     }, []);
@@ -22,8 +23,9 @@ export default function AdminSettingsPage() {
         e.preventDefault();
         setSaving(true);
         try {
-            const updated = await SettingsService.update({ contactRecipientEmail: email });
+            const updated = await SettingsService.update({ contactRecipientEmail: email, address });
             setEmail(updated.contactRecipientEmail);
+            setAddress(updated.address);
             toast.success('Settings saved');
         } catch (err) {
             toast.error(err instanceof Error ? err.message : 'Failed to save');
@@ -46,6 +48,13 @@ export default function AdminSettingsPage() {
                     required
                 />
                 <p className="text-xs text-gray-500">Contact form enquiries are emailed to this address.</p>
+                <TextInput
+                    label="Business address"
+                    name="address"
+                    value={address}
+                    onChange={e => setAddress(e.target.value)}
+                    required
+                />
                 <button
                     type="submit"
                     disabled={saving}
