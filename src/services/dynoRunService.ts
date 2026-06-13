@@ -1,6 +1,7 @@
 import axios from 'axios';
 import axiosInstance from './axiosInstance';
 import { formatApiError } from '@/lib/errors';
+import { imageUrl } from './imageService';
 
 export interface DynoRun {
     id: number;
@@ -8,6 +9,7 @@ export interface DynoRun {
     title: string;
     carMake?: string | null;
     carModel?: string | null;
+    trim?: string | null;
     year?: number | null;
     engine?: string | null;
     fuelType?: string | null;
@@ -16,8 +18,7 @@ export interface DynoRun {
     torqueBeforeNm?: number | null;
     torqueAfterNm?: number | null;
     description?: string | null;
-    coverImageData?: string | null;
-    coverImageContentType?: string | null;
+    coverImageId?: string | null;
     published: boolean;
     sortOrder: number;
     hasReport: boolean;
@@ -33,9 +34,7 @@ export const reportUrl = (id: number) =>
 export const reportProxyUrl = (id: number) => `/api/report/${id}`;
 
 export const coverImageSrc = (run: DynoRun): string | null =>
-    run.coverImageData && run.coverImageContentType
-        ? `data:${run.coverImageContentType};base64,${run.coverImageData}`
-        : null;
+    run.coverImageId != null ? imageUrl(run.coverImageId) : null;
 
 const DynoRunService = {
     async list(all = false): Promise<DynoRun[]> {

@@ -38,11 +38,16 @@ const nextConfig: NextConfig = {
             .map(s => s === 'self' ? "'self'" : s)
             .join(' ');
 
+        const imgSrc = ['self', apiOrigin, 'data:', 'blob:']
+            .filter(Boolean)
+            .map(s => s === 'self' ? "'self'" : s)
+            .join(' ');
+
         const csp = [
             "default-src 'self'",
             scriptSrc,
             "style-src 'self' 'unsafe-inline'",
-            "img-src 'self' data: blob:",
+            `img-src ${imgSrc}`,
             `connect-src ${connectSrc}`,
             `frame-src ${frameSrc}`,
             `object-src ${objectSrc}`,

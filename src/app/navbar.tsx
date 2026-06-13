@@ -4,11 +4,13 @@ import Link from 'next/link';
 import { signOut, useSession } from 'next-auth/react';
 import { ArrowRightStartOnRectangleIcon } from '@heroicons/react/24/outline';
 import { useBranding } from '@/components/BrandingProvider';
+import { ADMIN_ROLE } from '@/lib/roles';
+import { COMPANY } from '@/lib/company';
 
 export default function Navbar() {
     const { data: session, status } = useSession();
     const isAuthenticated = status === 'authenticated';
-    const isAdmin = (session?.user?.roles ?? []).includes('Admin');
+    const isAdmin = (session?.user?.roles ?? []).includes(ADMIN_ROLE);
     const { logoUrl } = useBranding();
 
     return (
@@ -18,14 +20,14 @@ export default function Navbar() {
                 <Link href="/" className="flex items-center gap-2.5">
                     {logoUrl ? (
                         // eslint-disable-next-line @next/next/no-img-element
-                        <img src={logoUrl} alt="NS Tuning" className="h-8 w-auto" />
+                        <img src={logoUrl} alt={COMPANY.name} className="h-8 w-auto" />
                     ) : (
                         <>
                             <span className="inline-flex items-center justify-center h-8 px-2.5 rounded-md bg-primary text-primary-foreground font-extrabold tracking-tight">
                                 NS
                             </span>
                             <span className="text-sm font-bold tracking-wide text-gray-900 hidden sm:block">
-                                NS Tuning
+                                {COMPANY.name}
                             </span>
                         </>
                     )}
@@ -46,6 +48,9 @@ export default function Navbar() {
                                     Admin
                                 </Link>
                             )}
+                            <Link href="/profile" className="px-3 py-1.5 rounded-lg text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-100 transition-colors">
+                                Account
+                            </Link>
                             <button
                                 onClick={() => signOut({ callbackUrl: '/' })}
                                 title="Sign out"

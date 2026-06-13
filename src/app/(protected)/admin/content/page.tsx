@@ -3,14 +3,15 @@
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import {
-    ArrowUpIcon, ArrowDownIcon, TrashIcon, PlusIcon, EyeIcon, EyeSlashIcon,
+    ArrowUpIcon, ArrowDownIcon, TrashIcon, PlusIcon, EyeIcon, EyeSlashIcon, DocumentDuplicateIcon,
 } from '@heroicons/react/24/outline';
 import ContentService from '@/services/contentService';
-import { Section, SectionType, SECTION_LABELS, createSection } from '@/types/content';
+import ImageService, { imageUrl } from '@/services/imageService';
+import { Section, SectionType, SECTION_LABELS, createSection, cloneSection, StatItem, ImageSection } from '@/types/content';
 import { DEFAULT_SECTIONS } from '@/lib/defaultSections';
 import TextInput from '@/components/TextInput';
 
-const SECTION_TYPES: SectionType[] = ['hero', 'feature', 'text', 'dynoRuns', 'contact'];
+const SECTION_TYPES: SectionType[] = ['hero', 'feature', 'text', 'feed', 'contact', 'cta', 'stats', 'image'];
 
 export default function AdminContentPage() {
     const [sections, setSections] = useState<Section[]>([]);
@@ -40,6 +41,12 @@ export default function AdminContentPage() {
 
     const remove = (id: string) => setSections(prev => prev.filter(s => s.id !== id));
     const add = () => setSections(prev => [...prev, createSection(addType)]);
+    const duplicate = (index: number) =>
+        setSections(prev => {
+            const next = [...prev];
+            next.splice(index + 1, 0, cloneSection(prev[index]));
+            return next;
+        });
 
     const save = async () => {
         setSaving(true);
@@ -89,6 +96,9 @@ export default function AdminContentPage() {
                             <button onClick={() => move(index, 1)} disabled={index === sections.length - 1} title="Move down" className="p-2 rounded-lg text-gray-500 hover:text-gray-900 hover:bg-gray-100 disabled:opacity-30">
                                 <ArrowDownIcon className="h-4 w-4" />
                             </button>
+                            <button onClick={() => duplicate(index)} title="Duplicate" className="p-2 rounded-lg text-gray-500 hover:text-gray-900 hover:bg-gray-100">
+                                <DocumentDuplicateIcon className="h-4 w-4" />
+                            </button>
                             <button onClick={() => remove(section.id)} title="Remove" className="p-2 rounded-lg text-red-500 hover:text-red-700 hover:bg-red-50">
                                 <TrashIcon className="h-4 w-4" />
                             </button>
@@ -108,6 +118,16 @@ export default function AdminContentPage() {
                 </select>
                 <button onClick={add} className="inline-flex items-center gap-1.5 rounded-lg bg-gray-100 text-gray-700 font-medium px-4 py-2 text-sm hover:bg-gray-200 transition">
                     <PlusIcon className="h-4 w-4" /> Add section
+                </button>
+            </div>
+
+            <div className="flex justify-end border-t border-gray-200 pt-4">
+                <button
+                    onClick={save}
+                    disabled={saving}
+                    className="rounded-lg bg-primary text-primary-foreground font-semibold px-5 py-2 text-sm hover:brightness-95 disabled:opacity-60 transition"
+                >
+                    {saving ? 'Saving…' : 'Save'}
                 </button>
             </div>
         </div>
@@ -164,7 +184,7 @@ function SectionEditor({ section, patch }: { section: Section; patch: (changes: 
                 </div>
             );
 
-        case 'dynoRuns':
+        case 'feed':
             return (
                 <div className="grid sm:grid-cols-2 gap-4">
                     <Field label="Heading" value={section.heading} onChange={v => patch({ heading: v })} />
@@ -184,7 +204,144 @@ function SectionEditor({ section, patch }: { section: Section; patch: (changes: 
                     <Field label="Text" value={section.text} onChange={v => patch({ text: v })} textarea />
                 </div>
             );
+
+        case 'cta':
+            return (
+                <div className="space-y-4">
+                    <Field label="Heading" value={section.heading} onChange={v => patch({ heading: v })} />
+                    <Field label="Text" value={section.text} onChange={v => patch({ text: v })} textarea />
+                    <div className="grid sm:grid-cols-2 gap-4">
+                        <Field label="Button label" value={section.primaryLabel} onChange={v => patch({ primaryLabel: v })} />
+                        <Field label="Button link" value={section.primaryHref} onChange={v => patch({ primaryHref: v })} />
+                    </div>
+                </div>
+            );
+
+        case 'stats':
+            return (
+                <div className="space-y-4">
+                    <Field label="Heading (optional)" value={section.heading} onChange={v => patch({ heading: v })} />
+                    <StatsEditor items={section.items} onChange={items => patch({ items })} />
+                </div>
+            );
+
+        case 'image': {
+            const layout = section.layout ?? 'standard';
+            const usesText = layout === 'left' || layout === 'right' || layout === 'overlay' || layout === 'overlayFull';
+            return (
+                <div className="space-y-4">
+                    <ImagePicker imageId={section.imageId} onChange={imageId => patch({ imageId })} />
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Layout</label>
+                        <select
+                            value={layout}
+                            onChange={e => patch({ layout: e.target.value as ImageSection['layout'] })}
+                            className="rounded-lg border border-gray-300 px-3 py-2 text-sm"
+                        >
+                            <option value="standard">Standard (centered)</option>
+                            <option value="full">Full width</option>
+                            <option value="left">Image left, text right</option>
+                            <option value="right">Image right, text left</option>
+                            <option value="overlay">Text over image</option>
+                            <option value="overlayFull">Text over image (full width)</option>
+                        </select>
+                    </div>
+                    <Field label="Alt text" value={section.alt} onChange={v => patch({ alt: v })} />
+                    {usesText && <Field label="Text" value={section.text} onChange={v => patch({ text: v })} textarea />}
+                    {!usesText && <Field label="Caption (optional)" value={section.caption} onChange={v => patch({ caption: v })} />}
+                </div>
+            );
+        }
     }
+}
+
+function StatsEditor({ items, onChange }: { items: StatItem[]; onChange: (items: StatItem[]) => void }) {
+    const update = (i: number, changes: Partial<StatItem>) =>
+        onChange(items.map((it, j) => (j === i ? { ...it, ...changes } : it)));
+
+    return (
+        <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Stats</label>
+            <div className="space-y-3">
+                {items.map((item, i) => (
+                    <div key={i} className="flex flex-wrap items-end gap-2 rounded-lg border border-gray-200 p-3">
+                        <label className="text-xs text-gray-600">
+                            Source
+                            <select
+                                value={item.source}
+                                onChange={e => {
+                                    const source = e.target.value as StatItem['source'];
+                                    const defaults: Record<StatItem['source'], string> = {
+                                        static: '',
+                                        dynoRuns: 'Dyno runs published',
+                                        brandsTuned: 'Brands tuned',
+                                    };
+                                    update(i, { source, ...(item.label ? {} : { label: defaults[source] }) });
+                                }}
+                                className="mt-1 block rounded-lg border border-gray-300 px-3 py-2 text-sm"
+                            >
+                                <option value="static">Manual number</option>
+                                <option value="dynoRuns">Published dyno runs (live)</option>
+                                <option value="brandsTuned">Brands tuned (live)</option>
+                            </select>
+                        </label>
+                        {item.source === 'static' && (
+                            <div className="w-28">
+                                <TextInput label="Value" value={item.value} onChange={e => update(i, { value: e.target.value })} />
+                            </div>
+                        )}
+                        <div className="flex-1 min-w-[10rem]">
+                            <TextInput label="Label" value={item.label} onChange={e => update(i, { label: e.target.value })} />
+                        </div>
+                        <button type="button" onClick={() => onChange(items.filter((_, j) => j !== i))} className="p-2 rounded-lg text-red-500 hover:bg-red-50">
+                            <TrashIcon className="h-4 w-4" />
+                        </button>
+                    </div>
+                ))}
+                <button type="button" onClick={() => onChange([...items, { source: 'static', value: '', label: '' }])} className="inline-flex items-center gap-1.5 text-sm text-gray-600 hover:text-gray-900">
+                    <PlusIcon className="h-4 w-4" /> Add stat
+                </button>
+            </div>
+        </div>
+    );
+}
+
+function ImagePicker({ imageId, onChange }: { imageId: string | null; onChange: (id: string | null) => void }) {
+    const [uploading, setUploading] = useState(false);
+
+    const handleFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        e.target.value = '';
+        if (!file) return;
+        setUploading(true);
+        try {
+            const { id } = await ImageService.upload(file);
+            onChange(id);
+        } catch (err) {
+            toast.error(err instanceof Error ? err.message : 'Failed to upload image');
+        } finally {
+            setUploading(false);
+        }
+    };
+
+    return (
+        <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Image</label>
+            {imageId != null && (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={imageUrl(imageId)} alt="" className="mb-2 h-32 w-auto rounded-lg border border-gray-200 object-cover" />
+            )}
+            <div className="flex items-center gap-3">
+                <label className="inline-flex items-center gap-1.5 rounded-lg bg-gray-100 text-gray-700 font-medium px-4 py-2 text-sm hover:bg-gray-200 transition cursor-pointer">
+                    {uploading ? 'Uploading…' : imageId != null ? 'Replace image' : 'Upload image'}
+                    <input type="file" accept="image/*" onChange={handleFile} disabled={uploading} className="hidden" />
+                </label>
+                {imageId != null && (
+                    <button type="button" onClick={() => onChange(null)} className="text-sm text-red-500 hover:text-red-700">Remove</button>
+                )}
+            </div>
+        </div>
+    );
 }
 
 function BulletEditor({ bullets, onChange }: { bullets: string[]; onChange: (bullets: string[]) => void }) {

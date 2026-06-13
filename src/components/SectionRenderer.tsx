@@ -4,8 +4,24 @@ import remarkGfm from 'remark-gfm';
 import rehypeSanitize from 'rehype-sanitize';
 import { CheckIcon } from '@heroicons/react/24/outline';
 import { Section } from '@/types/content';
+import { imageUrl } from '@/services/imageService';
 import FeaturedRuns from './FeaturedRuns';
 import ContactForm from './ContactForm';
+import StatsBand from './StatsBand';
+
+function Img(props: React.ImgHTMLAttributes<HTMLImageElement>) {
+    // eslint-disable-next-line @next/next/no-img-element
+    return <img {...props} />;
+}
+
+function ScrimText({ text, big }: { text: string; big?: boolean }) {
+    if (!text) return null;
+    return (
+        <div className="absolute inset-0 bg-black/40 flex items-center justify-center p-6">
+            <p className={`text-white font-black text-center whitespace-pre-line ${big ? 'text-3xl sm:text-5xl max-w-3xl' : 'text-2xl sm:text-4xl max-w-2xl'}`}>{text}</p>
+        </div>
+    );
+}
 
 export default function SectionRenderer({ section }: { section: Section }) {
     if (!section.visible) return null;
@@ -65,7 +81,7 @@ export default function SectionRenderer({ section }: { section: Section }) {
                 </section>
             );
 
-        case 'dynoRuns':
+        case 'feed':
             return (
                 <section className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
                     <div className="flex items-end justify-between mb-6">
@@ -86,5 +102,81 @@ export default function SectionRenderer({ section }: { section: Section }) {
                     </div>
                 </section>
             );
+
+        case 'cta':
+            return (
+                <section className="bg-primary">
+                    <div className="max-w-5xl mx-auto px-4 sm:px-6 py-14 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
+                        <div>
+                            <h2 className="text-2xl sm:text-3xl font-black text-primary-foreground whitespace-pre-line">{section.heading}</h2>
+                            {section.text && <p className="mt-2 text-primary-foreground/80 whitespace-pre-line">{section.text}</p>}
+                        </div>
+                        {section.primaryLabel && (
+                            <Link href={section.primaryHref || '#'} className="shrink-0 rounded-lg bg-gray-900 text-white font-semibold px-6 py-3 hover:bg-gray-800 transition">
+                                {section.primaryLabel}
+                            </Link>
+                        )}
+                    </div>
+                </section>
+            );
+
+        case 'stats':
+            return <StatsBand section={section} />;
+
+        case 'image': {
+            if (section.imageId == null) return null;
+            const src = imageUrl(section.imageId);
+            const layout = section.layout ?? 'standard';
+
+            if (layout === 'full') {
+                return (
+                    <section className="py-8">
+                        <Img src={src} alt={section.alt} className="w-full max-h-[70vh] object-cover" />
+                    </section>
+                );
+            }
+
+            if (layout === 'overlay') {
+                return (
+                    <section className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
+                        <div className="relative rounded-2xl overflow-hidden">
+                            <Img src={src} alt={section.alt} className="w-full h-[420px] object-cover" />
+                            <ScrimText text={section.text} />
+                        </div>
+                    </section>
+                );
+            }
+
+            if (layout === 'overlayFull') {
+                return (
+                    <section className="relative">
+                        <Img src={src} alt={section.alt} className="w-full h-[480px] object-cover" />
+                        <ScrimText text={section.text} big />
+                    </section>
+                );
+            }
+
+            if (layout === 'left' || layout === 'right') {
+                return (
+                    <section className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
+                        <div className="grid sm:grid-cols-2 gap-8 items-center">
+                            <Img src={src} alt={section.alt} className={`w-full rounded-2xl ${layout === 'right' ? 'sm:order-2' : ''}`} />
+                            {section.text && (
+                                <p className="text-gray-700 leading-relaxed whitespace-pre-line">{section.text}</p>
+                            )}
+                        </div>
+                    </section>
+                );
+            }
+
+            return (
+                <section className="max-w-5xl mx-auto px-4 sm:px-6 py-8">
+                    <figure>
+                        <Img src={src} alt={section.alt} className="w-full rounded-2xl" />
+                        {section.caption && <figcaption className="mt-2 text-center text-sm text-gray-500">{section.caption}</figcaption>}
+                    </figure>
+                </section>
+            );
+        }
     }
 }

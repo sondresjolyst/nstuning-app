@@ -9,7 +9,9 @@ function gain(before?: number | null, after?: number | null): number | null {
 export default function DynoRunCard({ run }: { run: DynoRun }) {
     const cover = coverImageSrc(run);
     const hpGain = gain(run.powerBeforeHp, run.powerAfterHp);
-    const carLine = [run.carMake, run.carModel, run.year].filter(Boolean).join(' ');
+    const carLine = [run.carMake, run.carModel, run.trim, run.year].filter(Boolean).join(' ');
+    const metaLine = [carLine, run.engine && `Engine ${run.engine}`, run.fuelType && `Fuel ${run.fuelType}`]
+        .filter(Boolean).join(' · ');
 
     return (
         <Link
@@ -29,7 +31,7 @@ export default function DynoRunCard({ run }: { run: DynoRun }) {
             </div>
             <div className="p-4">
                 <h3 className="font-bold text-gray-900 group-hover:text-gray-700">{run.title}</h3>
-                {carLine && <p className="text-sm text-gray-500 mt-0.5">{carLine}</p>}
+                {metaLine && <p className="text-sm text-gray-500 mt-0.5">{metaLine}</p>}
                 {run.powerAfterHp != null && (
                     <div className="mt-3 flex items-baseline gap-2">
                         <span className="text-2xl font-extrabold text-gray-900">{run.powerAfterHp}</span>
