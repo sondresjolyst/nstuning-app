@@ -1,6 +1,8 @@
 import axios from 'axios';
 import axiosInstance from './axiosInstance';
 import { formatApiError } from '@/lib/errors';
+import { revalidateTarget } from '@/lib/revalidate';
+import { REVALIDATE_TARGETS } from '@/lib/cacheTags';
 import { imageUrl } from './imageService';
 
 export interface DynoRun {
@@ -59,6 +61,7 @@ const DynoRunService = {
     async create(form: FormData): Promise<DynoRun> {
         try {
             const response = await axiosInstance.post<DynoRun>('/dyno-runs', form);
+            await revalidateDynoRuns();
             return response.data;
         } catch (error: unknown) {
             throw new Error(formatApiError(error, 'Failed to create dyno run'));
@@ -68,6 +71,7 @@ const DynoRunService = {
     async update(id: number, form: FormData): Promise<DynoRun> {
         try {
             const response = await axiosInstance.put<DynoRun>(`/dyno-runs/${id}`, form);
+            await revalidateDynoRuns();
             return response.data;
         } catch (error: unknown) {
             throw new Error(formatApiError(error, 'Failed to update dyno run'));
@@ -77,10 +81,15 @@ const DynoRunService = {
     async remove(id: number): Promise<void> {
         try {
             await axiosInstance.delete(`/dyno-runs/${id}`);
+            await revalidateDynoRuns();
         } catch (error: unknown) {
             throw new Error(formatApiError(error, 'Failed to delete dyno run'));
         }
     },
 };
+
+async function revalidateDynoRuns(): Promise<void> {
+    await revalidateTarget(REVALIDATE_TARGETS.dynoRuns);
+}
 
 export default DynoRunService;
