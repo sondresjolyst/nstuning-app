@@ -1,4 +1,12 @@
+import type { Metadata } from 'next';
 import ContactForm from '@/components/ContactForm';
+import { COMPANY } from '@/lib/company';
+
+export const metadata: Metadata = {
+    title: 'Contact',
+    description: `Book a dyno run or ask ${COMPANY.name} about tuning your car.`,
+    alternates: { canonical: '/contact' },
+};
 
 export default function ContactPage() {
     return (

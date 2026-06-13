@@ -1,4 +1,12 @@
+import type { Metadata } from "next";
 import Link from "next/link";
+import { COMPANY } from "@/lib/company";
+
+export const metadata: Metadata = {
+    title: "Cookie Policy",
+    description: `How ${COMPANY.name} uses cookies.`,
+    alternates: { canonical: "/cookies" },
+};
 
 export default function CookiesPage() {
     return (

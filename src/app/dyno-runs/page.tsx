@@ -1,8 +1,16 @@
+import type { Metadata } from 'next';
 import { DynoRun } from '@/services/dynoRunService';
 import { publicGet } from '@/lib/publicApi';
+import { COMPANY } from '@/lib/company';
 import DynoRunCard from '@/components/DynoRunCard';
 
 export const revalidate = 60;
+
+export const metadata: Metadata = {
+    title: 'Dyno runs',
+    description: `Documented before/after dyno results from ${COMPANY.name}.`,
+    alternates: { canonical: '/dyno-runs' },
+};
 
 export default async function DynoRunsPage() {
     const runs = await publicGet<DynoRun[]>('/dyno-runs') ?? [];
