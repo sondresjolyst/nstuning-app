@@ -4,4 +4,5 @@ export const COMPANY = {
     orgNumber: "923 202 374",
     address: "Håbakken 7, 4355 Kvernaland",
     email: "",
+    url: "https://www.nstuning.no",
 } as const;
