@@ -13,14 +13,20 @@ const BrandingContext = createContext<BrandingContextValue>({ branding: {}, logo
 
 export const useBranding = () => useContext(BrandingContext);
 
-export default function BrandingProvider({ children }: { children: React.ReactNode }) {
-    const [branding, setBranding] = useState<Branding>({});
+const REFRESH_INTERVAL_MS = 5 * 60 * 1000;
+
+export default function BrandingProvider({ children, initial }: { children: React.ReactNode; initial?: Branding }) {
+    const [branding, setBranding] = useState<Branding>(initial ?? {});
 
     const refresh = useCallback(() => {
         BrandingService.get().then(setBranding).catch(() => {});
     }, []);
 
-    useEffect(() => { refresh(); }, [refresh]);
+    useEffect(() => {
+        if (!initial) refresh();
+        const id = setInterval(refresh, REFRESH_INTERVAL_MS);
+        return () => clearInterval(id);
+    }, [refresh, initial]);
 
     useEffect(() => {
         const iconUrl = toDataUrl(branding.iconData, branding.iconContentType);
