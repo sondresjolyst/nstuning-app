@@ -3,6 +3,7 @@ import { formatApiError } from '@/lib/errors';
 
 export interface Settings {
     contactRecipientEmail: string;
+    address: string;
 }
 
 const SettingsService = {

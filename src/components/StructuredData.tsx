@@ -1,30 +1,30 @@
 import { COMPANY } from '@/lib/company';
+import { getCompanyInfo } from '@/lib/companyInfo';
 
-// schema.org AutoRepair (a LocalBusiness) for the tuning shop. Helps Google
-// build a knowledge panel and rank for local "dyno tuning" queries.
-export default function StructuredData() {
+export default async function StructuredData() {
+    const company = await getCompanyInfo();
     const data = {
         '@context': 'https://schema.org',
         '@type': 'AutoRepair',
-        name: COMPANY.name,
-        legalName: COMPANY.legalName,
+        name: company.name,
+        legalName: company.legalName,
         url: COMPANY.url,
         image: `${COMPANY.url}/icon.svg`,
         address: {
             '@type': 'PostalAddress',
-            streetAddress: 'Håbakken 7',
-            postalCode: '4355',
-            addressLocality: 'Kvernaland',
+            streetAddress: company.address,
             addressCountry: 'NO',
         },
         areaServed: 'NO',
         vatID: COMPANY.orgNumber,
     };
 
+    const json = JSON.stringify(data).replace(/</g, '\\u003c');
+
     return (
         <script
             type="application/ld+json"
-            dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
+            dangerouslySetInnerHTML={{ __html: json }}
         />
     );
 }
