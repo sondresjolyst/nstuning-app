@@ -8,6 +8,7 @@ import { imageUrl } from '@/services/imageService';
 import FeaturedRuns from './FeaturedRuns';
 import ContactForm from './ContactForm';
 import StatsBand from './StatsBand';
+import SmartLink from './SmartLink';
 
 function Img(props: React.ImgHTMLAttributes<HTMLImageElement>) {
     // eslint-disable-next-line @next/next/no-img-element
@@ -39,14 +40,14 @@ export default function SectionRenderer({ section }: { section: Section }) {
                         )}
                         <div className="mt-8 flex flex-wrap gap-3">
                             {section.primaryLabel && (
-                                <Link href={section.primaryHref || '#'} className="rounded-lg bg-gray-900 text-white font-semibold px-6 py-3 hover:bg-gray-800 transition">
+                                <SmartLink href={section.primaryHref || '#'} className="rounded-lg bg-gray-900 text-white font-semibold px-6 py-3 hover:bg-gray-800 transition">
                                     {section.primaryLabel}
-                                </Link>
+                                </SmartLink>
                             )}
                             {section.secondaryLabel && (
-                                <Link href={section.secondaryHref || '#'} className="rounded-lg bg-white text-gray-900 font-semibold px-6 py-3 hover:bg-gray-100 transition">
+                                <SmartLink href={section.secondaryHref || '#'} className="rounded-lg bg-white text-gray-900 font-semibold px-6 py-3 hover:bg-gray-100 transition">
                                     {section.secondaryLabel}
-                                </Link>
+                                </SmartLink>
                             )}
                         </div>
                     </div>
@@ -112,9 +113,9 @@ export default function SectionRenderer({ section }: { section: Section }) {
                             {section.text && <p className="mt-2 text-primary-foreground/80 whitespace-pre-line">{section.text}</p>}
                         </div>
                         {section.primaryLabel && (
-                            <Link href={section.primaryHref || '#'} className="shrink-0 rounded-lg bg-gray-900 text-white font-semibold px-6 py-3 hover:bg-gray-800 transition">
+                            <SmartLink href={section.primaryHref || '#'} className="shrink-0 rounded-lg bg-gray-900 text-white font-semibold px-6 py-3 hover:bg-gray-800 transition">
                                 {section.primaryLabel}
-                            </Link>
+                            </SmartLink>
                         )}
                     </div>
                 </section>

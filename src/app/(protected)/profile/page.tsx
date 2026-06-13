@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { signOut } from 'next-auth/react';
 import { toast } from 'sonner';
 import TextInput from '@/components/TextInput';
+import PasswordInput from '@/components/PasswordInput';
 import UserService, { UserProfile } from '@/services/userService';
 
 export default function ProfilePage() {
@@ -14,6 +15,9 @@ export default function ProfilePage() {
     const [exporting, setExporting] = useState(false);
     const [confirmDelete, setConfirmDelete] = useState(false);
     const [deleting, setDeleting] = useState(false);
+    const [currentPassword, setCurrentPassword] = useState('');
+    const [newPassword, setNewPassword] = useState('');
+    const [changingPassword, setChangingPassword] = useState(false);
 
     useEffect(() => {
         UserService.getProfile()
@@ -42,6 +46,25 @@ export default function ProfilePage() {
             toast.error(err instanceof Error ? err.message : 'Failed to update profile');
         } finally {
             setSaving(false);
+        }
+    }
+
+    async function handleChangePassword(e: React.FormEvent) {
+        e.preventDefault();
+        if (newPassword.length < 6) {
+            toast.error('New password must be at least 6 characters.');
+            return;
+        }
+        setChangingPassword(true);
+        try {
+            await UserService.changePassword({ currentPassword, newPassword });
+            toast.success('Password changed.');
+            setCurrentPassword('');
+            setNewPassword('');
+        } catch (err) {
+            toast.error(err instanceof Error ? err.message : 'Failed to change password');
+        } finally {
+            setChangingPassword(false);
         }
     }
 
@@ -97,6 +120,19 @@ export default function ProfilePage() {
                     className="rounded-lg bg-primary text-primary-foreground font-semibold px-5 py-2.5 hover:brightness-95 disabled:opacity-60 transition"
                 >
                     {saving ? 'Saving…' : 'Save changes'}
+                </button>
+            </form>
+
+            <form onSubmit={handleChangePassword} className="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm space-y-4">
+                <h2 className="text-base font-semibold text-gray-900">Change password</h2>
+                <PasswordInput label="Current password" name="currentPassword" autoComplete="current-password" value={currentPassword} onChange={e => setCurrentPassword(e.target.value)} required />
+                <PasswordInput label="New password" name="newPassword" autoComplete="new-password" value={newPassword} onChange={e => setNewPassword(e.target.value)} required />
+                <button
+                    type="submit"
+                    disabled={changingPassword || !currentPassword || !newPassword}
+                    className="rounded-lg bg-primary text-primary-foreground font-semibold px-5 py-2.5 hover:brightness-95 disabled:opacity-60 transition"
+                >
+                    {changingPassword ? 'Changing…' : 'Change password'}
                 </button>
             </form>
 
