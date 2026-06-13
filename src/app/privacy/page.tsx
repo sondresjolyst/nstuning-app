@@ -1,5 +1,12 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { COMPANY } from "@/lib/company";
+
+export const metadata: Metadata = {
+    title: "Privacy Policy",
+    description: `How ${COMPANY.name} (${COMPANY.legalName}) collects, uses, and protects your personal data.`,
+    alternates: { canonical: "/privacy" },
+};
 
 export default function PrivacyPage() {
     return (

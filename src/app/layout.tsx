@@ -7,9 +7,22 @@ import Footer from "./footer";
 import { COMPANY } from "@/lib/company";
 
 export const metadata: Metadata = {
-    title: `${COMPANY.name} — Dyno & Performance Tuning`,
+    metadataBase: new URL(COMPANY.url),
+    title: {
+        default: `${COMPANY.name} — Dyno & Performance Tuning`,
+        template: `%s — ${COMPANY.name}`,
+    },
     description: `Professional dyno tuning by ${COMPANY.name} (${COMPANY.legalName}). Real results, documented dyno runs.`,
     manifest: "/manifest.json",
+    alternates: { canonical: "/" },
+    robots: { index: true, follow: true },
+    openGraph: {
+        type: "website",
+        siteName: COMPANY.name,
+        url: COMPANY.url,
+        title: `${COMPANY.name} — Dyno & Performance Tuning`,
+        description: `Professional dyno tuning by ${COMPANY.name}. Real results, documented dyno runs.`,
+    },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

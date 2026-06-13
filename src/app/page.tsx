@@ -1,4 +1,5 @@
 import SectionRenderer from '@/components/SectionRenderer';
+import StructuredData from '@/components/StructuredData';
 import { Section } from '@/types/content';
 import { DEFAULT_SECTIONS } from '@/lib/defaultSections';
 import { publicGet } from '@/lib/publicApi';
@@ -11,6 +12,7 @@ export default async function Home() {
 
     return (
         <div>
+            <StructuredData />
             {sections.map(section => <SectionRenderer key={section.id} section={section} />)}
         </div>
     );

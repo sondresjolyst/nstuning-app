@@ -43,7 +43,7 @@ export const DEFAULT_SECTIONS: Section[] = [
         type: 'cta',
         visible: true,
         heading: 'Ready to find your power?',
-        text: 'Documented gains on the dyno.',
+        text: 'Documented results on the dyno.',
         primaryLabel: 'Book a dyno run',
         primaryHref: '#contact',
     },

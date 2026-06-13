@@ -1,5 +1,12 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { COMPANY } from "@/lib/company";
+
+export const metadata: Metadata = {
+    title: "Terms of Service",
+    description: `Terms of Service for ${COMPANY.name} (${COMPANY.legalName}).`,
+    alternates: { canonical: "/terms" },
+};
 
 export default function TermsPage() {
     return (
