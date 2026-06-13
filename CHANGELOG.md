@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.1.0](https://github.com/sondresjolyst/nstuning-app/compare/v1.0.0...v1.1.0) (2026-06-13)
+
+
+### Features
+
+* branding ([#3](https://github.com/sondresjolyst/nstuning-app/issues/3)) ([5508515](https://github.com/sondresjolyst/nstuning-app/commit/55085151b734820d97ae014fbeddcb544d53e6fa))
+* Marketing homepage, admin console, accounts, and SSR ([#11](https://github.com/sondresjolyst/nstuning-app/issues/11)) ([bfa138f](https://github.com/sondresjolyst/nstuning-app/commit/bfa138f77fda0481927ff4fddaf4d7e7d255c69d))
+
+
+### Bug Fixes
+
+* add object-src to CSP to allow PDF viewer in iframe ([#10](https://github.com/sondresjolyst/nstuning-app/issues/10)) ([1c735ac](https://github.com/sondresjolyst/nstuning-app/commit/1c735acd1fa81bec5410d165417b8a022952cc01))
+
 ## 1.0.0 (2026-06-11)
 
 
