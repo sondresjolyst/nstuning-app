@@ -56,6 +56,29 @@ const UserService = {
         return response.data;
     },
 
+    async requestPasswordReset(data: { email: string }): Promise<{ message: string }> {
+        try {
+            const response = await apiClient.post<{ message: string }>('/auth/request-password-reset', data);
+            return response.data;
+        } catch (error: unknown) {
+            throw new Error(formatApiError(error, 'Failed to request password reset code'));
+        }
+    },
+
+    async resetPassword(data: { email: string; code: string; newPassword: string }): Promise<{ message: string }> {
+        try {
+            const response = await apiClient.post<{ message: string }>('/auth/reset-password', data);
+            return response.data;
+        } catch (error: unknown) {
+            throw new Error(formatApiError(error, 'Failed to reset password'));
+        }
+    },
+
+    async changePassword(data: { currentPassword: string; newPassword: string }): Promise<{ message: string }> {
+        const id = await currentUserId();
+        return request(() => axiosInstance.put<{ message: string }>(`/users/${id}/password`, data), 'Failed to change password');
+    },
+
     async getProfile(): Promise<UserProfile> {
         const id = await currentUserId();
         return request(() => axiosInstance.get<UserProfile>(`/users/${id}/profile`), 'Failed to load profile');
