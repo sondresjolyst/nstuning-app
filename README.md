@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="ns-tuning-black-yellow.png" alt="NS Tuning" width="440">
+  <img src="docs/ns-tuning-black-yellow.png" alt="NS Tuning" width="440">
 </p>
 
 <p align="center">
