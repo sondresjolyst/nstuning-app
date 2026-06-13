@@ -8,7 +8,7 @@ export const revalidate = 60;
 
 export const metadata: Metadata = {
     title: 'Dyno runs',
-    description: `Documented before/after dyno results from ${COMPANY.name}.`,
+    description: `Documented dyno results from ${COMPANY.name}.`,
     alternates: { canonical: '/dyno-runs' },
 };
 
