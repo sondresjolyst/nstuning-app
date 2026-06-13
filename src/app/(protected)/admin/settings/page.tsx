@@ -55,7 +55,6 @@ export default function AdminSettingsPage() {
                     onChange={e => setAddress(e.target.value)}
                     required
                 />
-                <p className="text-xs text-gray-500">Shown on legal pages and in search-engine business data.</p>
                 <button
                     type="submit"
                     disabled={saving}
