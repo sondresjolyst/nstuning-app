@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.3.0](https://github.com/sondresjolyst/nstuning-app/compare/v1.2.0...v1.3.0) (2026-06-16)
+
+
+### Features
+
+* 404 page and SEO metadata routes ([#15](https://github.com/sondresjolyst/nstuning-app/issues/15)) ([ce8df21](https://github.com/sondresjolyst/nstuning-app/commit/ce8df21410d37a5bd16ebd1922a1c358c5320c88))
+* editable business address ([#16](https://github.com/sondresjolyst/nstuning-app/issues/16)) ([83fe094](https://github.com/sondresjolyst/nstuning-app/commit/83fe09431b0f00320853bdf314d9016fee237dfc))
+* revalidate ISR pages on admin save ([#14](https://github.com/sondresjolyst/nstuning-app/issues/14)) ([e29ff6b](https://github.com/sondresjolyst/nstuning-app/commit/e29ff6bcb86f582df4282bf79467de3037d9ce7d))
+
+
+### Bug Fixes
+
+* server-render branding to remove logo flash ([#18](https://github.com/sondresjolyst/nstuning-app/issues/18)) ([6f59463](https://github.com/sondresjolyst/nstuning-app/commit/6f594634334dcae9883b71981dd2ee39353ac2a8))
+
 ## [1.2.0](https://github.com/sondresjolyst/nstuning-app/compare/v1.1.0...v1.2.0) (2026-06-13)
 
 
