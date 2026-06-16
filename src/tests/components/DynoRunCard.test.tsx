@@ -5,7 +5,7 @@ import { DynoRun } from '@/services/dynoRunService';
 
 const run: DynoRun = {
     id: 1, slug: 'volvo-242-turbo', title: 'Volvo 242 Turbo Stage 2', carMake: 'Volvo', carModel: '242 Turbo', year: 2019,
-    powerBeforeHp: 300, powerAfterHp: 360, published: true, sortOrder: 0, hasReport: true,
+    enginePowerBeforeHp: 300, enginePowerAfterHp: 360, published: true, sortOrder: 0, hasReport: true,
     createdAt: '', updatedAt: '',
 };
 
