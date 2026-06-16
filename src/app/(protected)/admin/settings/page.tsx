@@ -3,18 +3,22 @@
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import TextInput from '@/components/TextInput';
+import Toggle from '@/components/Toggle';
 import SettingsService from '@/services/settingsService';
 import BrandingManager from '@/components/BrandingManager';
 
 export default function AdminSettingsPage() {
     const [email, setEmail] = useState('');
+    const [companyName, setCompanyName] = useState('');
+    const [orgNumber, setOrgNumber] = useState('');
+    const [vatRegistered, setVatRegistered] = useState(true);
     const [address, setAddress] = useState('');
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
 
     useEffect(() => {
         SettingsService.get()
-            .then(s => { setEmail(s.contactRecipientEmail); setAddress(s.address); })
+            .then(s => { setEmail(s.contactRecipientEmail); setCompanyName(s.companyName); setOrgNumber(s.orgNumber); setVatRegistered(s.vatRegistered); setAddress(s.address); })
             .catch(() => toast.error('Failed to load settings'))
             .finally(() => setLoading(false));
     }, []);
@@ -23,8 +27,11 @@ export default function AdminSettingsPage() {
         e.preventDefault();
         setSaving(true);
         try {
-            const updated = await SettingsService.update({ contactRecipientEmail: email, address });
+            const updated = await SettingsService.update({ contactRecipientEmail: email, companyName, orgNumber, vatRegistered, address });
             setEmail(updated.contactRecipientEmail);
+            setCompanyName(updated.companyName);
+            setOrgNumber(updated.orgNumber);
+            setVatRegistered(updated.vatRegistered);
             setAddress(updated.address);
             toast.success('Settings saved');
         } catch (err) {
@@ -48,6 +55,22 @@ export default function AdminSettingsPage() {
                     required
                 />
                 <p className="text-xs text-gray-500">Contact form enquiries are emailed to this address.</p>
+                <TextInput
+                    label="Company name"
+                    name="companyName"
+                    value={companyName}
+                    onChange={e => setCompanyName(e.target.value)}
+                    required
+                />
+                <TextInput
+                    label="Organisation number"
+                    name="orgNumber"
+                    value={orgNumber}
+                    onChange={e => setOrgNumber(e.target.value)}
+                    required
+                />
+                <Toggle label="VAT (MVA) registered" checked={vatRegistered} onChange={setVatRegistered} />
+                <p className="text-xs text-gray-500">When on, the org number is shown with the “MVA” suffix.</p>
                 <TextInput
                     label="Business address"
                     name="address"

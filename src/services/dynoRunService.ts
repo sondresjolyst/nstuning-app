@@ -3,7 +3,7 @@ import axiosInstance from './axiosInstance';
 import { formatApiError } from '@/lib/errors';
 import { revalidateTarget } from '@/lib/revalidate';
 import { REVALIDATE_TARGETS } from '@/lib/cacheTags';
-import { imageUrl } from './imageService';
+import { imageUrl, imageSrcSet } from './imageService';
 
 export interface DynoRun {
     id: number;
@@ -15,15 +15,21 @@ export interface DynoRun {
     year?: number | null;
     engine?: string | null;
     fuelType?: string | null;
-    powerBeforeHp?: number | null;
-    powerAfterHp?: number | null;
-    torqueBeforeNm?: number | null;
-    torqueAfterNm?: number | null;
+    dynoDate?: string | null;
+    hubPowerBeforeWhp?: number | null;
+    hubPowerAfterWhp?: number | null;
+    hubTorqueBeforeWnm?: number | null;
+    hubTorqueAfterWnm?: number | null;
+    enginePowerBeforeHp?: number | null;
+    enginePowerAfterHp?: number | null;
+    engineTorqueBeforeNm?: number | null;
+    engineTorqueAfterNm?: number | null;
     description?: string | null;
     coverImageId?: string | null;
     published: boolean;
     sortOrder: number;
     hasReport: boolean;
+    reportFileName?: string | null;
     createdAt: string;
     updatedAt: string;
 }
@@ -37,6 +43,9 @@ export const reportProxyUrl = (id: number) => `/api/report/${id}`;
 
 export const coverImageSrc = (run: DynoRun): string | null =>
     run.coverImageId != null ? imageUrl(run.coverImageId) : null;
+
+export const coverImageSrcSet = (run: DynoRun): string | undefined =>
+    run.coverImageId != null ? imageSrcSet(run.coverImageId) : undefined;
 
 const DynoRunService = {
     async list(all = false): Promise<DynoRun[]> {

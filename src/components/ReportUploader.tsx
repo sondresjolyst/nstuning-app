@@ -41,14 +41,17 @@ export default function ReportUploader({ onSelect, existingFileName }: ReportUpl
                 onClick={() => inputRef.current?.click()}
                 className="w-full flex items-center gap-2 rounded-lg border border-dashed border-gray-300 px-3 py-3 text-sm text-gray-600 hover:border-gray-400 hover:bg-gray-50 transition-colors"
             >
-                {file ? <DocumentCheckIcon className="h-5 w-5 text-green-600" /> : <DocumentArrowUpIcon className="h-5 w-5 text-gray-400" />}
-                <span className="truncate">
-                    {file
-                        ? `${file.name} · ${formatBytes(file.size)}`
-                        : existingFileName
-                            ? `Current: ${existingFileName} — click to replace`
-                            : 'Click to choose a PDF'}
-                </span>
+                {file ? <DocumentCheckIcon className="h-5 w-5 shrink-0 text-green-600" /> : <DocumentArrowUpIcon className="h-5 w-5 shrink-0 text-gray-400" />}
+                {file ? (
+                    <span className="min-w-0 truncate text-left">{file.name} · {formatBytes(file.size)}</span>
+                ) : existingFileName ? (
+                    <>
+                        <span className="min-w-0 truncate text-left">{existingFileName}</span>
+                        <span className="shrink-0 text-gray-400">— click to replace</span>
+                    </>
+                ) : (
+                    <span className="min-w-0 truncate text-left">Click to choose a PDF</span>
+                )}
             </button>
             {error && <p className="mt-1 text-xs text-red-600">{error}</p>}
         </div>

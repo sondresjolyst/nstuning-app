@@ -16,7 +16,7 @@ export default async function StructuredData() {
             addressCountry: 'NO',
         },
         areaServed: 'NO',
-        vatID: COMPANY.orgNumber,
+        vatID: company.orgNumber,
     };
 
     const json = JSON.stringify(data).replace(/</g, '\\u003c');

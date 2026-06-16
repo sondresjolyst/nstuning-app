@@ -3,6 +3,9 @@ import { formatApiError } from '@/lib/errors';
 
 export interface Settings {
     contactRecipientEmail: string;
+    companyName: string;
+    orgNumber: string;
+    vatRegistered: boolean;
     address: string;
 }
 

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { COMPANY } from "@/lib/company";
-import { getCompanyInfo } from "@/lib/companyInfo";
+import { getCompanyInfo, formatOrgNumber } from "@/lib/companyInfo";
 
 export const metadata: Metadata = {
     title: "Terms of Service",
@@ -21,8 +21,8 @@ export default async function TermsPage() {
                     <h2 className="text-base font-semibold text-gray-900">1. About us</h2>
                     <p>This website is operated by:</p>
                     <ul className="list-none space-y-0.5 pl-2">
-                        <li><span className="text-gray-900">Company name:</span> {COMPANY.legalName}</li>
-                        {COMPANY.orgNumber && <li><span className="text-gray-900">Organisation number:</span> {COMPANY.orgNumber}</li>}
+                        <li><span className="text-gray-900">Company name:</span> {company.legalName}</li>
+                        {company.orgNumber && <li><span className="text-gray-900">Organisation number:</span> {formatOrgNumber(company)}</li>}
                         {company.address && <li><span className="text-gray-900">Address:</span> {company.address}</li>}
                         {COMPANY.email && <li><span className="text-gray-900">Email:</span> {COMPANY.email}</li>}
                     </ul>
