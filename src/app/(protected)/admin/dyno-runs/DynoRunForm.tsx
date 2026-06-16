@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import TextInput from '@/components/TextInput';
 import ReportUploader from '@/components/ReportUploader';
+import Toggle from '@/components/Toggle';
 import DynoRunService, { DynoRun, coverImageSrc } from '@/services/dynoRunService';
 import VehicleService, { BrandNode } from '@/services/vehicleService';
 
@@ -40,10 +41,15 @@ interface FormState {
     year: string;
     engine: string;
     fuelType: string;
-    powerBeforeHp: string;
-    powerAfterHp: string;
-    torqueBeforeNm: string;
-    torqueAfterNm: string;
+    dynoDate: string;
+    hubPowerBeforeWhp: string;
+    hubPowerAfterWhp: string;
+    hubTorqueBeforeWnm: string;
+    hubTorqueAfterWnm: string;
+    enginePowerBeforeHp: string;
+    enginePowerAfterHp: string;
+    engineTorqueBeforeNm: string;
+    engineTorqueAfterNm: string;
     description: string;
     sortOrder: string;
     published: boolean;
@@ -58,10 +64,15 @@ function toState(run?: DynoRun | null): FormState {
         year: run?.year?.toString() ?? '',
         engine: run?.engine ?? '',
         fuelType: run?.fuelType ?? '',
-        powerBeforeHp: run?.powerBeforeHp?.toString() ?? '',
-        powerAfterHp: run?.powerAfterHp?.toString() ?? '',
-        torqueBeforeNm: run?.torqueBeforeNm?.toString() ?? '',
-        torqueAfterNm: run?.torqueAfterNm?.toString() ?? '',
+        dynoDate: run?.dynoDate ?? '',
+        hubPowerBeforeWhp: run?.hubPowerBeforeWhp?.toString() ?? '',
+        hubPowerAfterWhp: run?.hubPowerAfterWhp?.toString() ?? '',
+        hubTorqueBeforeWnm: run?.hubTorqueBeforeWnm?.toString() ?? '',
+        hubTorqueAfterWnm: run?.hubTorqueAfterWnm?.toString() ?? '',
+        enginePowerBeforeHp: run?.enginePowerBeforeHp?.toString() ?? '',
+        enginePowerAfterHp: run?.enginePowerAfterHp?.toString() ?? '',
+        engineTorqueBeforeNm: run?.engineTorqueBeforeNm?.toString() ?? '',
+        engineTorqueAfterNm: run?.engineTorqueAfterNm?.toString() ?? '',
         description: run?.description ?? '',
         sortOrder: run?.sortOrder?.toString() ?? '0',
         published: run?.published ?? false,
@@ -103,10 +114,15 @@ export default function DynoRunForm({ initial, onSaved, onCancel }: DynoRunFormP
         if (form.year) fd.append('Year', form.year);
         if (form.engine) fd.append('Engine', form.engine);
         if (form.fuelType) fd.append('FuelType', form.fuelType);
-        if (form.powerBeforeHp) fd.append('PowerBeforeHp', form.powerBeforeHp);
-        if (form.powerAfterHp) fd.append('PowerAfterHp', form.powerAfterHp);
-        if (form.torqueBeforeNm) fd.append('TorqueBeforeNm', form.torqueBeforeNm);
-        if (form.torqueAfterNm) fd.append('TorqueAfterNm', form.torqueAfterNm);
+        if (form.dynoDate) fd.append('DynoDate', form.dynoDate);
+        if (form.hubPowerBeforeWhp) fd.append('HubPowerBeforeWhp', form.hubPowerBeforeWhp);
+        if (form.hubPowerAfterWhp) fd.append('HubPowerAfterWhp', form.hubPowerAfterWhp);
+        if (form.hubTorqueBeforeWnm) fd.append('HubTorqueBeforeWnm', form.hubTorqueBeforeWnm);
+        if (form.hubTorqueAfterWnm) fd.append('HubTorqueAfterWnm', form.hubTorqueAfterWnm);
+        if (form.enginePowerBeforeHp) fd.append('EnginePowerBeforeHp', form.enginePowerBeforeHp);
+        if (form.enginePowerAfterHp) fd.append('EnginePowerAfterHp', form.enginePowerAfterHp);
+        if (form.engineTorqueBeforeNm) fd.append('EngineTorqueBeforeNm', form.engineTorqueBeforeNm);
+        if (form.engineTorqueAfterNm) fd.append('EngineTorqueAfterNm', form.engineTorqueAfterNm);
         if (form.description) fd.append('Description', form.description);
         fd.append('SortOrder', form.sortOrder || '0');
         fd.append('Published', String(form.published));
@@ -153,18 +169,28 @@ export default function DynoRunForm({ initial, onSaved, onCancel }: DynoRunFormP
                     onChange={v => setForm(f => ({ ...f, trim: v, engine: '' }))} />
             </div>
 
-            <div className="grid sm:grid-cols-3 gap-4">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 <LabeledSelect label="Engine" value={form.engine} options={engineOptions} disabled={!form.trim}
                     onChange={v => setForm(f => ({ ...f, engine: v }))} />
                 <TextInput label="Fuel" name="fuelType" value={form.fuelType} onChange={set('fuelType')} />
                 <TextInput label="Year" name="year" type="number" value={form.year} onChange={set('year')} />
+                <TextInput label="Dyno date" name="dynoDate" type="date" value={form.dynoDate} onChange={set('dynoDate')} />
             </div>
 
+            <p className="text-sm font-semibold text-gray-700 pt-2">Measured hub</p>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                <TextInput label="Power before (hp)" name="powerBeforeHp" type="number" value={form.powerBeforeHp} onChange={set('powerBeforeHp')} />
-                <TextInput label="Power after (hp)" name="powerAfterHp" type="number" value={form.powerAfterHp} onChange={set('powerAfterHp')} />
-                <TextInput label="Torque before (Nm)" name="torqueBeforeNm" type="number" value={form.torqueBeforeNm} onChange={set('torqueBeforeNm')} />
-                <TextInput label="Torque after (Nm)" name="torqueAfterNm" type="number" value={form.torqueAfterNm} onChange={set('torqueAfterNm')} />
+                <TextInput label="Power before (whp)" name="hubPowerBeforeWhp" type="number" value={form.hubPowerBeforeWhp} onChange={set('hubPowerBeforeWhp')} />
+                <TextInput label="Power after (whp)" name="hubPowerAfterWhp" type="number" value={form.hubPowerAfterWhp} onChange={set('hubPowerAfterWhp')} />
+                <TextInput label="Torque before (wNm)" name="hubTorqueBeforeWnm" type="number" value={form.hubTorqueBeforeWnm} onChange={set('hubTorqueBeforeWnm')} />
+                <TextInput label="Torque after (wNm)" name="hubTorqueAfterWnm" type="number" value={form.hubTorqueAfterWnm} onChange={set('hubTorqueAfterWnm')} />
+            </div>
+
+            <p className="text-sm font-semibold text-gray-700 pt-2">Calculated engine</p>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                <TextInput label="Power before (hp)" name="enginePowerBeforeHp" type="number" value={form.enginePowerBeforeHp} onChange={set('enginePowerBeforeHp')} />
+                <TextInput label="Power after (hp)" name="enginePowerAfterHp" type="number" value={form.enginePowerAfterHp} onChange={set('enginePowerAfterHp')} />
+                <TextInput label="Torque before (Nm)" name="engineTorqueBeforeNm" type="number" value={form.engineTorqueBeforeNm} onChange={set('engineTorqueBeforeNm')} />
+                <TextInput label="Torque after (Nm)" name="engineTorqueAfterNm" type="number" value={form.engineTorqueAfterNm} onChange={set('engineTorqueAfterNm')} />
             </div>
 
             <div>
@@ -200,15 +226,14 @@ export default function DynoRunForm({ initial, onSaved, onCancel }: DynoRunFormP
                         );
                     })()}
                 </div>
-                <ReportUploader onSelect={setReport} existingFileName={initial?.hasReport ? 'report.pdf' : null} />
+                <ReportUploader onSelect={setReport} existingFileName={initial?.reportFileName ?? null} />
             </div>
 
             <div className="flex items-center justify-between">
                 <TextInput label="Sort order" name="sortOrder" type="number" value={form.sortOrder} onChange={set('sortOrder')} />
-                <label className="flex items-center gap-2 text-sm font-medium text-gray-700 mt-6">
-                    <input type="checkbox" checked={form.published} onChange={e => setForm(f => ({ ...f, published: e.target.checked }))} />
-                    Published
-                </label>
+                <div className="mt-6">
+                    <Toggle label="Published" checked={form.published} onChange={v => setForm(f => ({ ...f, published: v }))} />
+                </div>
             </div>
 
             <div className="flex gap-3 pt-2">

@@ -4,7 +4,7 @@ import { notFound } from 'next/navigation';
 import Markdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeSanitize from 'rehype-sanitize';
-import { DynoRun, reportUrl, reportProxyUrl } from '@/services/dynoRunService';
+import { DynoRun, reportUrl, reportProxyUrl, coverImageSrc, coverImageSrcSet } from '@/services/dynoRunService';
 import { publicGet } from '@/lib/publicApi';
 import { COMPANY } from '@/lib/company';
 import PdfViewer from '@/components/PdfViewer';
@@ -23,7 +23,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     const carLine = carLineOf(run);
     return {
         title: `${run.title} — ${COMPANY.name}`,
-        description: [carLine, run.powerAfterHp ? `${run.powerAfterHp} hp` : null].filter(Boolean).join(' · ') || undefined,
+        description: [carLine, run.enginePowerAfterHp ? `${run.enginePowerAfterHp} hp` : null].filter(Boolean).join(' · ') || undefined,
     };
 }
 
@@ -43,6 +43,7 @@ function Stat({ label, before, after, unit }: { label: string; before?: number |
     );
 }
 
+
 export default async function DynoRunDetail({ params }: { params: Promise<{ slug: string }> }) {
     const { slug } = await params;
     const run = await getRun(slug);
@@ -51,15 +52,35 @@ export default async function DynoRunDetail({ params }: { params: Promise<{ slug
     const carLine = [carLineOf(run), run.engine && `Engine ${run.engine}`, run.fuelType && `Fuel ${run.fuelType}`]
         .filter(Boolean).join(' · ');
 
+    const dynoDate = run.dynoDate
+        ? new Date(run.dynoDate).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' })
+        : null;
+
     return (
         <div className="max-w-5xl mx-auto px-4 sm:px-6 py-12">
             <Link href="/dyno-runs" className="text-sm font-semibold text-gray-500 hover:text-gray-900">← Dyno runs</Link>
-            <h1 className="mt-3 text-3xl font-black text-gray-900">{run.title}</h1>
-            {carLine && <p className="mt-1 text-gray-600">{carLine}</p>}
+            <div className="mt-3 flex items-start justify-between gap-4">
+                <div>
+                    <h1 className="text-3xl font-black text-gray-900">{run.title}</h1>
+                    {carLine && <p className="mt-1 text-gray-600">{carLine}</p>}
+                    {dynoDate && <p className="mt-1 text-sm text-gray-500">Dynoed on {dynoDate}</p>}
+                </div>
+                {coverImageSrc(run) && (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={coverImageSrc(run)!} srcSet={coverImageSrcSet(run)} sizes="112px" alt={run.title} className="h-16 w-24 sm:h-20 sm:w-28 shrink-0 rounded-lg border border-gray-200 object-cover" />
+                )}
+            </div>
 
-            <div className="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-4">
-                <Stat label="Power" before={run.powerBeforeHp} after={run.powerAfterHp} unit="hp" />
-                <Stat label="Torque" before={run.torqueBeforeNm} after={run.torqueAfterNm} unit="Nm" />
+            <p className="mt-6 text-xs font-semibold uppercase tracking-wide text-gray-500">Measured at hub</p>
+            <div className="mt-2 grid grid-cols-2 gap-4">
+                <Stat label="Power" before={run.hubPowerBeforeWhp} after={run.hubPowerAfterWhp} unit="whp" />
+                <Stat label="Torque" before={run.hubTorqueBeforeWnm} after={run.hubTorqueAfterWnm} unit="wNm" />
+            </div>
+
+            <p className="mt-4 text-xs font-semibold uppercase tracking-wide text-gray-500">Calculated engine</p>
+            <div className="mt-2 grid grid-cols-2 gap-4">
+                <Stat label="Power" before={run.enginePowerBeforeHp} after={run.enginePowerAfterHp} unit="hp" />
+                <Stat label="Torque" before={run.engineTorqueBeforeNm} after={run.engineTorqueAfterNm} unit="Nm" />
             </div>
 
             {run.description && (

@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { PlusIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import AdminService, { AdminUser } from '@/services/adminService';
+import Toggle from '@/components/Toggle';
 
 export default function AdminUsersPage() {
     const [users, setUsers] = useState<AdminUser[]>([]);
@@ -58,10 +59,7 @@ export default function AdminUsersPage() {
         <div className="space-y-4">
             <div className="flex items-center justify-between">
                 <h2 className="font-bold text-gray-900">Users</h2>
-                <label className="flex items-center gap-2 text-sm text-gray-600">
-                    <input type="checkbox" checked={includeDeleted} onChange={e => setIncludeDeleted(e.target.checked)} />
-                    Show deleted
-                </label>
+                <Toggle label="Show deleted" checked={includeDeleted} onChange={setIncludeDeleted} />
             </div>
 
             {loading ? (
