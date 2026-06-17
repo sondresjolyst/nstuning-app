@@ -6,25 +6,36 @@ import TextInput from '@/components/TextInput';
 import ReportUploader from '@/components/ReportUploader';
 import Toggle from '@/components/Toggle';
 import DynoRunService, { DynoRun, coverImageSrc } from '@/services/dynoRunService';
-import VehicleService, { BrandNode } from '@/services/vehicleService';
+import VehicleService, { VehicleTree } from '@/services/vehicleService';
 
-function LabeledSelect({ label, value, options, disabled, onChange }: {
-    label: string; value: string; options: string[]; disabled?: boolean; onChange: (v: string) => void;
+const selectClass = "w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary disabled:bg-gray-50 disabled:text-gray-400";
+
+interface OptionGroup { label: string; options: string[]; }
+
+// Select with optional <optgroup> sections (e.g. models by family, fitted engines first).
+// Keys are group-prefixed since the same option value can appear in more than one group.
+function GroupedSelect({ label, value, groups, disabled, onChange }: {
+    label: string; value: string; groups: OptionGroup[]; disabled?: boolean; onChange: (v: string) => void;
 }) {
     return (
         <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
-            <select
-                value={value}
-                disabled={disabled}
-                onChange={e => onChange(e.target.value)}
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary disabled:bg-gray-50 disabled:text-gray-400"
-            >
+            <select value={value} disabled={disabled} onChange={e => onChange(e.target.value)} className={selectClass}>
                 <option value="">—</option>
-                {options.map(o => <option key={o} value={o}>{o}</option>)}
+                {groups.map((g, i) => g.label
+                    ? <optgroup key={i} label={g.label}>{g.options.map(o => <option key={`${i}-${o}`} value={o}>{o}</option>)}</optgroup>
+                    : g.options.map(o => <option key={`${i}-${o}`} value={o}>{o}</option>)
+                )}
             </select>
         </div>
     );
+}
+
+// Single-group convenience wrapper.
+function LabeledSelect({ label, value, options, disabled, onChange }: {
+    label: string; value: string; options: string[]; disabled?: boolean; onChange: (v: string) => void;
+}) {
+    return <GroupedSelect label={label} value={value} groups={[{ label: '', options }]} disabled={disabled} onChange={onChange} />;
 }
 
 interface DynoRunFormProps {
@@ -84,7 +95,7 @@ export default function DynoRunForm({ initial, onSaved, onCancel }: DynoRunFormP
     const [report, setReport] = useState<File | null>(null);
     const [cover, setCover] = useState<File | null>(null);
     const [submitting, setSubmitting] = useState(false);
-    const [tree, setTree] = useState<BrandNode[]>([]);
+    const [tree, setTree] = useState<VehicleTree>({ brands: [], engines: [] });
 
     useEffect(() => {
         VehicleService.getTree().then(setTree).catch(() => { });
@@ -93,17 +104,39 @@ export default function DynoRunForm({ initial, onSaved, onCancel }: DynoRunFormP
     const set = (field: keyof FormState) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
         setForm(f => ({ ...f, [field]: e.target.value }));
 
-    const selectedBrand = tree.find(b => b.name === form.carMake);
+    const selectedBrand = tree.brands.find(b => b.name === form.carMake);
     const selectedModel = selectedBrand?.models.find(m => m.name === form.carModel);
-    const selectedVariant = selectedModel?.variants.find(v => v.name === form.trim);
 
     const withCurrent = (options: string[], current: string) =>
         current && !options.includes(current) ? [current, ...options] : options;
 
-    const brandOptions = withCurrent(tree.map(b => b.name), form.carMake);
-    const modelOptions = withCurrent(selectedBrand?.models.map(m => m.name) ?? [], form.carModel);
+    const brandOptions = withCurrent(tree.brands.map(b => b.name), form.carMake);
+
+    // Models grouped by their optional family folder (folder labels are picker-only, never in the saved value).
+    const modelGroups: OptionGroup[] = (() => {
+        const models = selectedBrand?.models ?? [];
+        const byFamily = new Map<string, string[]>();
+        for (const m of models) byFamily.set(m.family ?? '', [...(byFamily.get(m.family ?? '') ?? []), m.name]);
+        const groups = [...byFamily.entries()]
+            .sort(([a], [b]) => a.localeCompare(b))
+            .map(([family, names]) => ({ label: family, options: names }));
+        if (form.carModel && !models.some(m => m.name === form.carModel)) groups.unshift({ label: '', options: [form.carModel] });
+        return groups;
+    })();
+
     const variantOptions = withCurrent(selectedModel?.variants.map(v => v.name) ?? [], form.trim);
-    const engineOptions = withCurrent(selectedVariant?.engines.map(e => e.name) ?? [], form.engine);
+
+    // Engine catalog is independent of the vehicle (handles swaps); factory-fitted engines listed first.
+    const engineGroups: OptionGroup[] = (() => {
+        const fittedIds = new Set(selectedModel?.engineIds ?? []);
+        const fitted = tree.engines.filter(e => fittedIds.has(e.id)).map(e => e.name);
+        const rest = tree.engines.filter(e => !fittedIds.has(e.id)).map(e => e.name);
+        const groups: OptionGroup[] = [];
+        if (fitted.length) groups.push({ label: 'Fitted from factory', options: fitted });
+        groups.push({ label: fitted.length ? 'All engines' : '', options: rest });
+        if (form.engine && !tree.engines.some(e => e.name === form.engine)) groups.unshift({ label: '', options: [form.engine] });
+        return groups;
+    })();
 
     const buildFormData = (): FormData => {
         const fd = new FormData();
@@ -162,15 +195,15 @@ export default function DynoRunForm({ initial, onSaved, onCancel }: DynoRunFormP
 
             <div className="grid sm:grid-cols-3 gap-4">
                 <LabeledSelect label="Make" value={form.carMake} options={brandOptions}
-                    onChange={v => setForm(f => ({ ...f, carMake: v, carModel: '', trim: '', engine: '' }))} />
-                <LabeledSelect label="Model" value={form.carModel} options={modelOptions} disabled={!form.carMake}
-                    onChange={v => setForm(f => ({ ...f, carModel: v, trim: '', engine: '' }))} />
+                    onChange={v => setForm(f => ({ ...f, carMake: v, carModel: '', trim: '' }))} />
+                <GroupedSelect label="Model" value={form.carModel} groups={modelGroups} disabled={!form.carMake}
+                    onChange={v => setForm(f => ({ ...f, carModel: v, trim: '' }))} />
                 <LabeledSelect label="Variant" value={form.trim} options={variantOptions} disabled={!form.carModel}
-                    onChange={v => setForm(f => ({ ...f, trim: v, engine: '' }))} />
+                    onChange={v => setForm(f => ({ ...f, trim: v }))} />
             </div>
 
             <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                <LabeledSelect label="Engine" value={form.engine} options={engineOptions} disabled={!form.trim}
+                <GroupedSelect label="Engine" value={form.engine} groups={engineGroups}
                     onChange={v => setForm(f => ({ ...f, engine: v }))} />
                 <TextInput label="Fuel" name="fuelType" value={form.fuelType} onChange={set('fuelType')} />
                 <TextInput label="Year" name="year" type="number" value={form.year} onChange={set('year')} />
