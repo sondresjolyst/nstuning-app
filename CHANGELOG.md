@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.0](https://github.com/sondresjolyst/nstuning-app/compare/v1.3.0...v1.4.0) (2026-06-16)
+
+
+### Features
+
+* responsive UI, dyno hub/engine + dyno date, company settings, webp images ([#24](https://github.com/sondresjolyst/nstuning-app/issues/24)) ([1561af9](https://github.com/sondresjolyst/nstuning-app/commit/1561af9756e7a7876d810118b851c24258bc310f))
+
 ## [1.3.0](https://github.com/sondresjolyst/nstuning-app/compare/v1.2.0...v1.3.0) (2026-06-16)
 
 
