@@ -10,23 +10,10 @@ import VehicleService, { VehicleTree } from '@/services/vehicleService';
 
 const selectClass = "w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary disabled:bg-gray-50 disabled:text-gray-400";
 
-function LabeledSelect({ label, value, options, disabled, onChange }: {
-    label: string; value: string; options: string[]; disabled?: boolean; onChange: (v: string) => void;
-}) {
-    return (
-        <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
-            <select value={value} disabled={disabled} onChange={e => onChange(e.target.value)} className={selectClass}>
-                <option value="">—</option>
-                {options.map(o => <option key={o} value={o}>{o}</option>)}
-            </select>
-        </div>
-    );
-}
-
 interface OptionGroup { label: string; options: string[]; }
 
 // Select with optional <optgroup> sections (e.g. models by family, fitted engines first).
+// Keys are group-prefixed since the same option value can appear in more than one group.
 function GroupedSelect({ label, value, groups, disabled, onChange }: {
     label: string; value: string; groups: OptionGroup[]; disabled?: boolean; onChange: (v: string) => void;
 }) {
@@ -36,12 +23,19 @@ function GroupedSelect({ label, value, groups, disabled, onChange }: {
             <select value={value} disabled={disabled} onChange={e => onChange(e.target.value)} className={selectClass}>
                 <option value="">—</option>
                 {groups.map((g, i) => g.label
-                    ? <optgroup key={i} label={g.label}>{g.options.map(o => <option key={o} value={o}>{o}</option>)}</optgroup>
-                    : g.options.map(o => <option key={o} value={o}>{o}</option>)
+                    ? <optgroup key={i} label={g.label}>{g.options.map(o => <option key={`${i}-${o}`} value={o}>{o}</option>)}</optgroup>
+                    : g.options.map(o => <option key={`${i}-${o}`} value={o}>{o}</option>)
                 )}
             </select>
         </div>
     );
+}
+
+// Single-group convenience wrapper.
+function LabeledSelect({ label, value, options, disabled, onChange }: {
+    label: string; value: string; options: string[]; disabled?: boolean; onChange: (v: string) => void;
+}) {
+    return <GroupedSelect label={label} value={value} groups={[{ label: '', options }]} disabled={disabled} onChange={onChange} />;
 }
 
 interface DynoRunFormProps {
