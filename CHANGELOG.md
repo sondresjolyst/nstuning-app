@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.0](https://github.com/sondresjolyst/nstuning-app/compare/v1.4.0...v1.5.0) (2026-06-17)
+
+
+### Features
+
+* vehicle picker for shared engine catalog and family grouping ([#26](https://github.com/sondresjolyst/nstuning-app/issues/26)) ([2d28aaa](https://github.com/sondresjolyst/nstuning-app/commit/2d28aaaae6b13961e40a8bc68078a4202f9c0e58))
+
 ## [1.4.0](https://github.com/sondresjolyst/nstuning-app/compare/v1.3.0...v1.4.0) (2026-06-16)
 
 
