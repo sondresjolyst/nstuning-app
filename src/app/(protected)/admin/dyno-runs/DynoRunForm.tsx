@@ -53,6 +53,8 @@ interface FormState {
     engine: string;
     fuelType: string;
     dynoDate: string;
+    displacementCc: string;
+    absolutePressureKpa: string;
     hubPowerBeforeWhp: string;
     hubPowerAfterWhp: string;
     hubTorqueBeforeWnm: string;
@@ -76,6 +78,8 @@ function toState(run?: DynoRun | null): FormState {
         engine: run?.engine ?? '',
         fuelType: run?.fuelType ?? '',
         dynoDate: run?.dynoDate ?? '',
+        displacementCc: run?.displacementCc?.toString() ?? '',
+        absolutePressureKpa: run?.absolutePressureKpa?.toString() ?? '',
         hubPowerBeforeWhp: run?.hubPowerBeforeWhp?.toString() ?? '',
         hubPowerAfterWhp: run?.hubPowerAfterWhp?.toString() ?? '',
         hubTorqueBeforeWnm: run?.hubTorqueBeforeWnm?.toString() ?? '',
@@ -148,6 +152,8 @@ export default function DynoRunForm({ initial, onSaved, onCancel }: DynoRunFormP
         if (form.engine) fd.append('Engine', form.engine);
         if (form.fuelType) fd.append('FuelType', form.fuelType);
         if (form.dynoDate) fd.append('DynoDate', form.dynoDate);
+        if (form.displacementCc) fd.append('DisplacementCc', form.displacementCc);
+        if (form.absolutePressureKpa) fd.append('AbsolutePressureKpa', form.absolutePressureKpa);
         if (form.hubPowerBeforeWhp) fd.append('HubPowerBeforeWhp', form.hubPowerBeforeWhp);
         if (form.hubPowerAfterWhp) fd.append('HubPowerAfterWhp', form.hubPowerAfterWhp);
         if (form.hubTorqueBeforeWnm) fd.append('HubTorqueBeforeWnm', form.hubTorqueBeforeWnm);
@@ -208,6 +214,11 @@ export default function DynoRunForm({ initial, onSaved, onCancel }: DynoRunFormP
                 <TextInput label="Fuel" name="fuelType" value={form.fuelType} onChange={set('fuelType')} />
                 <TextInput label="Year" name="year" type="number" value={form.year} onChange={set('year')} />
                 <TextInput label="Dyno date" name="dynoDate" type="date" value={form.dynoDate} onChange={set('dynoDate')} />
+            </div>
+
+            <div className="grid sm:grid-cols-2 gap-4">
+                <TextInput label="Displacement" name="displacementCc" type="number" placeholder="cc" value={form.displacementCc} onChange={set('displacementCc')} />
+                <TextInput label="Absolute pressure" name="absolutePressureKpa" type="number" placeholder="kPa · NA ≈ 100" value={form.absolutePressureKpa} onChange={set('absolutePressureKpa')} />
             </div>
 
             <p className="text-sm font-semibold text-gray-700 pt-2">Measured hub</p>

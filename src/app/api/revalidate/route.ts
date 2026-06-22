@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { revalidatePath } from 'next/cache';
+import { revalidatePath, revalidateTag } from 'next/cache';
 import { getToken } from 'next-auth/jwt';
 import { ADMIN_ROLE } from '@/lib/roles';
 import { RevalidateTarget, TARGET_PATHS } from '@/lib/cacheTags';
@@ -20,5 +20,8 @@ export async function POST(req: NextRequest) {
     for (const path of paths) {
         revalidatePath(path, path.includes('[') ? 'page' : undefined);
     }
+    // Purge the data cache by tag too: catches fetches the path purge misses
+    // when a different route rendered them. expire 0 = stale at once.
+    revalidateTag(target, { expire: 0 });
     return NextResponse.json({ revalidated: true, target });
 }

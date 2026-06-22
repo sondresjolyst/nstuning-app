@@ -32,10 +32,20 @@ export default function DynoRunCard({ run }: { run: DynoRun }) {
             <div className="p-4">
                 <h3 className="font-bold text-gray-900 group-hover:text-gray-700">{run.title}</h3>
                 {metaLine && <p className="text-sm text-gray-500 mt-0.5">{metaLine}</p>}
-                {run.enginePowerAfterHp != null && (
+                {(run.enginePowerAfterHp != null || run.engineTorqueAfterNm != null) && (
                     <div className="mt-3 flex items-baseline gap-2">
-                        <span className="text-2xl font-extrabold text-gray-900">{run.enginePowerAfterHp}</span>
-                        <span className="text-sm text-gray-500">hp</span>
+                        {run.enginePowerAfterHp != null && (
+                            <>
+                                <span className="text-2xl font-extrabold text-gray-900">{run.enginePowerAfterHp}</span>
+                                <span className="text-sm text-gray-500">hp</span>
+                            </>
+                        )}
+                        {run.engineTorqueAfterNm != null && (
+                            <>
+                                <span className="text-2xl font-extrabold text-gray-900">{run.engineTorqueAfterNm}</span>
+                                <span className="text-sm text-gray-500">Nm</span>
+                            </>
+                        )}
                         {hpGain != null && hpGain > 0 && (
                             <span className="ml-auto rounded-full bg-primary/20 text-gray-900 text-xs font-semibold px-2 py-0.5">
                                 +{hpGain} hp

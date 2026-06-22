@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { DynoRun } from '@/services/dynoRunService';
 import { publicGet } from '@/lib/publicApi';
+import { REVALIDATE_TARGETS } from '@/lib/cacheTags';
 import { COMPANY } from '@/lib/company';
 import DynoRunCard from '@/components/DynoRunCard';
 
@@ -13,7 +14,7 @@ export const metadata: Metadata = {
 };
 
 export default async function DynoRunsPage() {
-    const runs = await publicGet<DynoRun[]>('/dyno-runs') ?? [];
+    const runs = await publicGet<DynoRun[]>('/dyno-runs', { tags: [REVALIDATE_TARGETS.dynoRuns] }) ?? [];
 
     return (
         <div className="max-w-5xl mx-auto px-4 sm:px-6 py-12">
