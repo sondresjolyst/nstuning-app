@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.6.1](https://github.com/sondresjolyst/nstuning-app/compare/v1.6.0...v1.6.1) (2026-06-22)
+
+
+### Bug Fixes
+
+* **dyno-runs:** clearer absolute-pressure placeholder ([#35](https://github.com/sondresjolyst/nstuning-app/issues/35)) ([231378d](https://github.com/sondresjolyst/nstuning-app/commit/231378da90ef95bda0195ce46f49823394d129a5))
+
 ## [1.6.0](https://github.com/sondresjolyst/nstuning-app/compare/v1.5.1...v1.6.0) (2026-06-22)
 
 
