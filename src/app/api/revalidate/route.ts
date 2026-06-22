@@ -20,9 +20,8 @@ export async function POST(req: NextRequest) {
     for (const path of paths) {
         revalidatePath(path, path.includes('[') ? 'page' : undefined);
     }
-    // Tag-based purge clears the data cache directly, regardless of which route
-    // rendered it — more reliable than path purge across serverless instances.
-    // expire: 0 forces the tagged entries stale immediately.
+    // Purge the data cache by tag too: catches fetches the path purge misses
+    // when a different route rendered them. expire 0 = stale at once.
     revalidateTag(target, { expire: 0 });
     return NextResponse.json({ revalidated: true, target });
 }
