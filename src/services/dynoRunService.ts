@@ -16,6 +16,8 @@ export interface DynoRun {
     engine?: string | null;
     fuelType?: string | null;
     dynoDate?: string | null;
+    displacementCc?: number | null;
+    absolutePressureKpa?: number | null;
     hubPowerBeforeWhp?: number | null;
     hubPowerAfterWhp?: number | null;
     hubTorqueBeforeWnm?: number | null;
