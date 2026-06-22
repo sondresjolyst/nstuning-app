@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.5.1](https://github.com/sondresjolyst/nstuning-app/compare/v1.5.0...v1.5.1) (2026-06-22)
+
+
+### Dependencies
+
+* bump `eslint` from 9.39.4 to 10.5.0 ([#30](https://github.com/sondresjolyst/nstuning-app/issues/30)) ([a1770fa](https://github.com/sondresjolyst/nstuning-app/commit/a1770fabc320c7969af013c529c132ebb348c7aa))
+* bump `undici` from 7.27.2 to 7.28.0 ([#28](https://github.com/sondresjolyst/nstuning-app/issues/28)) ([e80fd64](https://github.com/sondresjolyst/nstuning-app/commit/e80fd644c46a64ee67898eb37105e966cbed2915))
+
 ## [1.5.0](https://github.com/sondresjolyst/nstuning-app/compare/v1.4.0...v1.5.0) (2026-06-17)
 
 
