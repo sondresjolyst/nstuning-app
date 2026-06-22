@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.6.0](https://github.com/sondresjolyst/nstuning-app/compare/v1.5.1...v1.6.0) (2026-06-22)
+
+
+### Features
+
+* **dyno-runs:** per-litre at 100 kPa, torque on card, fresher list ([#33](https://github.com/sondresjolyst/nstuning-app/issues/33)) ([e552fef](https://github.com/sondresjolyst/nstuning-app/commit/e552fef17cde1dc8a90c304dda7ce3d032835a89))
+
 ## [1.5.1](https://github.com/sondresjolyst/nstuning-app/compare/v1.5.0...v1.5.1) (2026-06-22)
 
 
