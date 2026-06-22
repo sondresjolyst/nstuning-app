@@ -218,7 +218,7 @@ export default function DynoRunForm({ initial, onSaved, onCancel }: DynoRunFormP
 
             <div className="grid sm:grid-cols-2 gap-4">
                 <TextInput label="Displacement" name="displacementCc" type="number" placeholder="cc" value={form.displacementCc} onChange={set('displacementCc')} />
-                <TextInput label="Absolute pressure" name="absolutePressureKpa" type="number" placeholder="kPa · NA ≈ 100" value={form.absolutePressureKpa} onChange={set('absolutePressureKpa')} />
+                <TextInput label="Absolute pressure" name="absolutePressureKpa" type="number" placeholder="kPa, NA ≈ 100" value={form.absolutePressureKpa} onChange={set('absolutePressureKpa')} />
             </div>
 
             <p className="text-sm font-semibold text-gray-700 pt-2">Measured hub</p>
