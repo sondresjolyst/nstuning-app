@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.6.3](https://github.com/sondresjolyst/nstuning-app/compare/v1.6.2...v1.6.3) (2026-07-20)
+
+
+### Bug Fixes
+
+* pin typescript back to ^6 to unblock next build ([#60](https://github.com/sondresjolyst/nstuning-app/issues/60)) ([78ce5f7](https://github.com/sondresjolyst/nstuning-app/commit/78ce5f7c04b01333fab3bacbcbe423f56d8df4e7))
+
 ## [1.6.2](https://github.com/sondresjolyst/nstuning-app/compare/v1.6.1...v1.6.2) (2026-07-19)
 
 
