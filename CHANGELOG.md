@@ -1,5 +1,22 @@
 # Changelog
 
+## [1.6.4](https://github.com/sondresjolyst/nstuning-app/compare/v1.6.3...v1.6.4) (2026-07-26)
+
+
+### Dependencies
+
+* bump `@tailwindcss/postcss` from 4.3.2 to 4.3.3 ([#70](https://github.com/sondresjolyst/nstuning-app/issues/70)) ([5e4a916](https://github.com/sondresjolyst/nstuning-app/commit/5e4a9164628b22e28dfee480b4cf12832444c2e8))
+* bump `@types/node` from 26.1.0 to 26.1.1 ([#66](https://github.com/sondresjolyst/nstuning-app/issues/66)) ([b3e07c1](https://github.com/sondresjolyst/nstuning-app/commit/b3e07c17192c569d4682f8fa2f67f5b0fd9febbb))
+* bump `actions/checkout` from 7.0.0 to 7.0.1 ([#62](https://github.com/sondresjolyst/nstuning-app/issues/62)) ([1fbb6ec](https://github.com/sondresjolyst/nstuning-app/commit/1fbb6ecb1bf230eb07f1d654840e33aa294a6f31))
+* bump `actions/setup-node` from 6.4.0 to 7.0.0 ([#63](https://github.com/sondresjolyst/nstuning-app/issues/63)) ([741cc16](https://github.com/sondresjolyst/nstuning-app/commit/741cc1642be4c7e8410479b8d0ab647f231bef88))
+* bump `equinor/ops-actions/.github/workflows/docker.yml` from 9.39.1 to 9.39.2 ([#65](https://github.com/sondresjolyst/nstuning-app/issues/65)) ([81b7d3e](https://github.com/sondresjolyst/nstuning-app/commit/81b7d3e9cc16ba2e0155634a587e1ff725089c1e))
+* bump `equinor/ops-actions/.github/workflows/release-please-manifest.yml` from 9.39.1 to 9.39.2 ([#64](https://github.com/sondresjolyst/nstuning-app/issues/64)) ([3561756](https://github.com/sondresjolyst/nstuning-app/commit/35617566d68acc218ff01606be6656118b06d4ab))
+* bump `eslint` from 10.6.0 to 10.7.0 ([#67](https://github.com/sondresjolyst/nstuning-app/issues/67)) ([d68c6f6](https://github.com/sondresjolyst/nstuning-app/commit/d68c6f62d184daca8297642247f3fc5fb3d0f93b))
+* bump `postcss` from 8.5.17 to 8.5.19 ([#68](https://github.com/sondresjolyst/nstuning-app/issues/68)) ([39de202](https://github.com/sondresjolyst/nstuning-app/commit/39de202e92f6a4d911815dade538a6562bd340ee))
+* bump `tailwindcss` from 4.3.2 to 4.3.3 ([#69](https://github.com/sondresjolyst/nstuning-app/issues/69)) ([574a49b](https://github.com/sondresjolyst/nstuning-app/commit/574a49b6726294044aa9efc611d131d108d0ae2e))
+* **github-actions:** bump `actions/checkout` from 7.0.0 to 7.0.1 ([#75](https://github.com/sondresjolyst/nstuning-app/issues/75)) ([8560904](https://github.com/sondresjolyst/nstuning-app/commit/856090499500a9654c2094a108c522504e577cd2))
+* **npm:** bump `postcss` from 8.5.19 to 8.5.20 ([#76](https://github.com/sondresjolyst/nstuning-app/issues/76)) ([0c4fc1b](https://github.com/sondresjolyst/nstuning-app/commit/0c4fc1b0f6a928417972ae80ff5e535f7143d929))
+
 ## [1.6.3](https://github.com/sondresjolyst/nstuning-app/compare/v1.6.2...v1.6.3) (2026-07-20)
 
 
