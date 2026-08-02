@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.6.5](https://github.com/sondresjolyst/nstuning-app/compare/v1.6.4...v1.6.5) (2026-08-02)
+
+
+### Dependencies
+
+* **github-actions:** bump `equinor/ops-actions/.github/workflows/docker.yml` from 9.39.2 to 9.39.3 ([#79](https://github.com/sondresjolyst/nstuning-app/issues/79)) ([3b583b0](https://github.com/sondresjolyst/nstuning-app/commit/3b583b098b2d227519eb63052a1c19e797bb1af2))
+* **github-actions:** bump `equinor/ops-actions/.github/workflows/release-please-manifest.yml` from 9.39.2 to 9.39.3 ([#80](https://github.com/sondresjolyst/nstuning-app/issues/80)) ([6bfb171](https://github.com/sondresjolyst/nstuning-app/commit/6bfb1719f10aa908563304e02089372530826c87))
+* **npm:** bump `@testing-library/jest-dom` from 6.9.1 to 7.0.0 ([#81](https://github.com/sondresjolyst/nstuning-app/issues/81)) ([882667e](https://github.com/sondresjolyst/nstuning-app/commit/882667e6395709728b0e1aa9041911476fc82cd0))
+* **npm:** bump `eslint-config-next` from 16.2.10 to 16.2.12 ([#83](https://github.com/sondresjolyst/nstuning-app/issues/83)) ([376eb7d](https://github.com/sondresjolyst/nstuning-app/commit/376eb7d2ea3a8e4b21776c49848c8d2d072ff52c))
+* **npm:** bump `eslint` from 10.7.0 to 10.8.0 ([#84](https://github.com/sondresjolyst/nstuning-app/issues/84)) ([7081aed](https://github.com/sondresjolyst/nstuning-app/commit/7081aedb25ef4ec0976334c43da8cd9c25b4f3da))
+* **npm:** bump `postcss` from 8.5.21 to 8.5.23 ([#85](https://github.com/sondresjolyst/nstuning-app/issues/85)) ([113712d](https://github.com/sondresjolyst/nstuning-app/commit/113712d2a676ff76223c756ea24120d6feeea6ec))
+* **npm:** bump `react-dom` from 19.2.7 to 19.2.8 ([#82](https://github.com/sondresjolyst/nstuning-app/issues/82)) ([e4e5df5](https://github.com/sondresjolyst/nstuning-app/commit/e4e5df549fc9e963ae0815fb5245971ab9fc20e7))
+
 ## [1.6.4](https://github.com/sondresjolyst/nstuning-app/compare/v1.6.3...v1.6.4) (2026-07-26)
 
 
