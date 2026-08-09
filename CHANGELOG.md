@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.6.6](https://github.com/sondresjolyst/nstuning-app/compare/v1.6.5...v1.6.6) (2026-08-09)
+
+
+### Dependencies
+
+* **github-actions:** bump `equinor/ops-actions/.github/workflows/docker.yml` from 9.39.3 to 9.39.4 ([#91](https://github.com/sondresjolyst/nstuning-app/issues/91)) ([4b77dc0](https://github.com/sondresjolyst/nstuning-app/commit/4b77dc00fce30a44b33dd994d07c6944fff1b5df))
+* **github-actions:** bump `equinor/ops-actions/.github/workflows/release-please-manifest.yml` from 9.39.3 to 9.39.4 ([#90](https://github.com/sondresjolyst/nstuning-app/issues/90)) ([1ebb14d](https://github.com/sondresjolyst/nstuning-app/commit/1ebb14d523c37105bdd4daa95e3240b8e65d4fc5))
+* **npm:** bump `@types/react-dom` from 19.2.3 to 19.2.4 ([#93](https://github.com/sondresjolyst/nstuning-app/issues/93)) ([8ef956b](https://github.com/sondresjolyst/nstuning-app/commit/8ef956b3c7674cfe7594ab859dc5850335b869a4))
+* **npm:** bump `@types/react` from 19.2.17 to 19.2.18 ([#92](https://github.com/sondresjolyst/nstuning-app/issues/92)) ([d45aee3](https://github.com/sondresjolyst/nstuning-app/commit/d45aee3d81ae4171d3c803dad5ff525c7516005a))
+* **npm:** bump `@vitejs/plugin-react` from 6.0.3 to 6.0.5 ([#95](https://github.com/sondresjolyst/nstuning-app/issues/95)) ([8e368ef](https://github.com/sondresjolyst/nstuning-app/commit/8e368ef9884c810125d3cb0f522ea6346070a4a3))
+* **npm:** bump `axios` from 1.18.1 to 1.19.0 ([#94](https://github.com/sondresjolyst/nstuning-app/issues/94)) ([ac5a55e](https://github.com/sondresjolyst/nstuning-app/commit/ac5a55ee1abc94e1f9b42c3ee1cf52015cdb4269))
+* **npm:** bump `postcss` from 8.5.23 to 8.5.25 ([#96](https://github.com/sondresjolyst/nstuning-app/issues/96)) ([d5d6eef](https://github.com/sondresjolyst/nstuning-app/commit/d5d6eefc92482ffeb3faaee575c9175d5900251e))
+* **npm:** bump the npm_and_yarn group across 1 directory with 3 updates ([#88](https://github.com/sondresjolyst/nstuning-app/issues/88)) ([97ea659](https://github.com/sondresjolyst/nstuning-app/commit/97ea659ff6e061123eb9965a18694f10308659aa))
+
 ## [1.6.5](https://github.com/sondresjolyst/nstuning-app/compare/v1.6.4...v1.6.5) (2026-08-02)
 
 
