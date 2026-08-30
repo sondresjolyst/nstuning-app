@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.6.9](https://github.com/sondresjolyst/nstuning-app/compare/v1.6.8...v1.6.9) (2026-08-30)
+
+
+### Dependencies
+
+* **npm:** bump `react-pdf` from 10.4.1 to 10.5.0 ([#120](https://github.com/sondresjolyst/nstuning-app/issues/120)) ([0346957](https://github.com/sondresjolyst/nstuning-app/commit/0346957bdbde1951dc4c2f3f51cb0fb7b4caf863))
+* **npm:** bump eslint from 10.8.1 to 10.9.0 in the eslint group ([#118](https://github.com/sondresjolyst/nstuning-app/issues/118)) ([7d039d3](https://github.com/sondresjolyst/nstuning-app/commit/7d039d384cffc4dc28d3cc66b0aec52c892f44ea))
+* **npm:** bump the next group across 1 directory with 2 updates ([#116](https://github.com/sondresjolyst/nstuning-app/issues/116)) ([bd86cdd](https://github.com/sondresjolyst/nstuning-app/commit/bd86cddd6bc6208e35c1acd87097b5ebe0f40ffa))
+* **npm:** bump the testing group with 3 updates ([#119](https://github.com/sondresjolyst/nstuning-app/issues/119)) ([5738712](https://github.com/sondresjolyst/nstuning-app/commit/5738712009b79bdfe80352e335b29b879fdf4f3a))
+
 ## [1.6.8](https://github.com/sondresjolyst/nstuning-app/compare/v1.6.7...v1.6.8) (2026-08-23)
 
 
