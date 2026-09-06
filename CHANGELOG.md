@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.6.10](https://github.com/sondresjolyst/nstuning-app/compare/v1.6.9...v1.6.10) (2026-09-06)
+
+
+### Dependencies
+
+* **npm:** bump @types/node from 26.2.0 to 26.4.0 in the types group ([#127](https://github.com/sondresjolyst/nstuning-app/issues/127)) ([359384e](https://github.com/sondresjolyst/nstuning-app/commit/359384e5b57afb253129263962c5e34699dedd32))
+* **npm:** bump `@types/react-dom` from 19.2.4 to 19.2.5 ([#123](https://github.com/sondresjolyst/nstuning-app/issues/123)) ([a2c85a0](https://github.com/sondresjolyst/nstuning-app/commit/a2c85a028d677d52b104801dcad946ebe99fd765))
+* **npm:** bump `browserslist` from 4.28.2 to 4.28.9 ([#129](https://github.com/sondresjolyst/nstuning-app/issues/129)) ([184ced9](https://github.com/sondresjolyst/nstuning-app/commit/184ced91e31e1db334045eee74cea1674dcfd423))
+* **npm:** bump eslint from 10.9.0 to 10.9.1 in the eslint group ([#125](https://github.com/sondresjolyst/nstuning-app/issues/125)) ([0a5324e](https://github.com/sondresjolyst/nstuning-app/commit/0a5324e07c997d658a7de58d335e4b29e082426c))
+* **npm:** bump the next group with 2 updates ([#124](https://github.com/sondresjolyst/nstuning-app/issues/124)) ([0620f14](https://github.com/sondresjolyst/nstuning-app/commit/0620f14e41bcbbdcdf21a6f3793aaa84fc0a424c))
+* **npm:** bump the testing group with 2 updates ([#126](https://github.com/sondresjolyst/nstuning-app/issues/126)) ([e472265](https://github.com/sondresjolyst/nstuning-app/commit/e47226569a2794d4b714e2e99e12be055620d6b4))
+
 ## [1.6.9](https://github.com/sondresjolyst/nstuning-app/compare/v1.6.8...v1.6.9) (2026-08-30)
 
 
