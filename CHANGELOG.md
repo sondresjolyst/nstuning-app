@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.6.11](https://github.com/sondresjolyst/nstuning-app/compare/v1.6.10...v1.6.11) (2026-09-13)
+
+
+### Dependencies
+
+* **npm:** bump @types/react-dom from 19.2.5 to 19.2.7 in the react group ([#133](https://github.com/sondresjolyst/nstuning-app/issues/133)) ([5a51b71](https://github.com/sondresjolyst/nstuning-app/commit/5a51b7165f6bbfd36634348817e39f1665bd5d45))
+* **npm:** bump `eslint` from 10.9.1 to 10.10.0 ([#135](https://github.com/sondresjolyst/nstuning-app/issues/135)) ([bd086c7](https://github.com/sondresjolyst/nstuning-app/commit/bd086c7cd7be92315971a3e6cba58f2da8e222b3))
+* **npm:** bump `sharp` from 0.35.3 to 0.35.4 ([#130](https://github.com/sondresjolyst/nstuning-app/issues/130)) ([515792b](https://github.com/sondresjolyst/nstuning-app/commit/515792b3987cbac5a227f25eb5494a8f04afc41f))
+* **npm:** bump postcss from 8.5.26 to 8.5.28 in the tailwind group ([#137](https://github.com/sondresjolyst/nstuning-app/issues/137)) ([2937e89](https://github.com/sondresjolyst/nstuning-app/commit/2937e894c313b674ce8053eecb10d1a8473cb430))
+* **npm:** bump the next group across 1 directory with 2 updates ([#134](https://github.com/sondresjolyst/nstuning-app/issues/134)) ([820d59c](https://github.com/sondresjolyst/nstuning-app/commit/820d59cd06498fe494f4dc149265f2cbd8d93bfd))
+* **npm:** bump the testing group with 2 updates ([#136](https://github.com/sondresjolyst/nstuning-app/issues/136)) ([532c129](https://github.com/sondresjolyst/nstuning-app/commit/532c12909f23becbd8f8376fd952c87ac274c120))
+
 ## [1.6.10](https://github.com/sondresjolyst/nstuning-app/compare/v1.6.9...v1.6.10) (2026-09-06)
 
 
