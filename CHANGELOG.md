@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.6.12](https://github.com/sondresjolyst/nstuning-app/compare/v1.6.11...v1.6.12) (2026-09-15)
+
+
+### Dependencies
+
+* **docker:** bump `node` from 23.10.0-slim to 26.8-slim ([#142](https://github.com/sondresjolyst/nstuning-app/issues/142)) ([baa0f14](https://github.com/sondresjolyst/nstuning-app/commit/baa0f147748b4669ef4427cecb10fe238857e348))
+* **npm:** bump @types/node from 26.4.0 to 26.5.0 in the types group ([#139](https://github.com/sondresjolyst/nstuning-app/issues/139)) ([8f67ad1](https://github.com/sondresjolyst/nstuning-app/commit/8f67ad19d4ac46c131003ac7921b7eb21b275fb1))
+* **npm:** bump `axios` from 1.19.0 to 1.20.0 ([#140](https://github.com/sondresjolyst/nstuning-app/issues/140)) ([506a803](https://github.com/sondresjolyst/nstuning-app/commit/506a803f0b378bb57050e521d1247d8b3e461e16))
+* **npm:** bump `zod` from 4.4.3 to 4.5.4 ([#141](https://github.com/sondresjolyst/nstuning-app/issues/141)) ([8ff5c7d](https://github.com/sondresjolyst/nstuning-app/commit/8ff5c7de5baa39f4a870d69714ab3d1cc5f9cb9b))
+
 ## [1.6.11](https://github.com/sondresjolyst/nstuning-app/compare/v1.6.10...v1.6.11) (2026-09-13)
 
 
