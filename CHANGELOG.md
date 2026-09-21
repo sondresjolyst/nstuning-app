@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.6.12](https://github.com/sondresjolyst/nstuning-app/compare/v1.6.11...v1.6.12) (2026-09-21)
+
+
+### Dependencies
+
+* **docker:** bump `node` from 23.10.0-slim to 26.8-slim ([#142](https://github.com/sondresjolyst/nstuning-app/issues/142)) ([baa0f14](https://github.com/sondresjolyst/nstuning-app/commit/baa0f147748b4669ef4427cecb10fe238857e348))
+* **npm:** bump @types/node from 26.4.0 to 26.5.0 in the types group ([#139](https://github.com/sondresjolyst/nstuning-app/issues/139)) ([8f67ad1](https://github.com/sondresjolyst/nstuning-app/commit/8f67ad19d4ac46c131003ac7921b7eb21b275fb1))
+* **npm:** bump `@types/node` from 26.5.0 to 26.5.1 ([#146](https://github.com/sondresjolyst/nstuning-app/issues/146)) ([88086ef](https://github.com/sondresjolyst/nstuning-app/commit/88086ef5e71ba99a9dbe435eea8355b18c370741))
+* **npm:** bump `axios` from 1.19.0 to 1.20.0 ([#140](https://github.com/sondresjolyst/nstuning-app/issues/140)) ([506a803](https://github.com/sondresjolyst/nstuning-app/commit/506a803f0b378bb57050e521d1247d8b3e461e16))
+* **npm:** bump `react-pdf` from 10.5.0 to 11.0.0 ([#148](https://github.com/sondresjolyst/nstuning-app/issues/148)) ([1a5c15c](https://github.com/sondresjolyst/nstuning-app/commit/1a5c15c3e156fa999d7309d375df395afe9244d7))
+* **npm:** bump `zod` from 4.4.3 to 4.5.4 ([#141](https://github.com/sondresjolyst/nstuning-app/issues/141)) ([8ff5c7d](https://github.com/sondresjolyst/nstuning-app/commit/8ff5c7de5baa39f4a870d69714ab3d1cc5f9cb9b))
+* **npm:** bump the next group across 1 directory with 2 updates ([#145](https://github.com/sondresjolyst/nstuning-app/issues/145)) ([0de9a69](https://github.com/sondresjolyst/nstuning-app/commit/0de9a6945986881c4b7df9f39da04f36065fe8ba))
+* **npm:** bump the react group across 1 directory with 4 updates ([#144](https://github.com/sondresjolyst/nstuning-app/issues/144)) ([a359d70](https://github.com/sondresjolyst/nstuning-app/commit/a359d702844dd880b4719122856c04d0065740d9))
+
 ## [1.6.11](https://github.com/sondresjolyst/nstuning-app/compare/v1.6.10...v1.6.11) (2026-09-13)
 
 
