@@ -14,6 +14,9 @@ function getApiOrigin(): string {
 const nextConfig: NextConfig = {
     output: 'standalone',
     poweredByHeader: false,
+    // The container runs with a read-only root filesystem, and Next writes revalidated pages to
+    // .next/server/app rather than to .next/cache. Keep the incremental cache in memory.
+    experimental: { isrFlushToDisk: false },
     images: {
         qualities: [75, 100],
     },
