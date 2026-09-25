@@ -13,6 +13,10 @@ function getApiOrigin(): string {
 
 const nextConfig: NextConfig = {
     output: 'standalone',
+    poweredByHeader: false,
+    // The container runs with a read-only root filesystem, and Next writes revalidated pages to
+    // .next/server/app rather than to .next/cache. Keep the incremental cache in memory.
+    experimental: { isrFlushToDisk: false },
     images: {
         qualities: [75, 100],
     },
@@ -52,7 +56,10 @@ const nextConfig: NextConfig = {
             `frame-src ${frameSrc}`,
             `object-src ${objectSrc}`,
             "font-src 'self'",
+            "base-uri 'self'",
+            "form-action 'self'",
             "frame-ancestors 'none'",
+            "upgrade-insecure-requests",
         ].join('; ');
 
         const headers = [
@@ -60,6 +67,8 @@ const nextConfig: NextConfig = {
             { key: 'X-Frame-Options', value: 'DENY' },
             { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
             { key: 'X-DNS-Prefetch-Control', value: 'on' },
+            { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=()' },
+            { key: 'Strict-Transport-Security', value: 'max-age=31536000; includeSubDomains' },
             { key: 'Content-Security-Policy', value: csp },
         ];
 
@@ -67,6 +76,7 @@ const nextConfig: NextConfig = {
             { key: 'X-Content-Type-Options', value: 'nosniff' },
             { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
             { key: 'X-Frame-Options', value: 'SAMEORIGIN' },
+            { key: 'Strict-Transport-Security', value: 'max-age=31536000; includeSubDomains' },
             { key: 'Content-Security-Policy', value: "frame-ancestors 'self'" },
         ];
 
