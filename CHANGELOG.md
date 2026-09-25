@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.6.13](https://github.com/sondresjolyst/nstuning-app/compare/v1.6.12...v1.6.13) (2026-09-25)
+
+
+### Bug Fixes
+
+* harden the image and the response headers ([#151](https://github.com/sondresjolyst/nstuning-app/issues/151)) ([0241a17](https://github.com/sondresjolyst/nstuning-app/commit/0241a171849d0cf9d4a806aec553add8b9c0166e))
+
 ## [1.6.12](https://github.com/sondresjolyst/nstuning-app/compare/v1.6.11...v1.6.12) (2026-09-21)
 
 
