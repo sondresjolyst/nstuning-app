@@ -34,7 +34,7 @@ export default function Footer() {
 
                 <p className="text-xs text-gray-400">
                     © {year} {COMPANY.name} · Created by{' '}
-                    <span className="text-gray-500">Sjølyst Innovations</span>
+                    <span className="text-gray-500">Sjølyst Innovation AS</span>
                 </p>
             </div>
         </footer>
