@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.6.14](https://github.com/sondresjolyst/nstuning-app/compare/v1.6.13...v1.6.14) (2026-09-26)
+
+
+### Bug Fixes
+
+* show the maker credit as Sjølyst Innovation AS ([#156](https://github.com/sondresjolyst/nstuning-app/issues/156)) ([aa7a998](https://github.com/sondresjolyst/nstuning-app/commit/aa7a998c40d0a56f1060371d1e00a070e9586e8b))
+
 ## [1.6.13](https://github.com/sondresjolyst/nstuning-app/compare/v1.6.12...v1.6.13) (2026-09-25)
 
 
