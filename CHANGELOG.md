@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.6.15](https://github.com/sondresjolyst/nstuning-app/compare/v1.6.14...v1.6.15) (2026-09-27)
+
+
+### Dependencies
+
+* **npm:** bump @types/node from 26.5.1 to 26.6.2 in the types group ([#161](https://github.com/sondresjolyst/nstuning-app/issues/161)) ([438b6c1](https://github.com/sondresjolyst/nstuning-app/commit/438b6c163e277212d97ea127a655d88b06e66593))
+* **npm:** bump eslint from 10.10.0 to 10.11.0 in the eslint group ([#159](https://github.com/sondresjolyst/nstuning-app/issues/159)) ([839ab54](https://github.com/sondresjolyst/nstuning-app/commit/839ab5494b2a2a00ca311d7ea538021619f448ec))
+* **npm:** bump the testing group with 2 updates ([#160](https://github.com/sondresjolyst/nstuning-app/issues/160)) ([b303952](https://github.com/sondresjolyst/nstuning-app/commit/b303952c04f8dcf006bbf706d87b082c00e09819))
+
 ## [1.6.14](https://github.com/sondresjolyst/nstuning-app/compare/v1.6.13...v1.6.14) (2026-09-26)
 
 
