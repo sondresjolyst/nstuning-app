@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.6.16](https://github.com/sondresjolyst/nstuning-app/compare/v1.6.15...v1.6.16) (2026-10-04)
+
+
+### Dependencies
+
+* **npm:** bump @types/node from 26.6.2 to 26.6.3 in the types group ([#166](https://github.com/sondresjolyst/nstuning-app/issues/166)) ([e4999ca](https://github.com/sondresjolyst/nstuning-app/commit/e4999ca638fe1047d63f46625f5dd580f3a97f90))
+* **npm:** bump the next group across 1 directory with 2 updates ([#163](https://github.com/sondresjolyst/nstuning-app/issues/163)) ([b38df2d](https://github.com/sondresjolyst/nstuning-app/commit/b38df2d74e2ccd9dd37c6d6ad90c62f0839398c3))
+* **npm:** bump the testing group with 2 updates ([#165](https://github.com/sondresjolyst/nstuning-app/issues/165)) ([28a4e32](https://github.com/sondresjolyst/nstuning-app/commit/28a4e324f898cc7d2f7ecbb84db2ce0896fea869))
+
 ## [1.6.15](https://github.com/sondresjolyst/nstuning-app/compare/v1.6.14...v1.6.15) (2026-09-27)
 
 
