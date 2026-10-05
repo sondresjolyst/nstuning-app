@@ -1,12 +1,15 @@
 "use client";
 
 import { useEffect, useState } from 'react';
+import { useSession } from 'next-auth/react';
 import { toast } from 'sonner';
+import Alert from '@/components/Alert';
 import TextInput from '@/components/TextInput';
 import ReportUploader from '@/components/ReportUploader';
 import Toggle from '@/components/Toggle';
 import DynoRunService, { DynoRun, coverImageSrc } from '@/services/dynoRunService';
 import VehicleService, { VehicleTree } from '@/services/vehicleService';
+import { useFormDraft } from '@/lib/useFormDraft';
 
 const selectClass = "w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary disabled:bg-gray-50 disabled:text-gray-400";
 
@@ -95,6 +98,7 @@ function toState(run?: DynoRun | null): FormState {
 }
 
 export default function DynoRunForm({ initial, onSaved, onCancel }: DynoRunFormProps) {
+    const { data: session } = useSession();
     const [form, setForm] = useState<FormState>(toState(initial));
     const [report, setReport] = useState<File | null>(null);
     const [cover, setCover] = useState<File | null>(null);
@@ -107,6 +111,52 @@ export default function DynoRunForm({ initial, onSaved, onCancel }: DynoRunFormP
 
     const set = (field: keyof FormState) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
         setForm(f => ({ ...f, [field]: e.target.value }));
+
+    const values = form;
+    // Scoped to the signed-in user: a shared browser profile must not offer one admin the
+    // draft another one left behind. Remembered, because a lost cookie reports no user at all,
+    // and that is the moment the draft matters most. A different user signing in replaces it.
+    const [ownerId, setOwnerId] = useState<string | undefined>(undefined);
+    useEffect(() => {
+        if (session?.user?.id) setOwnerId(session.user.id);
+    }, [session?.user?.id]);
+
+    const draft = useFormDraft(ownerId ? `${ownerId}:dyno-run:${initial?.id ?? 'new'}` : null, values);
+
+    // One setter per persisted field, checked by the compiler: adding a field to FormState
+    // without one here is an error rather than a field that silently fails to restore.
+    const setters: { [K in keyof FormState]: (value: FormState[K]) => void } = {
+        title: v => setForm(f => ({ ...f, title: v })),
+        carMake: v => setForm(f => ({ ...f, carMake: v })),
+        carModel: v => setForm(f => ({ ...f, carModel: v })),
+        trim: v => setForm(f => ({ ...f, trim: v })),
+        year: v => setForm(f => ({ ...f, year: v })),
+        engine: v => setForm(f => ({ ...f, engine: v })),
+        fuelType: v => setForm(f => ({ ...f, fuelType: v })),
+        dynoDate: v => setForm(f => ({ ...f, dynoDate: v })),
+        displacementCc: v => setForm(f => ({ ...f, displacementCc: v })),
+        absolutePressureKpa: v => setForm(f => ({ ...f, absolutePressureKpa: v })),
+        hubPowerBeforeWhp: v => setForm(f => ({ ...f, hubPowerBeforeWhp: v })),
+        hubPowerAfterWhp: v => setForm(f => ({ ...f, hubPowerAfterWhp: v })),
+        hubTorqueBeforeWnm: v => setForm(f => ({ ...f, hubTorqueBeforeWnm: v })),
+        hubTorqueAfterWnm: v => setForm(f => ({ ...f, hubTorqueAfterWnm: v })),
+        enginePowerBeforeHp: v => setForm(f => ({ ...f, enginePowerBeforeHp: v })),
+        enginePowerAfterHp: v => setForm(f => ({ ...f, enginePowerAfterHp: v })),
+        engineTorqueBeforeNm: v => setForm(f => ({ ...f, engineTorqueBeforeNm: v })),
+        engineTorqueAfterNm: v => setForm(f => ({ ...f, engineTorqueAfterNm: v })),
+        description: v => setForm(f => ({ ...f, description: v })),
+        sortOrder: v => setForm(f => ({ ...f, sortOrder: v })),
+        published: v => setForm(f => ({ ...f, published: v })),
+    };
+
+    const restoreDraft = () => {
+        const stored = draft.pending;
+        if (!stored) return;
+        for (const [key, setValue] of Object.entries(setters) as [keyof FormState, (value: unknown) => void][]) {
+            setValue(stored[key]);
+        }
+        draft.dismiss();
+    };
 
     const selectedBrand = tree.brands.find(b => b.name === form.carMake);
     const selectedModel = selectedBrand?.models.find(m => m.name === form.carModel);
@@ -185,6 +235,7 @@ export default function DynoRunForm({ initial, onSaved, onCancel }: DynoRunFormP
                 await DynoRunService.create(buildFormData());
                 toast.success('Dyno run created');
             }
+            draft.clear();
             onSaved();
         } catch (err) {
             toast.error(err instanceof Error ? err.message : 'Failed to save');
@@ -195,6 +246,21 @@ export default function DynoRunForm({ initial, onSaved, onCancel }: DynoRunFormP
 
     return (
         <form onSubmit={handleSubmit} className="space-y-4 rounded-2xl border border-gray-200 p-6">
+            {draft.pending && (
+                <Alert variant="warning">
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                        <span>You have an unsaved draft.</span>
+                        <span className="flex gap-3">
+                            <button type="button" onClick={restoreDraft} className="font-semibold underline underline-offset-2">
+                                Restore draft
+                            </button>
+                            <button type="button" onClick={() => { draft.clear(); draft.dismiss(); }} className="underline underline-offset-2">
+                                Discard draft
+                            </button>
+                        </span>
+                    </div>
+                </Alert>
+            )}
             <h2 className="font-bold text-gray-900">{initial ? 'Edit dyno run' : 'New dyno run'}</h2>
 
             <TextInput label="Title" name="title" value={form.title} onChange={set('title')} required />
