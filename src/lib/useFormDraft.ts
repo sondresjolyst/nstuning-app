@@ -39,7 +39,7 @@ interface DraftOptions<T> {
      * the draft matters most. Nothing is stored until an owner is known.
      */
     owner: string | undefined;
-    /** Identifies the form and the entity it edits, for example `recipe:new` or `recipe:42`. */
+    /** Identifies the form and the entity it edits, for example `dyno-run:new` or `dyno-run:42`. */
     scope: string;
     value: T;
 }

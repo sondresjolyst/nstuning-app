@@ -12,7 +12,6 @@ describe('the shared inputs', () => {
         expect(screen.getByLabelText('Tittel')).toBeInstanceOf(HTMLInputElement);
     });
 
-
     it('ties a label to its password field with no id or name given', () => {
         render(<PasswordInput label="Passord" />);
 

@@ -78,7 +78,7 @@ describe('the dyno run form draft bar', () => {
         expect(screen.getByRole('button', { name: 'Restore draft' })).toBeInTheDocument();
         expect(screen.getByRole('button', { name: 'Discard draft' })).toBeInTheDocument();
         // Offered, not applied: the form behind it is still empty.
-        expect(screen.getByLabelText('Title')).toHaveValue('');
+        expect(screen.getByLabelText(/^Title/)).toHaveValue('');
     });
 
     it('fills the form in from the draft when the user restores it', async () => {
@@ -87,7 +87,7 @@ describe('the dyno run form draft bar', () => {
 
         await userEvent.click(await screen.findByRole('button', { name: 'Restore draft' }));
 
-        expect(screen.getByLabelText('Title')).toHaveValue('Supra dyno day');
+        expect(screen.getByLabelText(/^Title/)).toHaveValue('Supra dyno day');
         expect(screen.getByDisplayValue('A short writeup of the run.')).toBeInTheDocument();
         expect(screen.queryByText('You have an unsaved draft.')).not.toBeInTheDocument();
     });
@@ -99,7 +99,7 @@ describe('the dyno run form draft bar', () => {
         await userEvent.click(await screen.findByRole('button', { name: 'Discard draft' }));
 
         expect(window.localStorage.getItem(KEY)).toBeNull();
-        expect(screen.getByLabelText('Title')).toHaveValue('');
+        expect(screen.getByLabelText(/^Title/)).toHaveValue('');
     });
 
     it('does not offer a draft stored for a different dyno run', async () => {
@@ -115,13 +115,13 @@ describe('the dyno run form draft bar', () => {
 
     it('keeps saving when the session cookie disappears mid-edit', async () => {
         const view = render(form());
-        await userEvent.type(screen.getByLabelText('Title'), 'Supra');
+        await userEvent.type(screen.getByLabelText(/^Title/), 'Supra');
 
         // The cookie is gone, so useSession reports nobody on the form already on screen. This
         // is the incident the draft exists for, and the worst possible moment to stop storing.
         sessionState = { data: null, status: 'unauthenticated' };
         view.rerender(form());
-        await userEvent.type(screen.getByLabelText('Title'), ' dyno day');
+        await userEvent.type(screen.getByLabelText(/^Title/), ' dyno day');
 
         await vi.waitFor(() => expect(window.localStorage.getItem(KEY)).not.toBeNull());
         expect(JSON.parse(window.localStorage.getItem(KEY)!).value.title).toBe('Supra dyno day');
@@ -131,7 +131,7 @@ describe('the dyno run form draft bar', () => {
         sessionState = { data: null, status: 'unauthenticated' };
         render(form());
 
-        await userEvent.type(screen.getByLabelText('Title'), 'Supra');
+        await userEvent.type(screen.getByLabelText(/^Title/), 'Supra');
         await new Promise(resolve => setTimeout(resolve, 700));
 
         // No owner was ever known here, so there is no key that could not belong to someone else.
