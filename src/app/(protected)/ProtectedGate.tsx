@@ -6,7 +6,7 @@ import { useSessionGate } from '@/lib/useSessionGate';
 
 export default function ProtectedGate({ children }: { children: React.ReactNode }) {
     const router = useRouter();
-    const { status, promptOpen, usable, wasUsable, recovering } = useSessionGate();
+    const { status, promptOpen, usable, wasUsable, mayRender } = useSessionGate();
 
     useEffect(() => {
         // A session that is already dead when the page opens must not render the protected UI:
@@ -19,10 +19,7 @@ export default function ProtectedGate({ children }: { children: React.ReactNode 
         }
     }, [status, usable, wasUsable, promptOpen, router]);
 
-    // Once the page has rendered, keep it mounted through a reload of the session, and through a
-    // signed-out status while the prompt is recovering it in place. Blanking the page in either
-    // case would throw away the form the user is filling in, which is the whole point of both.
-    if (!recovering && ((status === 'loading' && !wasUsable) || status === 'unauthenticated' || (!usable && !wasUsable))) {
+    if (!mayRender) {
         return (
             <div className="max-w-7xl mx-auto px-4 py-20 text-center text-gray-500">Loading…</div>
         );
