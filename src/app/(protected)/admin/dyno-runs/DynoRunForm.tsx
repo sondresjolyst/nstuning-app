@@ -1,12 +1,15 @@
 "use client";
 
 import { useEffect, useState } from 'react';
+import { useSession } from 'next-auth/react';
 import { toast } from 'sonner';
+import Alert from '@/components/Alert';
 import TextInput from '@/components/TextInput';
 import ReportUploader from '@/components/ReportUploader';
 import Toggle from '@/components/Toggle';
 import DynoRunService, { DynoRun, coverImageSrc } from '@/services/dynoRunService';
 import VehicleService, { VehicleTree } from '@/services/vehicleService';
+import { useFormDraft } from '@/lib/useFormDraft';
 
 const selectClass = "w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary disabled:bg-gray-50 disabled:text-gray-400";
 
@@ -95,6 +98,7 @@ function toState(run?: DynoRun | null): FormState {
 }
 
 export default function DynoRunForm({ initial, onSaved, onCancel }: DynoRunFormProps) {
+    const { data: session } = useSession();
     const [form, setForm] = useState<FormState>(toState(initial));
     const [report, setReport] = useState<File | null>(null);
     const [cover, setCover] = useState<File | null>(null);
@@ -107,6 +111,22 @@ export default function DynoRunForm({ initial, onSaved, onCancel }: DynoRunFormP
 
     const set = (field: keyof FormState) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
         setForm(f => ({ ...f, [field]: e.target.value }));
+
+    const values = form;
+    const draft = useFormDraft({
+        owner: session?.user?.id,
+        scope: `dyno-run:${initial?.id ?? 'new'}`,
+        value: values,
+    });
+
+    const restoreDraft = () => {
+        const stored = draft.pending;
+        if (!stored) return;
+        // Merge rather than replace. A draft saved before a field was added lacks that key,
+        // and assigning it straight in would hand the new input an undefined value.
+        setForm(f => ({ ...f, ...stored }));
+        draft.dismiss();
+    };
 
     const selectedBrand = tree.brands.find(b => b.name === form.carMake);
     const selectedModel = selectedBrand?.models.find(m => m.name === form.carModel);
@@ -185,6 +205,7 @@ export default function DynoRunForm({ initial, onSaved, onCancel }: DynoRunFormP
                 await DynoRunService.create(buildFormData());
                 toast.success('Dyno run created');
             }
+            draft.clear();
             onSaved();
         } catch (err) {
             toast.error(err instanceof Error ? err.message : 'Failed to save');
@@ -195,6 +216,21 @@ export default function DynoRunForm({ initial, onSaved, onCancel }: DynoRunFormP
 
     return (
         <form onSubmit={handleSubmit} className="space-y-4 rounded-2xl border border-gray-200 p-6">
+            {draft.pending && (
+                <Alert variant="warning">
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                        <span>You have an unsaved draft.</span>
+                        <span className="flex gap-3">
+                            <button type="button" onClick={restoreDraft} className="font-semibold underline underline-offset-2">
+                                Restore draft
+                            </button>
+                            <button type="button" onClick={() => { draft.clear(); draft.dismiss(); }} className="underline underline-offset-2">
+                                Discard draft
+                            </button>
+                        </span>
+                    </div>
+                </Alert>
+            )}
             <h2 className="font-bold text-gray-900">{initial ? 'Edit dyno run' : 'New dyno run'}</h2>
 
             <TextInput label="Title" name="title" value={form.title} onChange={set('title')} required />
