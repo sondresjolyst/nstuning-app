@@ -278,4 +278,5 @@ describe('SessionExpiryGuard', () => {
 
         expect(screen.getByLabelText(/^Email/)).toHaveValue('a@b.no');
     });
+
 });
