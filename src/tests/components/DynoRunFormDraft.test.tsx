@@ -26,8 +26,10 @@ vi.mock('@/services/vehicleService', () => ({
     default: { getTree: async () => ({ brands: [], engines: [] }) },
 }));
 
+const createRun = vi.fn();
+
 vi.mock('@/services/dynoRunService', () => ({
-    default: { create: vi.fn(), update: vi.fn() },
+    default: { create: (...args: unknown[]) => createRun(...args), update: vi.fn() },
     coverImageSrc: () => null,
 }));
 
@@ -136,5 +138,19 @@ describe('the dyno run form draft bar', () => {
 
         // No owner was ever known here, so there is no key that could not belong to someone else.
         expect(window.localStorage.length).toBe(0);
+    });
+
+    it('keeps a field the stored draft predates', async () => {
+        // Drafts are kept for a week, so one can easily predate a newly added field. Replacing
+        // the whole state would send the literal string "undefined" for the missing key.
+        const { published: _dropped, ...older } = draft;
+        window.localStorage.setItem(KEY, JSON.stringify({ savedAt: Date.now(), value: older }));
+        render(form());
+
+        await userEvent.click(await screen.findByRole('button', { name: 'Restore draft' }));
+        await userEvent.click(screen.getByRole('button', { name: 'Create' }));
+
+        const sent = createRun.mock.calls[0][0] as FormData;
+        expect(sent.get('Published')).toBe('false');
     });
 });
