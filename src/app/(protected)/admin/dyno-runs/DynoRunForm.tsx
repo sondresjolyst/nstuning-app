@@ -122,9 +122,9 @@ export default function DynoRunForm({ initial, onSaved, onCancel }: DynoRunFormP
     const restoreDraft = () => {
         const stored = draft.pending;
         if (!stored) return;
-        // The whole form lives in one state object, so the draft is the state. A per-field
-        // setter map would only restate what useFormDraft<FormState> already types.
-        setForm(stored);
+        // Merge rather than replace. A draft saved before a field was added lacks that key,
+        // and assigning it straight in would hand the new input an undefined value.
+        setForm(f => ({ ...f, ...stored }));
         draft.dismiss();
     };
 
