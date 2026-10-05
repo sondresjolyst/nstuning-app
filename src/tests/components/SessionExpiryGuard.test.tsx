@@ -32,7 +32,7 @@ const session = (overrides: Partial<Session> = {}): Session => ({
 const guard = () => <SessionExpiryGuard />;
 
 const signInWith = async (password: string) => {
-    await userEvent.type(screen.getByLabelText('Password'), password);
+    await userEvent.type(screen.getByLabelText(/^Password/), password);
     await userEvent.click(screen.getByRole('button', { name: 'Sign in' }));
 };
 
@@ -61,7 +61,7 @@ describe('SessionExpiryGuard', () => {
         act(() => openSessionPrompt());
 
         expect(screen.getByRole('dialog')).toBeInTheDocument();
-        expect(screen.getByLabelText('Email', { exact: false })).toHaveValue('a@b.no');
+        expect(screen.getByLabelText(/^Email/)).toHaveValue('a@b.no');
     });
 
     it('signs in without navigating away from the form', async () => {
@@ -188,7 +188,7 @@ describe('SessionExpiryGuard', () => {
 
         act(() => openSessionPrompt());
 
-        expect(screen.getByLabelText('Password')).toHaveFocus();
+        expect(screen.getByLabelText(/^Password/)).toHaveFocus();
     });
 
     it('closes on Escape', async () => {
