@@ -119,38 +119,12 @@ export default function DynoRunForm({ initial, onSaved, onCancel }: DynoRunFormP
         value: values,
     });
 
-    // One setter per persisted field, checked by the compiler: adding a field to FormState
-    // without one here is an error rather than a field that silently fails to restore.
-    const setters: { [K in keyof FormState]: (value: FormState[K]) => void } = {
-        title: v => setForm(f => ({ ...f, title: v })),
-        carMake: v => setForm(f => ({ ...f, carMake: v })),
-        carModel: v => setForm(f => ({ ...f, carModel: v })),
-        trim: v => setForm(f => ({ ...f, trim: v })),
-        year: v => setForm(f => ({ ...f, year: v })),
-        engine: v => setForm(f => ({ ...f, engine: v })),
-        fuelType: v => setForm(f => ({ ...f, fuelType: v })),
-        dynoDate: v => setForm(f => ({ ...f, dynoDate: v })),
-        displacementCc: v => setForm(f => ({ ...f, displacementCc: v })),
-        absolutePressureKpa: v => setForm(f => ({ ...f, absolutePressureKpa: v })),
-        hubPowerBeforeWhp: v => setForm(f => ({ ...f, hubPowerBeforeWhp: v })),
-        hubPowerAfterWhp: v => setForm(f => ({ ...f, hubPowerAfterWhp: v })),
-        hubTorqueBeforeWnm: v => setForm(f => ({ ...f, hubTorqueBeforeWnm: v })),
-        hubTorqueAfterWnm: v => setForm(f => ({ ...f, hubTorqueAfterWnm: v })),
-        enginePowerBeforeHp: v => setForm(f => ({ ...f, enginePowerBeforeHp: v })),
-        enginePowerAfterHp: v => setForm(f => ({ ...f, enginePowerAfterHp: v })),
-        engineTorqueBeforeNm: v => setForm(f => ({ ...f, engineTorqueBeforeNm: v })),
-        engineTorqueAfterNm: v => setForm(f => ({ ...f, engineTorqueAfterNm: v })),
-        description: v => setForm(f => ({ ...f, description: v })),
-        sortOrder: v => setForm(f => ({ ...f, sortOrder: v })),
-        published: v => setForm(f => ({ ...f, published: v })),
-    };
-
     const restoreDraft = () => {
         const stored = draft.pending;
         if (!stored) return;
-        for (const [key, setValue] of Object.entries(setters) as [keyof FormState, (value: unknown) => void][]) {
-            setValue(stored[key]);
-        }
+        // The whole form lives in one state object, so the draft is the state. A per-field
+        // setter map would only restate what useFormDraft<FormState> already types.
+        setForm(stored);
         draft.dismiss();
     };
 
