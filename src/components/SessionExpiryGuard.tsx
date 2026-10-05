@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
-import { getSession, useSession } from 'next-auth/react';
+import { getSession, signOut, useSession } from 'next-auth/react';
 import { toast } from 'sonner';
 import Alert from './Alert';
 import CredentialsForm, { SignInRejected } from './CredentialsForm';
@@ -93,10 +93,13 @@ export default function SessionExpiryGuard() {
         if (!next || isTerminalSessionError(next.error)) {
             throw new SignInRejected('We could not renew the session. Try again.');
         }
-        // The form on the page belongs to whoever opened it. Letting a different account take
-        // it over would save their work under the wrong author.
+        // The form on the page belongs to whoever opened it. Refusing in the dialog is not
+        // enough, because signIn has already replaced the session: end it, or the new account
+        // keeps the page and can save the previous user's work as their own. Nothing is lost,
+        // since that draft is stored under its owner's id and returns when they sign in.
         const owner = session?.user?.id;
         if (owner && next.user?.id !== owner) {
+            await signOut({ callbackUrl: '/login' });
             throw new SignInRejected('This page belongs to a different user. Sign in with the same account.');
         }
         closeSessionPrompt();

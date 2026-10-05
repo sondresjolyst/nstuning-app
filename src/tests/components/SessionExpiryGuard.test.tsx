@@ -6,6 +6,7 @@ import SessionExpiryGuard from '@/components/SessionExpiryGuard';
 import { closeSessionPrompt, getSessionPromptOpen, openSessionPrompt } from '@/lib/sessionExpiry';
 
 const signIn = vi.fn();
+const signOut = vi.fn();
 const getSession = vi.fn();
 const success = vi.fn();
 let sessionState: { data: Session | null; status: 'loading' | 'authenticated' | 'unauthenticated' };
@@ -13,6 +14,7 @@ let sessionState: { data: Session | null; status: 'loading' | 'authenticated' | 
 vi.mock('next-auth/react', () => ({
     useSession: () => sessionState,
     signIn: (...args: unknown[]) => signIn(...args),
+    signOut: (...args: unknown[]) => signOut(...args),
     getSession: () => getSession(),
 }));
 
@@ -37,6 +39,7 @@ const signInWith = async (password: string) => {
 describe('SessionExpiryGuard', () => {
     beforeEach(() => {
         signIn.mockReset();
+        signOut.mockReset();
         getSession.mockReset();
         success.mockReset();
         sessionState = { data: session(), status: 'authenticated' };
@@ -142,8 +145,9 @@ describe('SessionExpiryGuard', () => {
 
         await signInWith('Password1');
 
-        // The form belongs to whoever opened it; saving it as someone else would credit the
-        // wrong author.
+        // The form belongs to whoever opened it, and signIn has already swapped the session,
+        // so detecting the mismatch has to end it rather than only report it.
+        expect(signOut).toHaveBeenCalledWith(expect.objectContaining({ callbackUrl: '/login' }));
         expect(screen.getByText('This page belongs to a different user. Sign in with the same account.')).toBeInTheDocument();
         expect(getSessionPromptOpen()).toBe(true);
     });
