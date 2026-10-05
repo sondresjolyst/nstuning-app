@@ -4,11 +4,14 @@ import userEvent from '@testing-library/user-event';
 import { useState } from 'react';
 import { useFormDraft } from '@/lib/useFormDraft';
 
-const KEY = 'nstuning:draft:test-form';
+const OWNER = 'user-1';
+const KEY = `nstuning:draft:${OWNER}:test-form`;
 
-function Form({ initialTitle = '', formKey = 'test-form' }: { initialTitle?: string; formKey?: string | null }) {
+// noOwner rather than owner={undefined}: passing undefined for a defaulted prop just picks
+// the default up again.
+function Form({ initialTitle = '', owner = OWNER, scope = 'test-form', noOwner = false }: { initialTitle?: string; owner?: string; scope?: string; noOwner?: boolean }) {
     const [title, setTitle] = useState(initialTitle);
-    const draft = useFormDraft(formKey, { title });
+    const draft = useFormDraft({ owner: noOwner ? undefined : owner, scope, value: { title } });
 
     return (
         <div>
@@ -57,54 +60,54 @@ describe('useFormDraft', () => {
     it('stores what the user types so a lost session cannot lose it', async () => {
         render(<Form />);
 
-        await userEvent.type(screen.getByLabelText('title'), 'Dyno run');
+        await userEvent.type(screen.getByLabelText('title'), 'Fiskesuppe');
         await settle();
 
-        expect(stored()).toEqual({ title: 'Dyno run' });
+        expect(stored()).toEqual({ title: 'Fiskesuppe' });
     });
 
     it('offers a stored draft instead of applying it', async () => {
-        storedAt({ title: 'Halfway there' });
+        storedAt({ title: 'Halvferdig' });
         render(<Form />);
 
-        expect(await screen.findByText('draft waiting: Halfway there')).toBeInTheDocument();
+        expect(await screen.findByText('draft waiting: Halvferdig')).toBeInTheDocument();
         expect(screen.getByLabelText('title')).toHaveValue('');
     });
 
     it('leaves an unanswered offer alone while the form sits untouched', async () => {
-        storedAt({ title: 'Halfway there' });
+        storedAt({ title: 'Halvferdig' });
         render(<Form />);
         await settle();
 
-        expect(stored()).toEqual({ title: 'Halfway there' });
+        expect(stored()).toEqual({ title: 'Halvferdig' });
     });
 
     it('still saves new typing while the offer is unanswered', async () => {
         // The reason the offer is held in memory rather than gating the writer: an admin who
-        // ignores the banner and types a whole form must not end up with nothing stored.
-        storedAt({ title: 'Halfway there' });
+        // ignores the banner and types a whole recipe must not end up with nothing stored.
+        storedAt({ title: 'Halvferdig' });
         render(<Form />);
 
-        await userEvent.type(await screen.findByLabelText('title'), 'Something new');
+        await userEvent.type(await screen.findByLabelText('title'), 'Noe nytt');
         await settle();
 
-        expect(stored()).toEqual({ title: 'Something new' });
-        expect(screen.getByText('draft waiting: Halfway there')).toBeInTheDocument();
+        expect(stored()).toEqual({ title: 'Noe nytt' });
+        expect(screen.getByText('draft waiting: Halvferdig')).toBeInTheDocument();
     });
 
     it('restores the offered draft when the user asks for it', async () => {
-        storedAt({ title: 'Halfway there' });
+        storedAt({ title: 'Halvferdig' });
         render(<Form />);
 
         await userEvent.click(await screen.findByRole('button', { name: 'restore' }));
         await settle();
 
-        expect(screen.getByLabelText('title')).toHaveValue('Halfway there');
+        expect(screen.getByLabelText('title')).toHaveValue('Halvferdig');
         expect(screen.queryByText(/draft waiting/)).not.toBeInTheDocument();
     });
 
     it('drops the draft when the user discards it', async () => {
-        storedAt({ title: 'Halfway there' });
+        storedAt({ title: 'Halvferdig' });
         render(<Form />);
 
         await userEvent.click(await screen.findByRole('button', { name: 'discard' }));
@@ -114,7 +117,7 @@ describe('useFormDraft', () => {
     });
 
     it('does not write an edit form back before the user changes anything', async () => {
-        render(<Form initialTitle="From API" />);
+        render(<Form initialTitle="Fra API" />);
         await settle();
 
         expect(stored()).toBeNull();
@@ -123,7 +126,7 @@ describe('useFormDraft', () => {
     it('drops the draft after a successful save', async () => {
         render(<Form />);
 
-        await userEvent.type(screen.getByLabelText('title'), 'Dyno run');
+        await userEvent.type(screen.getByLabelText('title'), 'Fiskesuppe');
         await settle();
         await userEvent.click(screen.getByRole('button', { name: 'saved' }));
 
@@ -131,7 +134,7 @@ describe('useFormDraft', () => {
     });
 
     it('forgets a draft the user abandoned weeks ago', async () => {
-        storedAt({ title: 'Forgotten' }, Date.now() - 8 * 24 * 60 * 60 * 1000);
+        storedAt({ title: 'Glemt' }, Date.now() - 8 * 24 * 60 * 60 * 1000);
         render(<Form />);
         await settle();
 
@@ -145,17 +148,17 @@ describe('useFormDraft', () => {
         window.localStorage.setItem(KEY, 'not json at all');
         render(<Form />);
 
-        await userEvent.type(screen.getByLabelText('title'), 'New');
+        await userEvent.type(screen.getByLabelText('title'), 'Ny');
         await settle();
 
         expect(screen.queryByText(/draft waiting/)).not.toBeInTheDocument();
-        expect(stored()).toEqual({ title: 'New' });
+        expect(stored()).toEqual({ title: 'Ny' });
     });
 
-    it('stores nothing while the signed-in user is unknown', async () => {
-        render(<Form formKey={null} />);
+    it('stores nothing until an owner is known', async () => {
+        render(<Form noOwner />);
 
-        await userEvent.type(screen.getByLabelText('title'), 'Dyno run');
+        await userEvent.type(screen.getByLabelText('title'), 'Fiskesuppe');
         await settle();
 
         // A draft keyed without the user would be offered to whoever signs in next on a
@@ -164,9 +167,9 @@ describe('useFormDraft', () => {
     });
 
     it('does not offer one user the draft another user left behind', async () => {
-        storedAt({ title: 'From the previous user' });
+        storedAt({ title: 'Fra forrige bruker' });
 
-        render(<Form formKey="user-2:test-form" />);
+        render(<Form owner="user-2" />);
         await settle();
 
         expect(screen.queryByText(/draft waiting/)).not.toBeInTheDocument();
@@ -176,7 +179,7 @@ describe('useFormDraft', () => {
         render(<Form />);
 
         // The debounced write is already scheduled when the user hits save.
-        await userEvent.type(screen.getByLabelText('title'), 'Dyno run');
+        await userEvent.type(screen.getByLabelText('title'), 'Fiskesuppe');
         await userEvent.click(screen.getByRole('button', { name: 'saved' }));
         await settle();
 

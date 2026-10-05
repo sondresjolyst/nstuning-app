@@ -113,15 +113,11 @@ export default function DynoRunForm({ initial, onSaved, onCancel }: DynoRunFormP
         setForm(f => ({ ...f, [field]: e.target.value }));
 
     const values = form;
-    // Scoped to the signed-in user: a shared browser profile must not offer one admin the
-    // draft another one left behind. Remembered, because a lost cookie reports no user at all,
-    // and that is the moment the draft matters most. A different user signing in replaces it.
-    const [ownerId, setOwnerId] = useState<string | undefined>(undefined);
-    useEffect(() => {
-        if (session?.user?.id) setOwnerId(session.user.id);
-    }, [session?.user?.id]);
-
-    const draft = useFormDraft(ownerId ? `${ownerId}:dyno-run:${initial?.id ?? 'new'}` : null, values);
+    const draft = useFormDraft({
+        owner: session?.user?.id,
+        scope: `dyno-run:${initial?.id ?? 'new'}`,
+        value: values,
+    });
 
     // One setter per persisted field, checked by the compiler: adding a field to FormState
     // without one here is an error rather than a field that silently fails to restore.

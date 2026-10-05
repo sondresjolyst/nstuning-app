@@ -26,10 +26,30 @@ export default function SessionExpiryGuard() {
     const { data: session, status } = useSession();
 
     const open = useSyncExternalStore(subscribeSessionPrompt, getSessionPromptOpen, () => false);
-    const [minutesLeft, setMinutesLeft] = useState<number | null>(null);
 
-    const capPassed = session?.absoluteExpiresAt != null && session.absoluteExpiresAt <= Date.now();
-    const expired = status === 'authenticated' && (isTerminalSessionError(session?.error) || capPassed);
+    // Who opened this page. Latched, because once a lost cookie has been re-read useSession
+    // reports nobody, and an unlatched check would accept a sign-in from any account.
+    const [owner, setOwner] = useState<{ id: string; email: string } | null>(null);
+    const current = session?.user;
+    if (current?.id && current.id !== owner?.id) setOwner({ id: current.id, email: current.email ?? '' });
+
+    // A clock in state rather than Date.now() in render, so rendering stays pure and the banner
+    // still re-reads the remaining time every minute.
+    const [now, setNow] = useState(() => Date.now());
+    useEffect(() => {
+        const timer = window.setInterval(() => setNow(Date.now()), WARN_TICK_MS);
+        return () => window.clearInterval(timer);
+    }, []);
+
+    const remaining = status === 'authenticated' && session?.absoluteExpiresAt != null
+        ? session.absoluteExpiresAt - now
+        : null;
+    // Past the cap there are no minutes to report, so the expired copy takes over.
+    const minutesLeft = remaining != null && remaining > 0 && remaining <= WARN_BEFORE_MS
+        ? Math.round(remaining / 60000)
+        : null;
+    const expired = status === 'authenticated'
+        && (isTerminalSessionError(session?.error) || (remaining != null && remaining <= 0));
 
     // Nothing else can close the latch, so leaving it open here would stop ProtectedGate
     // redirecting a dead session for the rest of the page's life.
@@ -70,22 +90,6 @@ export default function SessionExpiryGuard() {
         };
     }, [open]);
 
-    useEffect(() => {
-        const at = session?.absoluteExpiresAt;
-        if (status !== 'authenticated' || at == null) {
-            setMinutesLeft(null);
-            return;
-        }
-        const tick = () => {
-            const remaining = at - Date.now();
-            // Past the cap there are no minutes to report, the expired copy takes over.
-            setMinutesLeft(remaining > 0 && remaining <= WARN_BEFORE_MS ? Math.round(remaining / 60000) : null);
-        };
-        tick();
-        const timer = window.setInterval(tick, WARN_TICK_MS);
-        return () => window.clearInterval(timer);
-    }, [status, session?.absoluteExpiresAt]);
-
     const signedIn = async () => {
         // next-auth's signIn already refreshed the client session, so read it back and only
         // claim success if the new session can actually be used to save.
@@ -97,8 +101,7 @@ export default function SessionExpiryGuard() {
         // enough, because signIn has already replaced the session: end it, or the new account
         // keeps the page and can save the previous user's work as their own. Nothing is lost,
         // since that draft is stored under its owner's id and returns when they sign in.
-        const owner = session?.user?.id;
-        if (owner && next.user?.id !== owner) {
+        if (owner && next.user?.id !== owner.id) {
             await signOut({ callbackUrl: '/login' });
             throw new SignInRejected('This page belongs to a different user. Sign in with the same account.');
         }
@@ -124,7 +127,7 @@ export default function SessionExpiryGuard() {
                                 onClick={openSessionPrompt}
                                 className="font-semibold underline underline-offset-2"
                             >
-                                Sign in again
+                                {'Sign in again'}
                             </button>
                         </div>
                     </Alert>
@@ -141,16 +144,16 @@ export default function SessionExpiryGuard() {
                         className="w-full max-w-sm rounded-xl bg-white p-6 shadow-xl"
                     >
                         <h2 id="session-expiry-title" className="text-lg font-bold text-gray-900">
-                            Session expired
+                            {'Session expired'}
                         </h2>
-                        <p className="mt-1 mb-4 text-sm text-gray-600">Your session has expired. Sign in again to save.</p>
-                        <CredentialsForm initialEmail={session?.user?.email ?? ''} onSignedIn={signedIn}>
+                        <p className="mt-1 mb-4 text-sm text-gray-600">{'Your session has expired. Sign in again to save.'}</p>
+                        <CredentialsForm initialEmail={owner?.email ?? ''} onSignedIn={signedIn}>
                             <button
                                 type="button"
                                 onClick={closeSessionPrompt}
                                 className="rounded-lg border border-gray-300 px-4 text-sm font-medium text-gray-700 hover:bg-gray-50"
                             >
-                                Close
+                                {'Close'}
                             </button>
                         </CredentialsForm>
                     </div>
