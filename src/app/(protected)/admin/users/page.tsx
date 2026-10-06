@@ -15,15 +15,22 @@ export default function AdminUsersPage() {
     const [selectedRole, setSelectedRole] = useState('');
     const [roleLoading, setRoleLoading] = useState(false);
 
-    const load = (deleted: boolean) => {
-        setLoading(true);
-        AdminService.getUsers(deleted)
-            .then(setUsers)
-            .catch(err => toast.error(err instanceof Error ? err.message : 'Failed to load users'))
-            .finally(() => setLoading(false));
-    };
+    // Callers set `loading` before changing what to fetch, so the effect only sets state once the
+    // request settles. A request replaced by a newer one is ignored, so a slow answer to an earlier
+    // toggle cannot overwrite the list the toggle now shows.
+    useEffect(() => {
+        let replaced = false;
+        AdminService.getUsers(includeDeleted)
+            .then(list => { if (!replaced) setUsers(list); })
+            .catch(err => { if (!replaced) toast.error(err instanceof Error ? err.message : 'Failed to load users'); })
+            .finally(() => { if (!replaced) setLoading(false); });
+        return () => { replaced = true; };
+    }, [includeDeleted]);
 
-    useEffect(() => { load(includeDeleted); }, [includeDeleted]);
+    const toggleDeleted = (deleted: boolean) => {
+        setLoading(true);
+        setIncludeDeleted(deleted);
+    };
     useEffect(() => { AdminService.getRoles().then(setAllRoles).catch(() => toast.error('Failed to load roles')); }, []);
 
     const setRoles = (id: string, roles: string[]) =>
@@ -59,7 +66,7 @@ export default function AdminUsersPage() {
         <div className="space-y-4">
             <div className="flex items-center justify-between">
                 <h2 className="font-bold text-gray-900">Users</h2>
-                <Toggle label="Show deleted" checked={includeDeleted} onChange={setIncludeDeleted} />
+                <Toggle label="Show deleted" checked={includeDeleted} onChange={toggleDeleted} />
             </div>
 
             {loading ? (
