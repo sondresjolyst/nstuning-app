@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { signOut } from 'next-auth/react';
 import { toast } from 'sonner';
 import TextInput from '@/components/TextInput';
-import PasswordInput from '@/components/PasswordInput';
+import { PasswordInput } from '@sjolystinnovation/app-kit/ui';
 import UserService, { UserProfile } from '@/services/userService';
 
 export default function ProfilePage() {
