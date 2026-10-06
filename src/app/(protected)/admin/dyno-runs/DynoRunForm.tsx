@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { toast } from 'sonner';
-import Alert from '@/components/Alert';
+import { Alert } from '@sjolystinnovation/app-kit/ui';
 import TextInput from '@/components/TextInput';
 import ReportUploader from '@/components/ReportUploader';
 import Toggle from '@/components/Toggle';

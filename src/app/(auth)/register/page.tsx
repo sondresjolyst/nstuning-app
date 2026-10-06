@@ -5,8 +5,7 @@ import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import TextInput from '@/components/TextInput';
-import PasswordInput from '@/components/PasswordInput';
-import Alert from '@/components/Alert';
+import { Alert, PasswordInput } from '@sjolystinnovation/app-kit/ui';
 import UserService from '@/services/userService';
 import { registerSchema, RegisterInput } from '@/lib/validation';
 

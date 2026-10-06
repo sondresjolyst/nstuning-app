@@ -12,6 +12,7 @@ function getApiOrigin(): string {
 }
 
 const nextConfig: NextConfig = {
+    transpilePackages: ['@sjolystinnovation/app-kit'],
     output: 'standalone',
     poweredByHeader: false,
     // The container runs with a read-only root filesystem, and Next writes revalidated pages to
