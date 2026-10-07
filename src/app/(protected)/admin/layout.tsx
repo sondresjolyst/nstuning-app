@@ -4,7 +4,7 @@ import { useRouter, usePathname } from 'next/navigation';
 import { useEffect } from 'react';
 import Link from 'next/link';
 import { ADMIN_ROLE } from '@/lib/roles';
-import { useSessionGate } from '@/lib/useSessionGate';
+import { useSessionGate } from '@sjolystinnovation/app-kit/session/react';
 
 const tabs = [
     { href: '/admin', label: 'Overview' },

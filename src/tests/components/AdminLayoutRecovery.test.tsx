@@ -3,7 +3,7 @@ import { act, render, screen } from '@testing-library/react';
 import type { Session } from 'next-auth';
 import ProtectedGate from '@/app/(protected)/ProtectedGate';
 import AdminLayout from '@/app/(protected)/admin/layout';
-import { closeSessionPrompt, openSessionPrompt } from '@/lib/sessionExpiry';
+import { closeSessionPrompt, openSessionPrompt } from '@sjolystinnovation/app-kit/session';
 
 const push = vi.fn();
 let pathname = '/admin/dyno-runs';

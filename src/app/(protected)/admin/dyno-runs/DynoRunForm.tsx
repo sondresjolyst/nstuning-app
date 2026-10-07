@@ -9,7 +9,8 @@ import ReportUploader from '@/components/ReportUploader';
 import Toggle from '@/components/Toggle';
 import DynoRunService, { DynoRun, coverImageSrc } from '@/services/dynoRunService';
 import VehicleService, { VehicleTree } from '@/services/vehicleService';
-import { useFormDraft } from '@/lib/useFormDraft';
+import { useFormDraft } from '@sjolystinnovation/app-kit/forms';
+import { sessionConfig } from '@/lib/session';
 
 const selectClass = "w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary disabled:bg-gray-50 disabled:text-gray-400";
 
@@ -113,7 +114,7 @@ export default function DynoRunForm({ initial, onSaved, onCancel }: DynoRunFormP
         setForm(f => ({ ...f, [field]: e.target.value }));
 
     const values = form;
-    const draft = useFormDraft({
+    const draft = useFormDraft(sessionConfig, {
         owner: session?.user?.id,
         scope: `dyno-run:${initial?.id ?? 'new'}`,
         value: values,
