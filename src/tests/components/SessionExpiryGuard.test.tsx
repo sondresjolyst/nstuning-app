@@ -3,7 +3,7 @@ import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import type { Session } from 'next-auth';
 import SessionExpiryGuard from '@/components/SessionExpiryGuard';
-import { closeSessionPrompt, getSessionPromptOpen, openSessionPrompt } from '@/lib/sessionExpiry';
+import { closeSessionPrompt, getSessionPromptOpen, openSessionPrompt } from '@sjolystinnovation/app-kit/session';
 
 const signIn = vi.fn();
 const signOut = vi.fn();

@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { act, render, screen } from '@testing-library/react';
 import type { Session } from 'next-auth';
 import ProtectedGate from '@/app/(protected)/ProtectedGate';
-import { closeSessionPrompt, openSessionPrompt } from '@/lib/sessionExpiry';
+import { closeSessionPrompt, openSessionPrompt } from '@sjolystinnovation/app-kit/session';
 
 const push = vi.fn();
 let pathname = '/admin/dyno-runs/new';

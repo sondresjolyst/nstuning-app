@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
-import { useSessionGate } from '@/lib/useSessionGate';
+import { useSessionGate } from '@sjolystinnovation/app-kit/session/react';
 
 export default function ProtectedGate({ children }: { children: React.ReactNode }) {
     const router = useRouter();
