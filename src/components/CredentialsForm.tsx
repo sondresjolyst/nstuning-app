@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { signIn } from 'next-auth/react';
 import TextInput from './TextInput';
+import { SIGN_IN_ERRORS } from '@sjolystinnovation/app-kit/session';
 import { Alert, PasswordInput } from '@sjolystinnovation/app-kit/ui';
 
 /** Thrown by an onSignedIn handler when the message is meant for the user to read. */
@@ -29,7 +30,7 @@ export default function CredentialsForm({ initialEmail = '', onSignedIn, childre
         try {
             const result = await signIn('credentials', { email, password, redirect: false });
             if (result?.error) {
-                setError('Invalid email or password.');
+                setError(result.error === SIGN_IN_ERRORS.unavailable ? 'Sign-in is unavailable right now. Try again shortly.' : 'Invalid email or password.');
                 return;
             }
             await onSignedIn();
