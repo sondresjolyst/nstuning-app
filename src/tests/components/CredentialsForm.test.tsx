@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import CredentialsForm from '@/components/CredentialsForm';
+import { CredentialsForm } from '@sjolystinnovation/app-kit/ui';
 
 const signIn = vi.fn();
 
