@@ -9,7 +9,7 @@ import ContentService from '@/services/contentService';
 import ImageService, { imageUrl } from '@/services/imageService';
 import { Section, SectionType, SECTION_LABELS, createSection, cloneSection, StatItem, ImageSection } from '@/types/content';
 import { DEFAULT_SECTIONS } from '@/lib/defaultSections';
-import TextInput from '@/components/TextInput';
+import { TextInput } from '@sjolystinnovation/app-kit/ui';
 
 const SECTION_TYPES: SectionType[] = ['hero', 'feature', 'text', 'feed', 'contact', 'cta', 'stats', 'image'];
 

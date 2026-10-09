@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import CredentialsForm from '@/components/CredentialsForm';
+import { CredentialsForm } from '@sjolystinnovation/app-kit/ui';
 
 export default function LoginPage() {
     const router = useRouter();
