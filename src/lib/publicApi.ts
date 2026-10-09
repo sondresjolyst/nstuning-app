@@ -1,11 +1,9 @@
-export async function publicGet<T>(path: string, opts?: { tags?: string[] }): Promise<T | null> {
-    try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}${path}`, {
-            next: { revalidate: 60, tags: opts?.tags },
-        });
-        if (!res.ok) return null;
-        return await res.json() as T;
-    } catch {
-        return null;
-    }
-}
+import { requireEnv } from '@sjolystinnovation/app-kit';
+import { createPublicApi } from '@sjolystinnovation/app-kit/server';
+
+export { PublicApiError } from '@sjolystinnovation/app-kit/server';
+export type { PublicResponse } from '@sjolystinnovation/app-kit/server';
+
+export const { publicGet, publicGetOptional, publicGetWithMeta } = createPublicApi(
+    requireEnv('NEXT_PUBLIC_API_URL', process.env.NEXT_PUBLIC_API_URL),
+);

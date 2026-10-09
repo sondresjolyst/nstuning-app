@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from 'react';
 import { signOut } from 'next-auth/react';
-import { toast } from 'sonner';
+import { toast } from '@sjolystinnovation/app-kit/toast';
 
 import { PasswordInput, TextInput } from '@sjolystinnovation/app-kit/ui';
 import UserService, { UserProfile } from '@/services/userService';

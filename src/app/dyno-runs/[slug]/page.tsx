@@ -6,13 +6,14 @@ import remarkGfm from 'remark-gfm';
 import rehypeSanitize from 'rehype-sanitize';
 import { DynoRun, reportUrl, reportProxyUrl, coverImageSrc, coverImageSrcSet } from '@/services/dynoRunService';
 import { publicGet } from '@/lib/publicApi';
+import { slugSegment } from '@/lib/slug';
 import { REVALIDATE_TARGETS } from '@/lib/cacheTags';
 import { COMPANY } from '@/lib/company';
 import PdfViewer from '@/components/PdfViewer';
 
 export const revalidate = 60;
 
-const getRun = (slug: string) => publicGet<DynoRun>(`/dyno-runs/${slug}`, { tags: [REVALIDATE_TARGETS.dynoRuns] });
+const getRun = (slug: string) => publicGet<DynoRun>(`/dyno-runs/${slugSegment(slug)}`, { tags: [REVALIDATE_TARGETS.dynoRuns] });
 
 const carLineOf = (run: DynoRun) =>
     [run.carMake, run.carModel, run.trim, run.year].filter(Boolean).join(' ');
