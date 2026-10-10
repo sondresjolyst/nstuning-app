@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import SectionRenderer from '@/components/SectionRenderer';
 import StructuredData from '@/components/StructuredData';
 import { Section } from '@/types/content';
@@ -5,6 +6,10 @@ import { DEFAULT_SECTIONS } from '@/lib/defaultSections';
 import { publicGet } from '@/lib/publicApi';
 
 export const revalidate = 60;
+
+export const metadata: Metadata = {
+    alternates: { canonical: '/' },
+};
 
 export default async function Home() {
     const data = await publicGet<Section[]>('/content/home');
