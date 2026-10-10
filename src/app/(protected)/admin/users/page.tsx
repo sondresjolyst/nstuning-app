@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { toast } from '@sjolystinnovation/app-kit/toast';
 import { PlusIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import AdminService, { AdminUser } from '@/services/adminService';
-import Toggle from '@/components/Toggle';
+import { Toggle } from '@sjolystinnovation/app-kit/ui';
 
 export default function AdminUsersPage() {
     const [users, setUsers] = useState<AdminUser[]>([]);
