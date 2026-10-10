@@ -1,91 +1,16 @@
-import type { NextConfig } from "next";
+import { defineAppConfig } from '@sjolystinnovation/app-kit/next-config';
 
-function getApiOrigin(): string {
-    const url = process.env.NEXT_PUBLIC_API_URL;
-    if (!url) return '';
-    try {
-        const { origin } = new URL(url);
-        return origin;
-    } catch {
-        return '';
-    }
-}
-
-const nextConfig: NextConfig = {
-    transpilePackages: ['@sjolystinnovation/app-kit'],
-    output: 'standalone',
-    poweredByHeader: false,
-    // The container runs with a read-only root filesystem, and Next writes revalidated pages to
-    // .next/server/app rather than to .next/cache. Keep the incremental cache in memory.
-    experimental: { isrFlushToDisk: false },
-    images: {
-        qualities: [75, 100],
-    },
-    async headers() {
-        const apiOrigin = getApiOrigin();
-        const connectSrc = ['self', apiOrigin]
-            .filter(Boolean)
-            .map(s => s === 'self' ? "'self'" : s)
-            .join(' ');
-
-        const frameSrc = ['self', apiOrigin]
-            .filter(Boolean)
-            .map(s => s === 'self' ? "'self'" : s)
-            .join(' ');
-
-        const isDev = process.env.NODE_ENV !== 'production';
-        const scriptSrc = isDev
-            ? "script-src 'self' 'unsafe-eval' 'unsafe-inline'"
-            : "script-src 'self' 'unsafe-inline'";
-
-        const objectSrc = ['self', apiOrigin, 'blob:']
-            .filter(Boolean)
-            .map(s => s === 'self' ? "'self'" : s)
-            .join(' ');
-
-        const imgSrc = ['self', apiOrigin, 'data:', 'blob:']
-            .filter(Boolean)
-            .map(s => s === 'self' ? "'self'" : s)
-            .join(' ');
-
-        const csp = [
-            "default-src 'self'",
-            scriptSrc,
-            "style-src 'self' 'unsafe-inline'",
-            `img-src ${imgSrc}`,
-            `connect-src ${connectSrc}`,
-            `frame-src ${frameSrc}`,
-            `object-src ${objectSrc}`,
-            "font-src 'self'",
-            "base-uri 'self'",
-            "form-action 'self'",
-            "frame-ancestors 'none'",
-            "upgrade-insecure-requests",
-        ].join('; ');
-
-        const headers = [
-            { key: 'X-Content-Type-Options', value: 'nosniff' },
-            { key: 'X-Frame-Options', value: 'DENY' },
-            { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
-            { key: 'X-DNS-Prefetch-Control', value: 'on' },
-            { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=()' },
-            { key: 'Strict-Transport-Security', value: 'max-age=31536000; includeSubDomains' },
-            { key: 'Content-Security-Policy', value: csp },
-        ];
-
-        const proxyHeaders = [
-            { key: 'X-Content-Type-Options', value: 'nosniff' },
-            { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
+export default defineAppConfig({
+    apiUrl: process.env.NEXT_PUBLIC_API_URL,
+    dev: process.env.NODE_ENV !== 'production',
+    // Images load straight from the API.
+    imgFromApi: true,
+    // The PDF report is shown in a viewer on the app's own pages.
+    pathHeaders: [{
+        source: '/api/report/:path*',
+        headers: [
             { key: 'X-Frame-Options', value: 'SAMEORIGIN' },
-            { key: 'Strict-Transport-Security', value: 'max-age=31536000; includeSubDomains' },
             { key: 'Content-Security-Policy', value: "frame-ancestors 'self'" },
-        ];
-
-        return [
-            { source: '/api/report/:path*', headers: proxyHeaders },
-            { source: '/((?!api/report/).*)', headers },
-        ];
-    },
-};
-
-export default nextConfig;
+        ],
+    }],
+});
