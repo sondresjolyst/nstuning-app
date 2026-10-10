@@ -9,7 +9,7 @@ import { publicGet } from '@/lib/publicApi';
 import { slugSegment } from '@/lib/slug';
 import { REVALIDATE_TARGETS } from '@/lib/cacheTags';
 import { COMPANY } from '@/lib/company';
-import PdfViewer from '@/components/PdfViewer';
+import ReportViewer from '@/components/ReportViewer';
 
 export const revalidate = 60;
 
@@ -132,7 +132,7 @@ export default async function DynoRunDetail({ params }: { params: Promise<{ slug
                             Open PDF ↗
                         </a>
                     </div>
-                    <PdfViewer url={reportProxyUrl(run.id)} />
+                    <ReportViewer url={reportProxyUrl(run.id)} />
                 </div>
             )}
         </div>
