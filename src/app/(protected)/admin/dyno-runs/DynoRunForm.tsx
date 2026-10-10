@@ -2,10 +2,9 @@
 import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { toast } from '@sjolystinnovation/app-kit/toast';
-import { Alert, TextInput } from '@sjolystinnovation/app-kit/ui';
+import { Alert, TextInput, Toggle } from '@sjolystinnovation/app-kit/ui';
 
 import ReportUploader from '@/components/ReportUploader';
-import Toggle from '@/components/Toggle';
 import DynoRunService, { DynoRun, coverImageSrc } from '@/services/dynoRunService';
 import VehicleService, { VehicleTree } from '@/services/vehicleService';
 import { useFormDraft } from '@sjolystinnovation/app-kit/forms';
