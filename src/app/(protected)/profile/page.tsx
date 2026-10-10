@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from 'react';
+import { passwordSchema } from '@sjolystinnovation/app-kit/validation';
 import { signOut } from 'next-auth/react';
 import { toast } from '@sjolystinnovation/app-kit/toast';
 
@@ -50,8 +51,9 @@ export default function ProfilePage() {
 
     async function handleChangePassword(e: React.FormEvent) {
         e.preventDefault();
-        if (newPassword.length < 6) {
-            toast.error('New password must be at least 6 characters.');
+        const check = passwordSchema().safeParse(newPassword);
+        if (!check.success) {
+            toast.error(check.error.issues.map(issue => issue.message).join(' '));
             return;
         }
         setChangingPassword(true);
