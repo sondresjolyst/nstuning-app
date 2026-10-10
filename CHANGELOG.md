@@ -1,5 +1,30 @@
 # Changelog
 
+## [1.7.0](https://github.com/sondresjolyst/nstuning-app/compare/v1.6.16...v1.7.0) (2026-10-10)
+
+
+### Features
+
+* sign in through app-kit and say when sign-in is unavailable ([#178](https://github.com/sondresjolyst/nstuning-app/issues/178)) ([e3f207e](https://github.com/sondresjolyst/nstuning-app/commit/e3f207e5125c912a7f68c8461bcc0531e40c916e))
+* **ui:** add an error page and use NotFoundState from app-kit ([#189](https://github.com/sondresjolyst/nstuning-app/issues/189)) ([80df204](https://github.com/sondresjolyst/nstuning-app/commit/80df2041eb2254b2755226cf7553f11c0211d5c3))
+
+
+### Bug Fixes
+
+* **dyno-runs:** render the PDF report in the browser only ([#186](https://github.com/sondresjolyst/nstuning-app/issues/186)) ([f73a3c2](https://github.com/sondresjolyst/nstuning-app/commit/f73a3c2a8eed5958c8d6f35b42a52a25c3447fde))
+* keep admin work when the session expires ([#168](https://github.com/sondresjolyst/nstuning-app/issues/168)) ([3495725](https://github.com/sondresjolyst/nstuning-app/commit/3495725befeb345fd5c50f1e8cab611093c09a0d))
+* **seo:** keep test hosts out of search and give each page its own canonical ([#184](https://github.com/sondresjolyst/nstuning-app/issues/184)) ([0b708d1](https://github.com/sondresjolyst/nstuning-app/commit/0b708d11ab2f3da5f3517c87f783ef71eea2f689))
+* use app-kit for admin access, public fetches, session renewal, quiet error toasts and password rules ([#181](https://github.com/sondresjolyst/nstuning-app/issues/181)) ([28a6519](https://github.com/sondresjolyst/nstuning-app/commit/28a6519f7edfa714da8df33694a648fcf8ec645d))
+
+
+### Dependencies
+
+* **npm:** bump `brace-expansion` from 1.1.18 to 1.1.21 ([#173](https://github.com/sondresjolyst/nstuning-app/issues/173)) ([4258023](https://github.com/sondresjolyst/nstuning-app/commit/42580232514d612b7fb34c9470be003f33349e2f))
+* **npm:** bump `next` from 16.3.7 to 16.4.0 ([#179](https://github.com/sondresjolyst/nstuning-app/issues/179)) ([fe1469d](https://github.com/sondresjolyst/nstuning-app/commit/fe1469d19bd3b7dd0eda5cd0304e85f8dcd21b28))
+* **npm:** bump `sharp` from 0.35.4 to 0.35.5 ([#175](https://github.com/sondresjolyst/nstuning-app/issues/175)) ([8b253a3](https://github.com/sondresjolyst/nstuning-app/commit/8b253a35a58698d65c16aff9ee27999b6ba44e45))
+* **npm:** bump `source-map-js` from 1.2.1 to 1.2.2 ([#174](https://github.com/sondresjolyst/nstuning-app/issues/174)) ([cf31c5c](https://github.com/sondresjolyst/nstuning-app/commit/cf31c5caa185f4654fd1ca355c70725b43e40f70))
+* **npm:** bump the next group with 2 updates ([#171](https://github.com/sondresjolyst/nstuning-app/issues/171)) ([2a223e3](https://github.com/sondresjolyst/nstuning-app/commit/2a223e30e60160f3c2e34f12d20879317782ac3b))
+
 ## [1.6.16](https://github.com/sondresjolyst/nstuning-app/compare/v1.6.15...v1.6.16) (2026-10-04)
 
 
