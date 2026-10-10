@@ -5,7 +5,7 @@ import Providers from "./providers";
 import Navbar from "./navbar";
 import Footer from "./footer";
 import { COMPANY } from "@/lib/company";
-import { publicGet } from "@/lib/publicApi";
+import { publicGetOptional } from "@/lib/publicApi";
 import { Branding } from "@/services/brandingService";
 
 export const metadata: Metadata = {
@@ -28,7 +28,7 @@ export const metadata: Metadata = {
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-    const branding = await publicGet<Branding>("/branding") ?? {};
+    const branding = await publicGetOptional<Branding>("/branding") ?? {};
     return (
         <html lang="no">
             <Script src="/register-sw.js" />

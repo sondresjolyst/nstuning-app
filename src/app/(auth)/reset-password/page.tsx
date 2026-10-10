@@ -3,7 +3,13 @@ import { useState } from 'react';
 import Link from 'next/link';
 
 import { Alert, PasswordInput, TextInput } from '@sjolystinnovation/app-kit/ui';
+import { passwordSchema } from '@sjolystinnovation/app-kit/validation';
 import UserService from '@/services/userService';
+
+const passwordProblem = (password: string): string | null => {
+    const result = passwordSchema().safeParse(password);
+    return result.success ? null : result.error.issues.map(issue => issue.message).join(' ');
+};
 
 export default function ResetPasswordPage() {
     const [step, setStep] = useState<1 | 2>(1);
@@ -31,6 +37,11 @@ export default function ResetPasswordPage() {
     const reset = async (e: React.FormEvent) => {
         e.preventDefault();
         setError(null);
+        const problem = passwordProblem(newPassword);
+        if (problem) {
+            setError(problem);
+            return;
+        }
         setLoading(true);
         try {
             const res = await UserService.resetPassword({ email, code, newPassword });

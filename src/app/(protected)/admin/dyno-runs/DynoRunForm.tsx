@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
-import { toast } from 'sonner';
+import { toast } from '@sjolystinnovation/app-kit/toast';
 import { Alert, TextInput } from '@sjolystinnovation/app-kit/ui';
 
 import ReportUploader from '@/components/ReportUploader';

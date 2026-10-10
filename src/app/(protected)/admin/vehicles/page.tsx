@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from 'react';
-import { toast } from 'sonner';
+import { toast } from '@sjolystinnovation/app-kit/toast';
 import { PlusIcon, XMarkIcon, ChevronRightIcon, ChevronDownIcon, PencilSquareIcon, CheckIcon } from '@heroicons/react/24/outline';
 import VehicleService, { VehicleTree, EngineCatalogItem } from '@/services/vehicleService';
 
