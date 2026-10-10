@@ -16,7 +16,6 @@ export const metadata: Metadata = {
     },
     description: `Professional dyno tuning by ${COMPANY.name} (${COMPANY.legalName}). Real results, documented dyno runs.`,
     manifest: "/manifest.json",
-    alternates: { canonical: "/" },
     robots: { index: true, follow: true },
     openGraph: {
         type: "website",

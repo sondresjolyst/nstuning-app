@@ -21,10 +21,11 @@ const carLineOf = (run: DynoRun) =>
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
     const { slug } = await params;
     const run = await getRun(slug);
-    if (!run) return { title: `Dyno run — ${COMPANY.name}` };
+    if (!run) return { title: 'Dyno run' };
     const carLine = carLineOf(run);
     return {
-        title: `${run.title} — ${COMPANY.name}`,
+        title: run.title || 'Dyno run',
+        alternates: { canonical: `/dyno-runs/${run.slug || slug}` },
         description: [carLine, run.enginePowerAfterHp ? `${run.enginePowerAfterHp} hp` : null].filter(Boolean).join(' · ') || undefined,
     };
 }

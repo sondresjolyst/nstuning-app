@@ -5,6 +5,10 @@ export async function GET(
     { params }: { params: Promise<{ id: string }> }
 ) {
     const { id } = await params;
+    // Only a positive whole number is forwarded, so the path cannot reach another API route.
+    if (!/^[1-9][0-9]{0,9}$/.test(id)) {
+        return new NextResponse(null, { status: 404 });
+    }
     const upstream = `${process.env.NEXT_PUBLIC_API_URL}/dyno-runs/${id}/report`;
 
     const res = await fetch(upstream, { cache: 'no-store' });
