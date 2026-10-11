@@ -1,7 +1,5 @@
 import Link from 'next/link';
-import Markdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
-import rehypeSanitize from 'rehype-sanitize';
+import { Markdown } from '@sjolystinnovation/app-kit/markdown';
 import { CheckIcon } from '@heroicons/react/24/outline';
 import { Section } from '@/types/content';
 import { imageUrl } from '@/services/imageService';
@@ -76,8 +74,8 @@ export default function SectionRenderer({ section }: { section: Section }) {
             return (
                 <section className="max-w-3xl mx-auto px-4 sm:px-6 py-12">
                     {section.heading && <h2 className="text-2xl font-bold text-gray-900 mb-4">{section.heading}</h2>}
-                    <div className="prose prose-sm max-w-none text-gray-700">
-                        <Markdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeSanitize]}>{section.body}</Markdown>
+                    <div className="space-y-4 text-gray-700">
+                        <Markdown>{section.body}</Markdown>
                     </div>
                 </section>
             );

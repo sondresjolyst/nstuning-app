@@ -1,9 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import Markdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
-import rehypeSanitize from 'rehype-sanitize';
+import { Markdown } from '@sjolystinnovation/app-kit/markdown';
 import { DynoRun, reportUrl, reportProxyUrl, coverImageSrc, coverImageSrcSet } from '@/services/dynoRunService';
 import { publicGet } from '@/lib/publicApi';
 import { slugSegment } from '@/lib/slug';
@@ -119,8 +117,8 @@ export default async function DynoRunDetail({ params }: { params: Promise<{ slug
             )}
 
             {run.description && (
-                <div className="prose prose-sm mt-8 max-w-none text-gray-700">
-                    <Markdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeSanitize]}>{run.description}</Markdown>
+                <div className="mt-8 space-y-4 text-gray-700">
+                    <Markdown>{run.description}</Markdown>
                 </div>
             )}
 
