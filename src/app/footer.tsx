@@ -1,7 +1,7 @@
 "use client";
 
 import Link from 'next/link';
-import { useBranding } from '@/components/BrandingProvider';
+import { useBranding } from '@sjolystinnovation/app-kit/branding';
 import { COMPANY } from '@/lib/company';
 
 export default function Footer() {

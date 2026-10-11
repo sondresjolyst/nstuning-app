@@ -4,7 +4,8 @@ import { useEffect, useState } from 'react';
 import { toast } from '@sjolystinnovation/app-kit/toast';
 import { TextInput, Toggle } from '@sjolystinnovation/app-kit/ui';
 import SettingsService from '@/services/settingsService';
-import BrandingManager from '@/components/BrandingManager';
+import { BrandingManager } from '@sjolystinnovation/app-kit/branding';
+import BrandingService from '@/services/brandingService';
 
 export default function AdminSettingsPage() {
     const [email, setEmail] = useState('');
@@ -86,7 +87,7 @@ export default function AdminSettingsPage() {
                 </button>
             </form>
 
-            <BrandingManager />
+            <BrandingManager save={BrandingService.update} />
         </div>
     );
 }

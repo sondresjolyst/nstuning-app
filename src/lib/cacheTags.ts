@@ -3,6 +3,7 @@
 export const REVALIDATE_TARGETS = {
     home: 'home',
     dynoRuns: 'dynoRuns',
+    branding: 'branding',
 } as const;
 
 export type RevalidateTarget = (typeof REVALIDATE_TARGETS)[keyof typeof REVALIDATE_TARGETS];
@@ -12,4 +13,6 @@ export type RevalidateTarget = (typeof REVALIDATE_TARGETS)[keyof typeof REVALIDA
 export const TARGET_PATHS: Record<RevalidateTarget, string[]> = {
     home: ['/'],
     dynoRuns: ['/', '/dyno-runs', '/dyno-runs/[slug]', '/sitemap.xml'],
+    // Every page renders branding through the layout, and so does /icon: the tag reaches them all.
+    branding: [],
 };
