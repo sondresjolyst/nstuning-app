@@ -7,6 +7,7 @@ import Footer from "./footer";
 import { COMPANY } from "@/lib/company";
 import { publicGetOptional } from "@/lib/publicApi";
 import { Branding } from "@/services/brandingService";
+import { REVALIDATE_TARGETS } from "@/lib/cacheTags";
 
 export const metadata: Metadata = {
     metadataBase: new URL(COMPANY.url),
@@ -27,7 +28,7 @@ export const metadata: Metadata = {
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-    const branding = await publicGetOptional<Branding>("/branding") ?? {};
+    const branding = await publicGetOptional<Branding>("/branding", { tags: [REVALIDATE_TARGETS.branding] }) ?? {};
     return (
         <html lang="no">
             <Script src="/register-sw.js" />
