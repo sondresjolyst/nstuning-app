@@ -6,6 +6,9 @@ import ResetPasswordPage from '@/app/(auth)/reset-password/page';
 
 const resetPassword = vi.fn();
 const requestPasswordReset = vi.fn();
+const link = vi.hoisted(() => ({ search: '' }));
+
+vi.mock('next/navigation', () => ({ useSearchParams: () => new URLSearchParams(link.search) }));
 
 vi.mock('@/services/userService', () => ({
     default: {
@@ -25,6 +28,19 @@ describe('reset password page', () => {
     beforeEach(() => {
         resetPassword.mockReset().mockResolvedValue({ message: 'Password reset.' });
         requestPasswordReset.mockReset().mockResolvedValue({ message: 'sent' });
+        link.search = '';
+    });
+
+    it('opens on the last step with the email and code from the emailed link', async () => {
+        link.search = 'email=kari%2Btest%40example.no&code=AB12CD';
+        render(<ResetPasswordPage />);
+
+        expect(screen.getByLabelText(/^Reset code/)).toHaveValue('AB12CD');
+        await userEvent.type(screen.getByLabelText(/^New password/), 'Password1');
+        await userEvent.click(screen.getByRole('button', { name: 'Reset password' }));
+
+        expect(requestPasswordReset).not.toHaveBeenCalled();
+        expect(resetPassword).toHaveBeenCalledWith(expect.objectContaining({ email: 'kari+test@example.no', code: 'AB12CD' }));
     });
 
     it('names each rule a new password breaks, without sending it', async () => {

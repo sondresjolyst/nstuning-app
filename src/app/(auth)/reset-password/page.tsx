@@ -1,6 +1,7 @@
 "use client";
-import { useState } from 'react';
+import { Suspense, useState } from 'react';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 
 import { Alert, PasswordInput, TextInput } from '@sjolystinnovation/app-kit/ui';
 import { passwordSchema } from '@sjolystinnovation/app-kit/validation';
@@ -11,10 +12,21 @@ const passwordProblem = (password: string): string | null => {
     return result.success ? null : result.error.issues.map(issue => issue.message).join(' ');
 };
 
+// The emailed link carries the email and code, so the form opens on the last step.
 export default function ResetPasswordPage() {
-    const [step, setStep] = useState<1 | 2>(1);
-    const [email, setEmail] = useState('');
-    const [code, setCode] = useState('');
+    return (
+        <Suspense fallback={null}>
+            <ResetPasswordForm />
+        </Suspense>
+    );
+}
+
+function ResetPasswordForm() {
+    const params = useSearchParams();
+    const linkedCode = params.get('code') ?? '';
+    const [step, setStep] = useState<1 | 2>(linkedCode ? 2 : 1);
+    const [email, setEmail] = useState(params.get('email') ?? '');
+    const [code, setCode] = useState(linkedCode);
     const [newPassword, setNewPassword] = useState('');
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState<string | null>(null);
