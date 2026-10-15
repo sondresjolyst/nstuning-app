@@ -3,36 +3,43 @@
 import { useEffect, useState } from 'react';
 import { toast } from '@sjolystinnovation/app-kit/toast';
 import { TextInput, Toggle } from '@sjolystinnovation/app-kit/ui';
-import SettingsService from '@/services/settingsService';
+import SettingsService, { Settings } from '@/services/settingsService';
 import { BrandingManager } from '@sjolystinnovation/app-kit/branding';
 import BrandingService from '@/services/brandingService';
 
+const EMPTY: Settings = {
+    contactRecipientEmail: '',
+    companyName: '',
+    companyLegalName: '',
+    orgNumber: '',
+    vatRegistered: false,
+    streetAddress: '',
+    postalCode: '',
+    addressLocality: '',
+    addressRegion: '',
+    publicEmail: '',
+    publicPhone: '',
+};
+
 export default function AdminSettingsPage() {
-    const [email, setEmail] = useState('');
-    const [companyName, setCompanyName] = useState('');
-    const [orgNumber, setOrgNumber] = useState('');
-    const [vatRegistered, setVatRegistered] = useState(true);
-    const [address, setAddress] = useState('');
+    const [settings, setSettings] = useState<Settings>(EMPTY);
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
 
     useEffect(() => {
         SettingsService.get()
-            .then(s => { setEmail(s.contactRecipientEmail); setCompanyName(s.companyName); setOrgNumber(s.orgNumber); setVatRegistered(s.vatRegistered); setAddress(s.address); })
+            .then(setSettings)
             .catch(() => toast.error('Failed to load settings'))
             .finally(() => setLoading(false));
     }, []);
+
+    const patch = (changes: Partial<Settings>) => setSettings(prev => ({ ...prev, ...changes }));
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setSaving(true);
         try {
-            const updated = await SettingsService.update({ contactRecipientEmail: email, companyName, orgNumber, vatRegistered, address });
-            setEmail(updated.contactRecipientEmail);
-            setCompanyName(updated.companyName);
-            setOrgNumber(updated.orgNumber);
-            setVatRegistered(updated.vatRegistered);
-            setAddress(updated.address);
+            setSettings(await SettingsService.update(settings));
             toast.success('Settings saved');
         } catch (err) {
             toast.error(err instanceof Error ? err.message : 'Failed to save');
@@ -50,34 +57,81 @@ export default function AdminSettingsPage() {
                     label="Contact enquiry recipient"
                     name="contactRecipientEmail"
                     type="email"
-                    value={email}
-                    onChange={e => setEmail(e.target.value)}
+                    value={settings.contactRecipientEmail}
+                    onChange={e => patch({ contactRecipientEmail: e.target.value })}
                     required
                 />
                 <p className="text-xs text-gray-500">Contact form enquiries are emailed to this address.</p>
+
                 <TextInput
                     label="Company name"
                     name="companyName"
-                    value={companyName}
-                    onChange={e => setCompanyName(e.target.value)}
+                    value={settings.companyName}
+                    onChange={e => patch({ companyName: e.target.value })}
                     required
                 />
+                <TextInput
+                    label="Legal name"
+                    name="companyLegalName"
+                    value={settings.companyLegalName}
+                    onChange={e => patch({ companyLegalName: e.target.value })}
+                />
+                <p className="text-xs text-gray-500">The registered name. Leave blank to use the company name.</p>
+
                 <TextInput
                     label="Organisation number"
                     name="orgNumber"
-                    value={orgNumber}
-                    onChange={e => setOrgNumber(e.target.value)}
-                    required
+                    value={settings.orgNumber}
+                    onChange={e => patch({ orgNumber: e.target.value })}
                 />
-                <Toggle label="VAT (MVA) registered" checked={vatRegistered} onChange={setVatRegistered} />
+                <Toggle label="VAT (MVA) registered" checked={settings.vatRegistered} onChange={v => patch({ vatRegistered: v })} />
                 <p className="text-xs text-gray-500">When on, the org number is shown with the “MVA” suffix.</p>
+
                 <TextInput
-                    label="Business address"
-                    name="address"
-                    value={address}
-                    onChange={e => setAddress(e.target.value)}
+                    label="Street address"
+                    name="streetAddress"
+                    value={settings.streetAddress}
+                    onChange={e => patch({ streetAddress: e.target.value })}
                     required
                 />
+                <div className="grid gap-4 sm:grid-cols-[8rem_1fr]">
+                    <TextInput
+                        label="Postal code"
+                        name="postalCode"
+                        inputMode="numeric"
+                        value={settings.postalCode}
+                        onChange={e => patch({ postalCode: e.target.value })}
+                    />
+                    <TextInput
+                        label="Place"
+                        name="addressLocality"
+                        value={settings.addressLocality}
+                        onChange={e => patch({ addressLocality: e.target.value })}
+                    />
+                </div>
+                <TextInput
+                    label="County"
+                    name="addressRegion"
+                    value={settings.addressRegion}
+                    onChange={e => patch({ addressRegion: e.target.value })}
+                />
+                <p className="text-xs text-gray-500">The county is optional.</p>
+                <TextInput
+                    label="Public email"
+                    name="publicEmail"
+                    type="email"
+                    value={settings.publicEmail}
+                    onChange={e => patch({ publicEmail: e.target.value })}
+                    required
+                />
+                <TextInput
+                    label="Public phone"
+                    name="publicPhone"
+                    value={settings.publicPhone}
+                    onChange={e => patch({ publicPhone: e.target.value })}
+                    required
+                />
+
                 <button
                     type="submit"
                     disabled={saving}
