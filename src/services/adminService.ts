@@ -1,5 +1,5 @@
 import axiosInstance from './axiosInstance';
-import { request } from '@sjolystinnovation/app-kit/api';
+import { createAdminUsersService, request } from '@sjolystinnovation/app-kit/api';
 
 export interface AdminStats {
     totalUsers: number;
@@ -30,16 +30,7 @@ export interface EmailStats {
     invalid: number;
 }
 
-export interface AdminUser {
-    id: string;
-    userName: string;
-    email: string;
-    firstName: string;
-    lastName: string;
-    createdAt: string;
-    isDeleted: boolean;
-    roles: string[];
-}
+export type { AdminUser } from '@sjolystinnovation/app-kit/api';
 
 const AdminService = {
     getStats: () =>
@@ -54,14 +45,7 @@ const AdminService = {
     getRoles: () =>
         request(() => axiosInstance.get<string[]>('/admin/roles'), 'Failed to load roles'),
 
-    getUsers: (includeDeleted = false) =>
-        request(() => axiosInstance.get<AdminUser[]>('/users', { params: { includeDeleted } }), 'Failed to load users'),
-
-    addRole: (userId: string, role: string) =>
-        request(() => axiosInstance.post(`/users/${userId}/roles`, { role }), 'Failed to assign role'),
-
-    removeRole: (userId: string, role: string) =>
-        request(() => axiosInstance.delete(`/users/${userId}/roles/${role}`), 'Failed to remove role'),
+    ...createAdminUsersService(axiosInstance),
 };
 
 export default AdminService;
