@@ -1,5 +1,6 @@
 "use client";
 import { useState } from 'react';
+import { zodFieldErrors } from '@sjolystinnovation/app-kit/validation';
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
@@ -24,12 +25,7 @@ export default function RegisterPage() {
         setFormError(null);
         const parsed = registerSchema.safeParse(form);
         if (!parsed.success) {
-            const fieldErrors: Partial<Record<keyof RegisterInput, string>> = {};
-            for (const issue of parsed.error.issues) {
-                const key = issue.path[0] as keyof RegisterInput;
-                fieldErrors[key] ??= issue.message;
-            }
-            setErrors(fieldErrors);
+            setErrors(zodFieldErrors(parsed.error));
             return;
         }
         setErrors({});

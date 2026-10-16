@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from 'react';
+import { zodFieldErrors } from '@sjolystinnovation/app-kit/validation';
 import { toast } from '@sjolystinnovation/app-kit/toast';
 import { TextInput } from '@sjolystinnovation/app-kit/ui';
 import ContactService from '@/services/contactService';
@@ -20,12 +21,7 @@ export default function ContactForm() {
         e.preventDefault();
         const parsed = contactSchema.safeParse(form);
         if (!parsed.success) {
-            const fieldErrors: Partial<Record<keyof ContactInput, string>> = {};
-            for (const issue of parsed.error.issues) {
-                const key = issue.path[0] as keyof ContactInput;
-                fieldErrors[key] ??= issue.message;
-            }
-            setErrors(fieldErrors);
+            setErrors(zodFieldErrors(parsed.error));
             return;
         }
         setErrors({});
