@@ -1,16 +1,15 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { CredentialsForm } from '@sjolystinnovation/app-kit/ui';
+import { auth, resetTestMocks } from '@sjolystinnovation/app-kit/testing';
 
-const signIn = vi.fn();
+vi.mock('next-auth/react', async () => (await import('@sjolystinnovation/app-kit/testing')).nextAuthMock());
 
-vi.mock('next-auth/react', () => ({
-    signIn: (...args: unknown[]) => signIn(...args),
-}));
+beforeEach(resetTestMocks);
 
 async function submitWith(error: string) {
-    signIn.mockResolvedValue({ error });
+    auth.signIn.mockResolvedValue({ error });
     render(<CredentialsForm initialEmail="a@b.no" onSignedIn={() => {}} />);
     await userEvent.type(screen.getByLabelText(/^Password/), 'pw');
     await userEvent.click(screen.getByRole('button', { name: 'Sign in' }));

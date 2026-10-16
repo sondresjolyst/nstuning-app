@@ -1,26 +1,10 @@
+import { mergeCompanyInfo, type CompanyInfo } from '@sjolystinnovation/app-kit/api';
 import { publicGetOptional } from '@/lib/publicApi';
 import { COMPANY } from '@/lib/company';
 
-export interface CompanyInfo {
-    name: string;
-    legalName: string;
-    orgNumber: string;
-    vatRegistered: boolean;
-    address: string;
-}
+export { formatOrgNumber, type CompanyInfo } from '@sjolystinnovation/app-kit/api';
 
+// The company has always been VAT registered, so that is the default when the API cannot say.
 export async function getCompanyInfo(): Promise<CompanyInfo> {
-    const data = await publicGetOptional<CompanyInfo>('/company');
-    return {
-        name: data?.name || COMPANY.name,
-        legalName: data?.legalName || COMPANY.legalName,
-        orgNumber: data?.orgNumber || COMPANY.orgNumber,
-        vatRegistered: data?.vatRegistered ?? true,
-        address: data?.address || COMPANY.address,
-    };
-}
-
-/** Org number with the Norwegian " MVA" suffix when the company is VAT-registered. */
-export function formatOrgNumber(info: CompanyInfo): string {
-    return info.vatRegistered ? `${info.orgNumber} MVA` : info.orgNumber;
+    return mergeCompanyInfo(await publicGetOptional<CompanyInfo>('/company'), { ...COMPANY, vatRegistered: true });
 }

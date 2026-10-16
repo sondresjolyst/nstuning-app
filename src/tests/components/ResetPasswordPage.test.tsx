@@ -3,12 +3,11 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { defaultPasswordStrings } from '@sjolystinnovation/app-kit/validation';
 import ResetPasswordPage from '@/app/(auth)/reset-password/page';
+import { navigation, resetTestMocks } from '@sjolystinnovation/app-kit/testing';
 
 const resetPassword = vi.fn();
 const requestPasswordReset = vi.fn();
-const link = vi.hoisted(() => ({ search: '' }));
-
-vi.mock('next/navigation', () => ({ useSearchParams: () => new URLSearchParams(link.search) }));
+vi.mock('next/navigation', async () => (await import('@sjolystinnovation/app-kit/testing')).nextNavigationMock());
 
 vi.mock('@/services/userService', () => ({
     default: {
@@ -28,11 +27,11 @@ describe('reset password page', () => {
     beforeEach(() => {
         resetPassword.mockReset().mockResolvedValue({ message: 'Password reset.' });
         requestPasswordReset.mockReset().mockResolvedValue({ message: 'sent' });
-        link.search = '';
+        resetTestMocks();
     });
 
     it('opens on the last step with the email and code from the emailed link', async () => {
-        link.search = 'email=kari%2Btest%40example.no&code=AB12CD';
+        navigation.searchParams = new URLSearchParams('email=kari%2Btest%40example.no&code=AB12CD');
         render(<ResetPasswordPage />);
 
         expect(screen.getByLabelText(/^Reset code/)).toHaveValue('AB12CD');
