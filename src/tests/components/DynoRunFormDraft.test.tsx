@@ -2,25 +2,13 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import DynoRunForm from '@/app/(protected)/admin/dyno-runs/DynoRunForm';
+import { makeSession, resetTestMocks, setSession } from '@sjolystinnovation/app-kit/testing';
 
 const USER_ID = 'user-1';
 const KEY = `nstuning:draft:${USER_ID}:dyno-run:new`;
 
-let sessionState: { data: unknown; status: string } = {
-    data: { user: { id: USER_ID, name: 'admin', email: 'a@b.no', roles: ['Admin'] }, accessToken: 't', expires: '' },
-    status: 'authenticated',
-};
-
-vi.mock('next-auth/react', () => ({
-    useSession: () => sessionState,
-}));
-
-const authenticated = () => ({
-    data: { user: { id: USER_ID, name: 'admin', email: 'a@b.no', roles: ['Admin'] }, accessToken: 't', expires: '' },
-    status: 'authenticated',
-});
-
-vi.mock('sonner', () => ({ toast: { success: vi.fn(), error: vi.fn() } }));
+vi.mock('next-auth/react', async () => (await import('@sjolystinnovation/app-kit/testing')).nextAuthMock());
+vi.mock('sonner', async () => (await import('@sjolystinnovation/app-kit/testing')).toastMock());
 
 vi.mock('@/services/vehicleService', () => ({
     default: { getTree: async () => ({ brands: [], engines: [] }) },
@@ -62,7 +50,8 @@ const form = () => <DynoRunForm onSaved={vi.fn()} onCancel={vi.fn()} />;
 describe('the dyno run form draft bar', () => {
     beforeEach(() => {
         window.localStorage.clear();
-        sessionState = authenticated();
+        resetTestMocks();
+        setSession(makeSession({ user: { id: USER_ID, name: 'admin', email: 'a@b.no', roles: ['Admin'] } }));
     });
 
     it('stays out of the way when there is no draft', async () => {
@@ -121,7 +110,7 @@ describe('the dyno run form draft bar', () => {
 
         // The cookie is gone, so useSession reports nobody on the form already on screen. This
         // is the incident the draft exists for, and the worst possible moment to stop storing.
-        sessionState = { data: null, status: 'unauthenticated' };
+        setSession(null);
         view.rerender(form());
         await userEvent.type(screen.getByLabelText(/^Title/), ' dyno day');
 
@@ -130,7 +119,7 @@ describe('the dyno run form draft bar', () => {
     });
 
     it('stores nothing on a form opened with no session at all', async () => {
-        sessionState = { data: null, status: 'unauthenticated' };
+        setSession(null);
         render(form());
 
         await userEvent.type(screen.getByLabelText(/^Title/), 'Supra');

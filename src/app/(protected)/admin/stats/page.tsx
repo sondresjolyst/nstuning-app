@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { toast } from '@sjolystinnovation/app-kit/toast';
 import AdminService, { AdminStats, DailyStat, EmailStats } from '@/services/adminService';
-import StatHistoryChart from '@/components/StatHistoryChart';
+import { StatHistoryChart, type StatSeries } from '@sjolystinnovation/app-kit/admin';
 
 function formatBytes(n: number): string {
     if (n <= 0) return '0 B';
@@ -11,6 +11,13 @@ function formatBytes(n: number): string {
     const i = Math.min(units.length - 1, Math.floor(Math.log(n) / Math.log(1024)));
     return `${(n / 1024 ** i).toFixed(i === 0 ? 0 : 1)} ${units[i]}`;
 }
+
+const SERIES: StatSeries<DailyStat>[] = [
+    { key: 'totalUsers', label: 'Users', color: '#2563eb' },
+    { key: 'publishedDynoRuns', label: 'Published', color: '#16a34a' },
+    { key: 'draftDynoRuns', label: 'Drafts', color: '#d97706' },
+    { key: 'contentImages', label: 'Images', color: '#9333ea' },
+];
 
 export default function AdminStatsPage() {
     const [stats, setStats] = useState<AdminStats | null>(null);
@@ -43,7 +50,7 @@ export default function AdminStatsPage() {
 
             <div className="rounded-2xl border border-gray-200 p-5">
                 <h2 className="font-bold text-gray-900 mb-4">Over time</h2>
-                <StatHistoryChart data={history} />
+                <StatHistoryChart data={history} series={SERIES} />
             </div>
 
             <div className="grid sm:grid-cols-2 gap-4">

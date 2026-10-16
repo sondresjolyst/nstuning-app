@@ -2,13 +2,14 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import AdminSettingsPage from '@/app/(protected)/admin/settings/page';
+import { resetTestMocks, toastSpies } from '@sjolystinnovation/app-kit/testing';
 
-const { get, update, toastError } = vi.hoisted(() => ({ get: vi.fn(), update: vi.fn(), toastError: vi.fn() }));
+const { get, update } = vi.hoisted(() => ({ get: vi.fn(), update: vi.fn() }));
 
 vi.mock('@/services/settingsService', () => ({ default: { get: () => get(), update: (s: unknown) => update(s) } }));
 vi.mock('@/services/brandingService', () => ({ default: { update: vi.fn() } }));
 vi.mock('@sjolystinnovation/app-kit/branding', () => ({ BrandingManager: () => null }));
-vi.mock('@sjolystinnovation/app-kit/toast', () => ({ toast: { success: vi.fn(), error: (m: string) => toastError(m) } }));
+vi.mock('@sjolystinnovation/app-kit/toast', async () => (await import('@sjolystinnovation/app-kit/testing')).toastMock());
 
 const stored = {
     contactRecipientEmail: 'inbox@nstuning.no',
@@ -28,7 +29,7 @@ describe('admin settings page', () => {
     beforeEach(() => {
         get.mockReset().mockResolvedValue(stored);
         update.mockReset().mockImplementation(async (s: unknown) => s);
-        toastError.mockReset();
+        resetTestMocks();
     });
 
     it('shows the address in its parts', async () => {
@@ -60,6 +61,6 @@ describe('admin settings page', () => {
 
         await userEvent.click(await screen.findByRole('button', { name: 'Save' }));
 
-        await waitFor(() => expect(toastError).toHaveBeenCalledWith('Not a valid organisation number.'));
+        await waitFor(() => expect(toastSpies.error).toHaveBeenCalledWith('Not a valid organisation number.'));
     });
 });

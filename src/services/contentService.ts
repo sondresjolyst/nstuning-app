@@ -1,8 +1,7 @@
 import axios from 'axios';
 import axiosInstance from './axiosInstance';
 import { formatApiError } from '@sjolystinnovation/app-kit';
-import { revalidateTarget } from '@/lib/revalidate';
-import { REVALIDATE_TARGETS } from '@/lib/cacheTags';
+import { REVALIDATE_TARGETS, revalidateTarget } from '@/lib/cacheTags';
 import { Section } from '@/types/content';
 
 const publicClient = axios.create({ baseURL: process.env.NEXT_PUBLIC_API_URL });
