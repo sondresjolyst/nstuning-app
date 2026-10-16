@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { CredentialsForm } from '@sjolystinnovation/app-kit/ui';
+import { CredentialsForm } from '@sjolystinnovation/app-kit/session/react';
 import { auth, resetTestMocks } from '@sjolystinnovation/app-kit/testing';
 
 vi.mock('next-auth/react', async () => (await import('@sjolystinnovation/app-kit/testing')).nextAuthMock());
