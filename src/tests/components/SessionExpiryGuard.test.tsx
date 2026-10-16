@@ -3,7 +3,7 @@ import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import SessionExpiryGuard from '@/components/SessionExpiryGuard';
 import { defaultSessionExpiryGuardStrings as text } from '@sjolystinnovation/app-kit/session/react';
-import { defaultCredentialsFormStrings as formText } from '@sjolystinnovation/app-kit/ui';
+import { defaultCredentialsFormStrings as formText } from '@sjolystinnovation/app-kit/session/react';
 import { closeSessionPrompt, openSessionPrompt } from '@sjolystinnovation/app-kit/session';
 import { auth, makeSession, resetTestMocks, setSession, toastSpies } from '@sjolystinnovation/app-kit/testing';
 

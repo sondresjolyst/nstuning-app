@@ -1,6 +1,6 @@
 import axios from 'axios';
 import axiosInstance from './axiosInstance';
-import { formatApiError } from '@sjolystinnovation/app-kit';
+import { formatApiError } from '@sjolystinnovation/app-kit/api';
 import { REVALIDATE_TARGETS, revalidateTarget } from '@/lib/cacheTags';
 import { imageUrl, imageSrcSet } from './imageService';
 
