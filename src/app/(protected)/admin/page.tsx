@@ -1,13 +1,14 @@
 "use client";
 
 import Link from 'next/link';
-import { ChartBarIcon, Cog6ToothIcon, Squares2X2Icon, PresentationChartLineIcon, UsersIcon } from '@heroicons/react/24/outline';
+import { ChartBarIcon, Cog6ToothIcon, Squares2X2Icon, PresentationChartLineIcon, ScaleIcon, UsersIcon } from '@heroicons/react/24/outline';
 
 const cards = [
     { href: '/admin/content', icon: Squares2X2Icon, title: 'Content', text: 'Build the home page from orderable sections.' },
     { href: '/admin/dyno-runs', icon: ChartBarIcon, title: 'Dyno runs', text: 'Create, edit and publish dyno runs.' },
     { href: '/admin/stats', icon: PresentationChartLineIcon, title: 'Stats', text: 'Site totals, trends, storage and email.' },
     { href: '/admin/users', icon: UsersIcon, title: 'Users', text: 'Manage users and assign roles.' },
+    { href: '/admin/legal', icon: ScaleIcon, title: 'Legal', text: 'Edit the terms, privacy and cookie pages.' },
     { href: '/admin/settings', icon: Cog6ToothIcon, title: 'Settings', text: 'Manage site settings.' },
 ];
 
