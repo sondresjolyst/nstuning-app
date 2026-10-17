@@ -48,8 +48,19 @@ describe('reset password page', () => {
         await userEvent.click(screen.getByRole('button', { name: 'Reset password' }));
 
         expect(resetPassword).not.toHaveBeenCalled();
-        expect(screen.getByRole('alert')).toHaveTextContent(defaultPasswordStrings.uppercase);
-        expect(screen.getByRole('alert')).toHaveTextContent(defaultPasswordStrings.digit);
+        const field = screen.getByLabelText(/^New password/);
+        expect(field).toHaveAttribute('aria-invalid', 'true');
+        expect(field).toHaveAccessibleDescription(expect.stringContaining(defaultPasswordStrings.uppercase));
+        expect(field).toHaveAccessibleDescription(expect.stringContaining(defaultPasswordStrings.digit));
+    });
+
+    it("says a wrong or expired code in the app's words when the API refuses it", async () => {
+        resetPassword.mockRejectedValue({ isAxiosError: true, response: { status: 400, data: { message: 'API text', code: 'invalidResetCode' } } });
+        await toStepTwo();
+        await userEvent.type(screen.getByLabelText(/^New password/), 'Password1');
+        await userEvent.click(screen.getByRole('button', { name: 'Reset password' }));
+
+        expect(await screen.findByRole('alert')).toHaveTextContent('Invalid or expired reset code.');
     });
 
     it('sends a password that meets the rules', async () => {
