@@ -1,5 +1,41 @@
 # Changelog
 
+## [1.7.0](https://github.com/sondresjolyst/nstuning-app/compare/v1.6.16...v1.7.0) (2026-10-17)
+
+
+### Features
+
+* **auth:** open the reset page on the last step from an emailed link ([#199](https://github.com/sondresjolyst/nstuning-app/issues/199)) ([8332a1e](https://github.com/sondresjolyst/nstuning-app/commit/8332a1e511438f1a7834f4fb0dd9640cddbc9dfd))
+* **legal:** render the terms, privacy and cookie pages from the API and edit them in the admin ([#208](https://github.com/sondresjolyst/nstuning-app/issues/208)) ([3510218](https://github.com/sondresjolyst/nstuning-app/commit/3510218d1b5b6fe106f2ea7f6c2c5260dd69cd62))
+* **settings:** edit the address in parts and the public email and phone ([#200](https://github.com/sondresjolyst/nstuning-app/issues/200)) ([dc91cf0](https://github.com/sondresjolyst/nstuning-app/commit/dc91cf08817e53cc2eaa841f7e5c778782d749f1))
+* sign in through app-kit and say when sign-in is unavailable ([#178](https://github.com/sondresjolyst/nstuning-app/issues/178)) ([e3f207e](https://github.com/sondresjolyst/nstuning-app/commit/e3f207e5125c912a7f68c8461bcc0531e40c916e))
+* **ui:** add an error page and use NotFoundState from app-kit ([#189](https://github.com/sondresjolyst/nstuning-app/issues/189)) ([80df204](https://github.com/sondresjolyst/nstuning-app/commit/80df2041eb2254b2755226cf7553f11c0211d5c3))
+
+
+### Bug Fixes
+
+* **csp:** stop zod from trying eval, which the content security policy blocks ([#197](https://github.com/sondresjolyst/nstuning-app/issues/197)) ([05393df](https://github.com/sondresjolyst/nstuning-app/commit/05393dff69b6c414ec283eb442c2e14003e059ce)), closes [#187](https://github.com/sondresjolyst/nstuning-app/issues/187)
+* **docker:** default SITE_ENV to dev so a build without it is not crawled ([#207](https://github.com/sondresjolyst/nstuning-app/issues/207)) ([43a3201](https://github.com/sondresjolyst/nstuning-app/commit/43a32014d7a19a49ee1f04ea63cad070ca9555a3))
+* **dyno-runs:** render the PDF report in the browser only ([#186](https://github.com/sondresjolyst/nstuning-app/issues/186)) ([f73a3c2](https://github.com/sondresjolyst/nstuning-app/commit/f73a3c2a8eed5958c8d6f35b42a52a25c3447fde))
+* keep admin work when the session expires ([#168](https://github.com/sondresjolyst/nstuning-app/issues/168)) ([3495725](https://github.com/sondresjolyst/nstuning-app/commit/3495725befeb345fd5c50f1e8cab611093c09a0d))
+* **reports:** load the pdf.js decoders so JBIG2 graphs in the dyno reports render ([#210](https://github.com/sondresjolyst/nstuning-app/issues/210)) ([ecd548c](https://github.com/sondresjolyst/nstuning-app/commit/ecd548c0584d02bd0e8682d43442f76512631919))
+* **seo:** keep test hosts out of search and give each page its own canonical ([#184](https://github.com/sondresjolyst/nstuning-app/issues/184)) ([0b708d1](https://github.com/sondresjolyst/nstuning-app/commit/0b708d11ab2f3da5f3517c87f783ef71eea2f689))
+* **ui:** style Markdown with app-kit's Markdown ([#194](https://github.com/sondresjolyst/nstuning-app/issues/194)) ([0d4893b](https://github.com/sondresjolyst/nstuning-app/commit/0d4893bd2d719466c24fcc1ad6dbe9126f04fd9a))
+* use app-kit for admin access, public fetches, session renewal, quiet error toasts and password rules ([#181](https://github.com/sondresjolyst/nstuning-app/issues/181)) ([28a6519](https://github.com/sondresjolyst/nstuning-app/commit/28a6519f7edfa714da8df33694a648fcf8ec645d))
+
+
+### Dependencies
+
+* **app-kit:** update @sjolystinnovation/app-kit to 0.16.0 ([#198](https://github.com/sondresjolyst/nstuning-app/issues/198)) ([baf35c1](https://github.com/sondresjolyst/nstuning-app/commit/baf35c153cb00386911df9b4cdbf434716a1e9f9))
+* **npm:** bump `@types/node` from 26.6.3 to 26.6.4 ([#193](https://github.com/sondresjolyst/nstuning-app/issues/193)) ([dd616ea](https://github.com/sondresjolyst/nstuning-app/commit/dd616eaa2fb4fa91c1009d8e0ea28e3b88eaa2a8))
+* **npm:** bump `brace-expansion` from 1.1.18 to 1.1.21 ([#173](https://github.com/sondresjolyst/nstuning-app/issues/173)) ([4258023](https://github.com/sondresjolyst/nstuning-app/commit/42580232514d612b7fb34c9470be003f33349e2f))
+* **npm:** bump `next` from 16.3.7 to 16.4.0 ([#179](https://github.com/sondresjolyst/nstuning-app/issues/179)) ([fe1469d](https://github.com/sondresjolyst/nstuning-app/commit/fe1469d19bd3b7dd0eda5cd0304e85f8dcd21b28))
+* **npm:** bump `sharp` from 0.35.4 to 0.35.5 ([#175](https://github.com/sondresjolyst/nstuning-app/issues/175)) ([8b253a3](https://github.com/sondresjolyst/nstuning-app/commit/8b253a35a58698d65c16aff9ee27999b6ba44e45))
+* **npm:** bump `source-map-js` from 1.2.1 to 1.2.2 ([#174](https://github.com/sondresjolyst/nstuning-app/issues/174)) ([cf31c5c](https://github.com/sondresjolyst/nstuning-app/commit/cf31c5caa185f4654fd1ca355c70725b43e40f70))
+* **npm:** bump eslint-config-next from 16.3.7 to 16.3.8 in the next group ([#190](https://github.com/sondresjolyst/nstuning-app/issues/190)) ([468c9ba](https://github.com/sondresjolyst/nstuning-app/commit/468c9badb52d18fb81d9b71cbd15d9bcdd7ec621))
+* **npm:** bump the next group with 2 updates ([#171](https://github.com/sondresjolyst/nstuning-app/issues/171)) ([2a223e3](https://github.com/sondresjolyst/nstuning-app/commit/2a223e30e60160f3c2e34f12d20879317782ac3b))
+* **npm:** bump vitest from 5.0.2 to 5.0.3 in the testing group ([#192](https://github.com/sondresjolyst/nstuning-app/issues/192)) ([db0face](https://github.com/sondresjolyst/nstuning-app/commit/db0face5d3f484ca366ccd32156f62b0e57e61ad))
+
 ## [1.6.16](https://github.com/sondresjolyst/nstuning-app/compare/v1.6.15...v1.6.16) (2026-10-04)
 
 
