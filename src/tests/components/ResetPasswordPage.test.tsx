@@ -1,7 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { defaultPasswordStrings } from '@sjolystinnovation/app-kit/validation';
 import ResetPasswordPage from '@/app/(auth)/reset-password/page';
 import { navigation, resetTestMocks } from '@sjolystinnovation/app-kit/testing';
 
@@ -42,7 +41,7 @@ describe('reset password page', () => {
         expect(resetPassword).toHaveBeenCalledWith(expect.objectContaining({ email: 'kari+test@example.no', code: 'AB12CD' }));
     });
 
-    it('names each rule a new password breaks, without sending it', async () => {
+    it('says how to make the password valid under the field, without sending it', async () => {
         await toStepTwo();
         await userEvent.type(screen.getByLabelText(/^New password/), 'password');
         await userEvent.click(screen.getByRole('button', { name: 'Reset password' }));
@@ -50,8 +49,9 @@ describe('reset password page', () => {
         expect(resetPassword).not.toHaveBeenCalled();
         const field = screen.getByLabelText(/^New password/);
         expect(field).toHaveAttribute('aria-invalid', 'true');
-        expect(field).toHaveAccessibleDescription(expect.stringContaining(defaultPasswordStrings.uppercase));
-        expect(field).toHaveAccessibleDescription(expect.stringContaining(defaultPasswordStrings.digit));
+        expect(field).toHaveAccessibleDescription(
+            'The password does not meet the requirements. Use at least 8 characters, with at least one lowercase and one uppercase letter from A to Z and one digit from 0 to 9.',
+        );
     });
 
     it("says a wrong or expired code in the app's words when the API refuses it", async () => {
@@ -69,5 +69,16 @@ describe('reset password page', () => {
         await userEvent.click(screen.getByRole('button', { name: 'Reset password' }));
 
         expect(resetPassword).toHaveBeenCalledWith({ email: 'a@b.no', code: '123456', newPassword: 'Password1' });
+        expect(await screen.findByText('Your password has been changed. You can sign in now.')).toBeInTheDocument();
+    });
+
+    it('explains each step in English', async () => {
+        render(<ResetPasswordPage />);
+        expect(screen.getByText('Enter your email address and we will send you a code.')).toBeInTheDocument();
+
+        await userEvent.type(screen.getByLabelText(/^Email/), 'a@b.no');
+        await userEvent.click(screen.getByRole('button', { name: 'Send reset code' }));
+
+        expect(await screen.findByText('Use at least 8 characters, with at least one lowercase and one uppercase letter from A to Z and one digit from 0 to 9.')).toBeInTheDocument();
     });
 });

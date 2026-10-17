@@ -26,6 +26,12 @@ describe('AdminContentPage', () => {
         expect(select.tagName).toBe('SELECT');
     });
 
+    it('names the delete button of each section "Delete section"', async () => {
+        content.getHome.mockResolvedValue([stats, image]);
+        render(<AdminContentPage />);
+        expect(await screen.findAllByRole('button', { name: 'Delete section' })).toHaveLength(2);
+    });
+
     it('offers the live dyno run and brand counts as stat sources', async () => {
         content.getHome.mockResolvedValue([stats]);
         render(<AdminContentPage />);
