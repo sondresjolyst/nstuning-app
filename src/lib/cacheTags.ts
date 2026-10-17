@@ -10,6 +10,8 @@ export const { targets: REVALIDATE_TARGETS, paths: TARGET_PATHS, revalidate: rev
         dynoRuns: { pages: ['/', '/dyno-runs', '/dyno-runs/[slug]'], root: ['/sitemap.xml'] },
         // Every page renders branding through the layout, and so does /icon: the tag reaches them all.
         branding: {},
+        // An admin edits the legal pages, and the sitemap dates them by their last edit.
+        legal: { pages: ['/terms', '/privacy', '/cookies'], root: ['/sitemap.xml'] },
     },
 });
 
