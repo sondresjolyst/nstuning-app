@@ -1,11 +1,20 @@
 "use client";
 import { useEffect, useState } from 'react';
 import { passwordSchema } from '@sjolystinnovation/app-kit/validation';
+import { apiErrorCode, apiFieldErrors } from '@sjolystinnovation/app-kit/api';
 import { signOut } from 'next-auth/react';
 import { toast } from '@sjolystinnovation/app-kit/toast';
 
 import { PasswordInput, TextInput } from '@sjolystinnovation/app-kit/ui';
 import UserService, { UserProfile } from '@/services/userService';
+
+type PasswordField = 'currentPassword' | 'newPassword';
+
+/** The texts for an account deletion the API refuses, by the refusal's code. */
+const deleteRefusals: Record<string, string> = {
+    lastAdmin: 'Your account is the last admin account and cannot be deleted. Give someone else the admin role first.',
+    accountChangeConflict: 'Another change to the accounts happened at the same time. Try again.',
+};
 
 export default function ProfilePage() {
     const [profile, setProfile] = useState<UserProfile | null>(null);
@@ -18,6 +27,7 @@ export default function ProfilePage() {
     const [currentPassword, setCurrentPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [changingPassword, setChangingPassword] = useState(false);
+    const [passwordErrors, setPasswordErrors] = useState<Partial<Record<PasswordField, string>>>({});
 
     useEffect(() => {
         UserService.getProfile()
@@ -57,13 +67,20 @@ export default function ProfilePage() {
             return;
         }
         setChangingPassword(true);
+        setPasswordErrors({});
         try {
             await UserService.changePassword({ currentPassword, newPassword });
             toast.success('Password changed.');
             setCurrentPassword('');
             setNewPassword('');
         } catch (err) {
-            toast.error(err instanceof Error ? err.message : 'Failed to change password');
+            const fields = apiFieldErrors(err);
+            const onFields = {
+                currentPassword: fields?.currentPassword?.join(' '),
+                newPassword: fields?.newPassword?.join(' '),
+            };
+            if (onFields.currentPassword || onFields.newPassword) setPasswordErrors(onFields);
+            else toast.error(err instanceof Error ? err.message : 'Failed to change password');
         } finally {
             setChangingPassword(false);
         }
@@ -94,7 +111,9 @@ export default function ProfilePage() {
             toast.success('Account deleted.');
             await signOut({ callbackUrl: '/' });
         } catch (err) {
-            toast.error(err instanceof Error ? err.message : 'Failed to delete account');
+            const code = apiErrorCode(err);
+            const refusal = code && Object.hasOwn(deleteRefusals, code) ? deleteRefusals[code] : undefined;
+            toast.error(refusal ?? (err instanceof Error ? err.message : 'Failed to delete account'));
             setDeleting(false);
         }
     }
@@ -126,8 +145,8 @@ export default function ProfilePage() {
 
             <form onSubmit={handleChangePassword} className="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm space-y-4">
                 <h2 className="text-base font-semibold text-gray-900">Change password</h2>
-                <PasswordInput label="Current password" name="currentPassword" autoComplete="current-password" value={currentPassword} onChange={e => setCurrentPassword(e.target.value)} required />
-                <PasswordInput label="New password" name="newPassword" autoComplete="new-password" value={newPassword} onChange={e => setNewPassword(e.target.value)} required />
+                <PasswordInput label="Current password" name="currentPassword" autoComplete="current-password" value={currentPassword} onChange={e => { setCurrentPassword(e.target.value); setPasswordErrors(p => ({ ...p, currentPassword: undefined })); }} error={passwordErrors.currentPassword} required />
+                <PasswordInput label="New password" name="newPassword" autoComplete="new-password" value={newPassword} onChange={e => { setNewPassword(e.target.value); setPasswordErrors(p => ({ ...p, newPassword: undefined })); }} error={passwordErrors.newPassword} required />
                 <button
                     type="submit"
                     disabled={changingPassword || !currentPassword || !newPassword}
