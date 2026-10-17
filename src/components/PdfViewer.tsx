@@ -10,6 +10,15 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
     import.meta.url,
 ).toString();
 
+// pdf.js loads its image decoders, font data and colour profiles from these folders at runtime. Without
+// them, JBIG2 images such as the dyno graphs render blank. scripts/copy-pdfjs-assets.mjs puts them there.
+const PDF_OPTIONS = {
+    wasmUrl: '/pdfjs/wasm/',
+    cMapUrl: '/pdfjs/cmaps/',
+    standardFontDataUrl: '/pdfjs/standard_fonts/',
+    iccUrl: '/pdfjs/iccs/',
+};
+
 const A4_RATIO = 297 / 210;
 const VIEWPORT_FRACTION = 0.92;
 const PAGE_PADDING = 16;
@@ -68,6 +77,7 @@ export default function PdfViewer({ url }: { url: string }) {
             >
                 <Document
                     file={url}
+                    options={PDF_OPTIONS}
                     onLoadSuccess={({ numPages }) => setNumPages(numPages)}
                     className="flex flex-col items-center gap-2 py-2"
                     loading={<p className="p-8 text-sm text-gray-400">Loading PDF…</p>}
