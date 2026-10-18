@@ -15,6 +15,8 @@ vi.mock('@/services/userService', () => ({
     },
 }));
 
+const RULES = 'Use at least 8 characters, with at least one lowercase and one uppercase letter from A to Z and one digit from 0 to 9.';
+
 const toStepTwo = async () => {
     render(<ResetPasswordPage />);
     await userEvent.type(screen.getByLabelText(/^Email/), 'a@b.no');
@@ -43,15 +45,16 @@ describe('reset password page', () => {
 
     it('says how to make the password valid under the field, without sending it', async () => {
         await toStepTwo();
+        expect(screen.getByText(RULES)).toBeInTheDocument();
         await userEvent.type(screen.getByLabelText(/^New password/), 'password');
         await userEvent.click(screen.getByRole('button', { name: 'Reset password' }));
 
         expect(resetPassword).not.toHaveBeenCalled();
         const field = screen.getByLabelText(/^New password/);
         expect(field).toHaveAttribute('aria-invalid', 'true');
-        expect(field).toHaveAccessibleDescription(
-            'The password does not meet the requirements. Use at least 8 characters, with at least one lowercase and one uppercase letter from A to Z and one digit from 0 to 9.',
-        );
+        expect(field).toHaveAccessibleDescription(`The password does not meet the requirements. ${RULES}`);
+        expect(screen.queryByText(RULES)).not.toBeInTheDocument();
+        expect(document.body.textContent!.split(RULES)).toHaveLength(2);
     });
 
     it("says a wrong or expired code in the app's words when the API refuses it", async () => {

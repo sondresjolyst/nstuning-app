@@ -1,7 +1,8 @@
 import { describe, it, expect, vi } from 'vitest';
 import { formatOrgNumber, getCompanyInfo, CompanyInfo } from '@/lib/companyInfo';
 
-vi.mock('@/lib/publicApi', () => ({ publicGetOptional: async () => null }));
+const { companyAnswer } = vi.hoisted(() => ({ companyAnswer: vi.fn(async (): Promise<unknown> => null) }));
+vi.mock('@/lib/publicApi', () => ({ publicGetOptional: companyAnswer }));
 
 const base: CompanyInfo = {
     name: 'NS Tuning',
@@ -33,5 +34,11 @@ describe('getCompanyInfo', () => {
 
         expect(info).toMatchObject({ name: 'NS Tuning', legalName: 'Nordmark Service AS', orgNumber: '923 202 374', vatRegistered: true });
         expect(formatOrgNumber(info)).toBe('923 202 374 MVA');
+    });
+
+    it('takes the details the API gives', async () => {
+        companyAnswer.mockResolvedValueOnce({ name: 'NS Tuning AS', orgNumber: '999 888 777', vatRegistered: false });
+
+        expect(await getCompanyInfo()).toMatchObject({ name: 'NS Tuning AS', orgNumber: '999 888 777', vatRegistered: false });
     });
 });
