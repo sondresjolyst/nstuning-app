@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from 'react';
 import { toast } from '@sjolystinnovation/app-kit/toast';
-import AdminService, { AdminStats, DailyStat, EmailStats } from '@/services/adminService';
-import { StatHistoryChart, type StatSeries } from '@sjolystinnovation/app-kit/admin';
+import AdminService, { AdminStats, DailyStat, EmailStatsService } from '@/services/adminService';
+import { EmailStatsPanel, StatHistoryChart, type StatSeries } from '@sjolystinnovation/app-kit/admin';
 
 function formatBytes(n: number): string {
     if (n <= 0) return '0 B';
@@ -22,12 +22,10 @@ const SERIES: StatSeries<DailyStat>[] = [
 export default function AdminStatsPage() {
     const [stats, setStats] = useState<AdminStats | null>(null);
     const [history, setHistory] = useState<DailyStat[]>([]);
-    const [email, setEmail] = useState<EmailStats | null>(null);
 
     useEffect(() => {
         AdminService.getStats().then(setStats).catch(err => toast.error(err instanceof Error ? err.message : 'Failed to load stats'));
         AdminService.getStatsHistory().then(setHistory).catch(() => { });
-        AdminService.getEmailStats().then(setEmail).catch(() => { });
     }, []);
 
     const tiles = stats ? [
@@ -70,17 +68,7 @@ export default function AdminStatsPage() {
                     ) : <p className="text-sm text-gray-500">Loading…</p>}
                 </div>
 
-                <div className="rounded-2xl border border-gray-200 p-5">
-                    <h2 className="font-bold text-gray-900 mb-3">Email (last {email?.days ?? 30} days)</h2>
-                    {email ? (
-                        <div className="space-y-1.5 text-sm text-gray-700">
-                            <div className="flex justify-between"><span className="text-gray-500">Sent</span><span className="tabular-nums">{email.requests}</span></div>
-                            <div className="flex justify-between"><span className="text-gray-500">Delivered</span><span className="tabular-nums">{email.delivered}</span></div>
-                            <div className="flex justify-between"><span className="text-gray-500">Bounces</span><span className="tabular-nums">{email.hardBounces + email.softBounces}</span></div>
-                            <div className="flex justify-between"><span className="text-gray-500">Blocked / spam</span><span className="tabular-nums">{email.blocked + email.spamReports}</span></div>
-                        </div>
-                    ) : <p className="text-sm text-gray-500">Unavailable.</p>}
-                </div>
+                <EmailStatsPanel service={EmailStatsService} />
             </div>
         </div>
     );

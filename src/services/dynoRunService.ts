@@ -2,7 +2,8 @@ import axios from 'axios';
 import axiosInstance from './axiosInstance';
 import { formatApiError } from '@sjolystinnovation/app-kit/api';
 import { REVALIDATE_TARGETS, revalidateTarget } from '@/lib/cacheTags';
-import { imageUrl, imageSrcSet } from './imageService';
+import { contentImageSrcSet } from '@sjolystinnovation/app-kit/ui';
+import { contentImagesUrl, imageUrl } from './imageService';
 
 export interface DynoRun {
     id: number;
@@ -46,7 +47,7 @@ export const coverImageSrc = (run: DynoRun): string | null =>
     run.coverImageId != null ? imageUrl(run.coverImageId) : null;
 
 export const coverImageSrcSet = (run: DynoRun): string | undefined =>
-    run.coverImageId != null ? imageSrcSet(run.coverImageId) : undefined;
+    run.coverImageId != null ? contentImageSrcSet(run.coverImageId, undefined, contentImagesUrl()) : undefined;
 
 const DynoRunService = {
     async list(all = false): Promise<DynoRun[]> {

@@ -6,16 +6,10 @@ export interface UploadedImage {
     url: string;
 }
 
-export const imageUrl = (id: string): string =>
-    `${process.env.NEXT_PUBLIC_API_URL}/content-images/${id}`;
+/** Where the API serves the uploaded images. */
+export const contentImagesUrl = (): string => `${process.env.NEXT_PUBLIC_API_URL}/content-images`;
 
-// Widths offered for responsive srcset. The API serves the nearest webp variant
-// >= the requested width (falling back to the largest), or the original if the
-// browser doesn't accept webp.
-const SRCSET_WIDTHS = [384, 640, 768, 1024, 1366, 1600];
-
-export const imageSrcSet = (id: string): string =>
-    SRCSET_WIDTHS.map(w => `${imageUrl(id)}?w=${w} ${w}w`).join(', ');
+export const imageUrl = (id: string): string => `${contentImagesUrl()}/${id}`;
 
 const ImageService = {
     upload(file: File): Promise<UploadedImage> {

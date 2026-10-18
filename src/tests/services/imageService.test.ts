@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { imageUrl, imageSrcSet } from '@/services/imageService';
+import { contentImagesUrl, imageUrl } from '@/services/imageService';
 
 describe('imageUrl', () => {
     it('builds a content-image URL from an id', () => {
@@ -7,12 +7,9 @@ describe('imageUrl', () => {
     });
 });
 
-describe('imageSrcSet', () => {
-    it('lists each width as a ?w= candidate with its descriptor', () => {
-        const entries = imageSrcSet('abc').split(', ');
-
-        expect(entries[0]).toBe(`${imageUrl('abc')}?w=384 384w`);
-        expect(entries).toContain(`${imageUrl('abc')}?w=1600 1600w`);
-        expect(entries.every(e => /\?w=\d+ \d+w$/.test(e))).toBe(true);
+describe('contentImagesUrl', () => {
+    it('is the API base followed by /content-images', () => {
+        expect(contentImagesUrl()).toBe('http://api.test/api/content-images');
+        expect(imageUrl('abc123')).toBe('http://api.test/api/content-images/abc123');
     });
 });

@@ -1,10 +1,8 @@
-import axios from 'axios';
 import axiosInstance from './axiosInstance';
-import { formatApiError } from '@sjolystinnovation/app-kit/api';
+import publicClient from './publicClient';
+import { request } from '@sjolystinnovation/app-kit/api';
 import { REVALIDATE_TARGETS, revalidateTarget } from '@/lib/cacheTags';
 import { Section } from '@/types/content';
-
-const publicClient = axios.create({ baseURL: process.env.NEXT_PUBLIC_API_URL });
 
 const ContentService = {
     async getHome(): Promise<Section[]> {
@@ -17,13 +15,9 @@ const ContentService = {
     },
 
     async updateHome(sections: Section[]): Promise<Section[]> {
-        try {
-            const response = await axiosInstance.put<Section[]>('/content/home', sections);
-            await revalidateTarget(REVALIDATE_TARGETS.home);
-            return response.data;
-        } catch (error: unknown) {
-            throw new Error(formatApiError(error, 'Failed to save content'));
-        }
+        const saved = await request(() => axiosInstance.put<Section[]>('/content/home', sections), 'Failed to save content');
+        await revalidateTarget(REVALIDATE_TARGETS.home);
+        return saved;
     },
 };
 
