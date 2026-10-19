@@ -22,9 +22,9 @@ const renderers: SectionRenderers<Section> = {
     contact: createContactRenderer({ form: <ContactForm /> }),
     feed: section => (
         <section className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
-            <div className="flex items-end justify-between mb-6">
-                {section.heading && <h2 className="text-2xl font-bold text-gray-900">{section.heading}</h2>}
-                <Link href="/dyno-runs" className="text-sm font-semibold text-gray-700 hover:text-gray-900">View all →</Link>
+            <div className="flex items-end justify-between gap-4 mb-6">
+                {section.heading && <h2 className="min-w-0 break-words text-2xl font-bold text-gray-900">{section.heading}</h2>}
+                <Link href="/dyno-runs" className="shrink-0 text-sm font-semibold text-gray-700 hover:text-gray-900">View all →</Link>
             </div>
             <FeaturedRuns limit={section.limit} />
         </section>

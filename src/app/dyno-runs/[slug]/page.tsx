@@ -73,7 +73,7 @@ export default async function DynoRunDetail({ params }: { params: Promise<{ slug
         <div className="max-w-5xl mx-auto px-4 sm:px-6 py-12">
             <Link href="/dyno-runs" className="text-sm font-semibold text-gray-500 hover:text-gray-900">← Dyno runs</Link>
             <div className="mt-3 flex items-start justify-between gap-4">
-                <div>
+                <div className="min-w-0 break-words">
                     <h1 className="text-3xl font-black text-gray-900">{run.title}</h1>
                     {carLine && <p className="mt-1 text-gray-600">{carLine}</p>}
                     {dynoDate && <p className="mt-1 text-sm text-gray-500">Dynoed on {dynoDate}</p>}

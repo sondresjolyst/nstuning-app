@@ -71,7 +71,7 @@ export default function AdminDynoRunsPage() {
                         <li key={run.id} className="flex items-center justify-between gap-4 px-4 py-3">
                             <div className="min-w-0">
                                 <p className="font-medium text-gray-900 truncate">{run.title}</p>
-                                <p className="text-xs text-gray-500">
+                                <p className="text-xs text-gray-500 break-words">
                                     {[run.carMake, run.carModel].filter(Boolean).join(' ')}
                                     {run.published ? ' · Published' : ' · Draft'}
                                     {run.hasReport ? ' · PDF' : ''}
