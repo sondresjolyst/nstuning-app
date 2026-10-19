@@ -28,12 +28,12 @@ export default function StatsBand({ section }: { section: StatsSection }) {
     return (
         <section className="bg-gray-50 border-y border-gray-200">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12">
-                {section.heading && <h2 className="text-2xl font-bold text-gray-900 mb-8 text-center">{section.heading}</h2>}
+                {section.heading && <h2 className="text-2xl font-bold text-gray-900 mb-8 text-center break-words">{section.heading}</h2>}
                 <dl className="flex flex-wrap justify-center gap-4 sm:gap-6">
                     {section.items.map((item, i) => (
-                        <div key={i} className="rounded-2xl border border-gray-200 bg-white shadow-sm px-8 py-6 text-center min-w-[10rem]">
-                            <dt className="text-4xl sm:text-5xl font-black text-gray-900 tabular-nums">{display(item)}</dt>
-                            <dd className="mt-1 text-sm text-gray-600">{item.label}</dd>
+                        <div key={i} className="rounded-2xl border border-gray-200 bg-white shadow-sm px-8 py-6 text-center min-w-[10rem] max-w-full">
+                            <dt className="text-4xl sm:text-5xl font-black text-gray-900 tabular-nums break-words">{display(item)}</dt>
+                            <dd className="mt-1 text-sm text-gray-600 break-words">{item.label}</dd>
                         </div>
                     ))}
                 </dl>

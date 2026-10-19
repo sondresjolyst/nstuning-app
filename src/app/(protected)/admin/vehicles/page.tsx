@@ -11,13 +11,13 @@ function EditableName({ editing, value, name, className, onEdit, onChange, onSav
 }) {
     if (editing) {
         return (
-            <span className="flex items-center gap-1">
+            <span className="flex items-center gap-1 min-w-0">
                 <input
                     autoFocus
                     value={value}
                     onChange={e => onChange(e.target.value)}
                     onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); onSave(); } if (e.key === 'Escape') onCancel(); }}
-                    className="rounded border border-gray-300 px-2 py-0.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                    className="min-w-0 rounded border border-gray-300 px-2 py-0.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
                 />
                 <button onClick={onSave} className="text-green-600 hover:text-green-700" title="Save"><CheckIcon className="h-4 w-4" /></button>
                 <button onClick={onCancel} className="text-gray-400 hover:text-gray-700" title="Cancel"><XMarkIcon className="h-4 w-4" /></button>
@@ -25,9 +25,9 @@ function EditableName({ editing, value, name, className, onEdit, onChange, onSav
         );
     }
     return (
-        <span className="flex items-center gap-1.5">
-            <span className={className}>{name}</span>
-            <button onClick={onEdit} className="text-gray-300 hover:text-gray-600" title="Rename"><PencilSquareIcon className="h-3.5 w-3.5" /></button>
+        <span className="flex items-center gap-1.5 min-w-0">
+            <span className={`${className} min-w-0 break-words`}>{name}</span>
+            <button onClick={onEdit} className="shrink-0 text-gray-300 hover:text-gray-600" title="Rename"><PencilSquareIcon className="h-3.5 w-3.5" /></button>
         </span>
     );
 }
@@ -154,8 +154,8 @@ export default function AdminVehiclesPage() {
                                     onSave={() => saveEdit('brands', brand.id, `b${brand.id}`)}
                                     onCancel={() => cancelEdit(`b${brand.id}`)}
                                 />
-                                <span className="text-xs text-gray-400">{brand.models.length} model{brand.models.length === 1 ? '' : 's'}</span>
-                                <button onClick={() => run(() => VehicleService.removeBrand(brand.id))} className="ml-auto text-gray-400 hover:text-red-600" title="Remove brand">
+                                <span className="shrink-0 text-xs text-gray-400">{brand.models.length} model{brand.models.length === 1 ? '' : 's'}</span>
+                                <button onClick={() => run(() => VehicleService.removeBrand(brand.id))} className="ml-auto shrink-0 text-gray-400 hover:text-red-600" title="Remove brand">
                                     <XMarkIcon className="h-4 w-4" />
                                 </button>
                             </div>
@@ -200,14 +200,14 @@ export default function AdminVehiclesPage() {
                                                     ) : (
                                                         <button
                                                             onClick={() => startEdit(famKey, model.family ?? '')}
-                                                            className={`text-xs rounded-full px-2 py-0.5 border ${model.family ? 'bg-primary/10 border-primary/30 text-gray-700' : 'border-dashed border-gray-300 text-gray-400 hover:text-gray-600'}`}
+                                                            className={`max-w-full break-words text-left text-xs rounded-full px-2 py-0.5 border ${model.family ? 'bg-primary/10 border-primary/30 text-gray-700' : 'border-dashed border-gray-300 text-gray-400 hover:text-gray-600'}`}
                                                             title="Set grouping folder (picker only)"
                                                         >
                                                             {model.family ? `📁 ${model.family}` : '+ family'}
                                                         </button>
                                                     )}
                                                     <span className="text-xs text-gray-400">{model.variants.length} variant{model.variants.length === 1 ? '' : 's'}</span>
-                                                    <button onClick={() => run(() => VehicleService.removeModel(model.id))} className="ml-auto text-gray-400 hover:text-red-600" title="Remove model">
+                                                    <button onClick={() => run(() => VehicleService.removeModel(model.id))} className="ml-auto shrink-0 text-gray-400 hover:text-red-600" title="Remove model">
                                                         <XMarkIcon className="h-4 w-4" />
                                                     </button>
                                                 </div>
@@ -218,7 +218,7 @@ export default function AdminVehiclesPage() {
                                                             <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Variants</p>
                                                             <div className="flex flex-wrap gap-1.5">
                                                                 {model.variants.map(variant => (
-                                                                    <span key={variant.id} className="flex items-center gap-1 pl-2.5 pr-1.5 py-0.5 bg-gray-100 border border-gray-200 rounded-lg text-xs text-gray-700">
+                                                                    <span key={variant.id} className="flex items-center gap-1 max-w-full pl-2.5 pr-1.5 py-0.5 bg-gray-100 border border-gray-200 rounded-lg text-xs text-gray-700">
                                                                         <EditableName
                                                                             editing={editing[`v${variant.id}`] !== undefined}
                                                                             value={editing[`v${variant.id}`] ?? ''}
@@ -252,7 +252,7 @@ export default function AdminVehiclesPage() {
                                                                                 onClick={() => run(() => linked
                                                                                     ? VehicleService.unlinkEngine(model.id, engine.id)
                                                                                     : VehicleService.linkEngine(model.id, engine.id))}
-                                                                                className={`px-2.5 py-0.5 rounded-lg text-xs border transition ${linked
+                                                                                className={`max-w-full break-words text-left px-2.5 py-0.5 rounded-lg text-xs border transition ${linked
                                                                                     ? 'bg-primary/20 border-primary/40 text-gray-900 font-medium'
                                                                                     : 'bg-white border-gray-200 text-gray-500 hover:border-gray-400'}`}
                                                                                 title={linked ? 'Fitted — click to remove' : 'Click to mark as factory-fitted'}
@@ -338,7 +338,7 @@ function EngineCatalog({ engines, brands, editing, newEngine, onNewEngine, onAdd
                 <select
                     value={newEngine.brandId}
                     onChange={e => onNewEngine({ ...newEngine, brandId: e.target.value })}
-                    className="rounded-lg border border-gray-300 px-3 py-1.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary"
+                    className="max-w-full rounded-lg border border-gray-300 px-3 py-1.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary"
                 >
                     <option value="">Global</option>
                     {brands.map(b => <option key={b.id} value={b.id}>{b.name}</option>)}
@@ -354,15 +354,15 @@ function EngineCatalog({ engines, brands, editing, newEngine, onNewEngine, onAdd
                 <ul className="divide-y divide-gray-100 rounded-2xl border border-gray-200">
                     {sortedGroups.map(([group, items]) => (
                         <li key={group} className="p-3">
-                            <button onClick={() => toggle(group)} className="flex items-center gap-1.5 text-xs font-semibold text-gray-500 uppercase tracking-wide hover:text-gray-700">
-                                {open[group] ? <ChevronDownIcon className="h-3.5 w-3.5" /> : <ChevronRightIcon className="h-3.5 w-3.5" />}
+                            <button onClick={() => toggle(group)} className="flex items-center gap-1.5 max-w-full text-left wrap-anywhere text-xs font-semibold text-gray-500 uppercase tracking-wide hover:text-gray-700">
+                                {open[group] ? <ChevronDownIcon className="h-3.5 w-3.5 shrink-0" /> : <ChevronRightIcon className="h-3.5 w-3.5 shrink-0" />}
                                 {group}
-                                <span className="text-gray-400 normal-case">({items.length})</span>
+                                <span className="shrink-0 text-gray-400 normal-case">({items.length})</span>
                             </button>
                             {open[group] && (
                             <div className="flex flex-wrap gap-1.5 mt-1.5">
                                 {items.map(engine => (
-                                    <span key={engine.id} className="flex items-center gap-1 pl-2.5 pr-1.5 py-0.5 bg-gray-100 border border-gray-200 rounded-lg text-xs text-gray-700">
+                                    <span key={engine.id} className="flex items-center gap-1 max-w-full pl-2.5 pr-1.5 py-0.5 bg-gray-100 border border-gray-200 rounded-lg text-xs text-gray-700">
                                         <EditableName
                                             editing={editing[`e${engine.id}`] !== undefined}
                                             value={editing[`e${engine.id}`] ?? ''}
