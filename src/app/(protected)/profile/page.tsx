@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from 'react';
 import { passwordSchema } from '@sjolystinnovation/app-kit/validation';
-import { apiErrorCode, apiFieldErrors } from '@sjolystinnovation/app-kit/api';
+import { apiFieldErrors, errorText } from '@sjolystinnovation/app-kit/api';
 import { signOut } from 'next-auth/react';
 import { toast } from '@sjolystinnovation/app-kit/toast';
 
@@ -111,9 +111,7 @@ export default function ProfilePage() {
             toast.success('Account deleted.');
             await signOut({ callbackUrl: '/' });
         } catch (err) {
-            const code = apiErrorCode(err);
-            const refusal = code && Object.hasOwn(deleteRefusals, code) ? deleteRefusals[code] : undefined;
-            toast.error(refusal ?? (err instanceof Error ? err.message : 'Failed to delete account'));
+            toast.error(errorText(err, deleteRefusals, 'Failed to delete account'));
             setDeleting(false);
         }
     }
