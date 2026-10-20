@@ -12,6 +12,7 @@ export default function AdminLegalPage() {
             keyLabels={keyLabels}
             locales={[LEGAL_LOCALE]}
             localeLabels={{ [LEGAL_LOCALE]: 'English' }}
+            dateLocale="en-GB"
         />
     );
 }
