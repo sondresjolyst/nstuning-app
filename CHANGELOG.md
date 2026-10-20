@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.7.1](https://github.com/sondresjolyst/nstuning-app/compare/v1.7.0...v1.7.1) (2026-10-19)
+
+
+### Bug Fixes
+
+* **layout:** stop clipping horizontal overflow on html and body and wrap long text in the app's own pages ([#223](https://github.com/sondresjolyst/nstuning-app/issues/223)) ([14815e9](https://github.com/sondresjolyst/nstuning-app/commit/14815e99e4b44f2aa344954bc7cd6ece6df75001)), closes [#222](https://github.com/sondresjolyst/nstuning-app/issues/222)
+
 ## [1.7.0](https://github.com/sondresjolyst/nstuning-app/compare/v1.6.16...v1.7.0) (2026-10-18)
 
 
