@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.7.2](https://github.com/sondresjolyst/nstuning-app/compare/v1.7.1...v1.7.2) (2026-10-21)
+
+
+### Dependencies
+
+* **npm:** bump @sjolystinnovation/app-kit to 1.3.0 ([#226](https://github.com/sondresjolyst/nstuning-app/issues/226)) ([682abd8](https://github.com/sondresjolyst/nstuning-app/commit/682abd86af1ccfbe0f1625959a5517dd8406c21b))
+* **npm:** bump `follow-redirects` from 1.16.0 to 1.16.1 ([#228](https://github.com/sondresjolyst/nstuning-app/issues/228)) ([be6595a](https://github.com/sondresjolyst/nstuning-app/commit/be6595a4dc2869a2e26d584449b110aaeebb9be9))
+
 ## [1.7.1](https://github.com/sondresjolyst/nstuning-app/compare/v1.7.0...v1.7.1) (2026-10-19)
 
 
