@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.7.3](https://github.com/sondresjolyst/nstuning-app/compare/v1.7.2...v1.7.3) (2026-10-22)
+
+
+### Dependencies
+
+* **npm:** bump next to 16.4.2 ([#229](https://github.com/sondresjolyst/nstuning-app/issues/229)) ([953c715](https://github.com/sondresjolyst/nstuning-app/commit/953c71512ab90f9930bee77336ec9d7f434bd7f5))
+
 ## [1.7.2](https://github.com/sondresjolyst/nstuning-app/compare/v1.7.1...v1.7.2) (2026-10-21)
 
 
