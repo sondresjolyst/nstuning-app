@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.7.4](https://github.com/sondresjolyst/nstuning-app/compare/v1.7.3...v1.7.4) (2026-10-23)
+
+
+### Miscellaneous Chores
+
+* release 1.7.4 ([#233](https://github.com/sondresjolyst/nstuning-app/issues/233)) ([a5b00cb](https://github.com/sondresjolyst/nstuning-app/commit/a5b00cb105dc2511bcdeaa99cf8367c0d51a4135))
+
 ## [1.7.3](https://github.com/sondresjolyst/nstuning-app/compare/v1.7.2...v1.7.3) (2026-10-22)
 
 
