@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { toast } from '@sjolystinnovation/app-kit/toast';
+import { ConfirmDialog } from '@sjolystinnovation/app-kit/ui';
 import { PencilSquareIcon, TrashIcon, PlusIcon } from '@heroicons/react/24/outline';
 import DynoRunService, { DynoRun } from '@/services/dynoRunService';
 import DynoRunForm from './DynoRunForm';
@@ -11,6 +12,8 @@ export default function AdminDynoRunsPage() {
     const [loading, setLoading] = useState(true);
     const [editing, setEditing] = useState<DynoRun | null>(null);
     const [creating, setCreating] = useState(false);
+    const [pendingDelete, setPendingDelete] = useState<DynoRun | null>(null);
+    const [deleting, setDeleting] = useState(false);
 
     const load = useCallback(() => {
         setLoading(true);
@@ -35,14 +38,18 @@ export default function AdminDynoRunsPage() {
         load();
     };
 
-    const handleDelete = async (run: DynoRun) => {
-        if (!confirm(`Delete "${run.title}"?`)) return;
+    const handleDelete = async () => {
+        if (!pendingDelete) return;
+        setDeleting(true);
         try {
-            await DynoRunService.remove(run.id);
+            await DynoRunService.remove(pendingDelete.id);
             toast.success('Deleted');
             load();
         } catch (err) {
             toast.error(err instanceof Error ? err.message : 'Failed to delete');
+        } finally {
+            setDeleting(false);
+            setPendingDelete(null);
         }
     };
 
@@ -81,13 +88,24 @@ export default function AdminDynoRunsPage() {
                                 <button onClick={() => setEditing(run)} className="p-2 rounded-lg text-gray-500 hover:text-gray-900 hover:bg-gray-100 transition" title="Edit">
                                     <PencilSquareIcon className="h-4 w-4" />
                                 </button>
-                                <button onClick={() => handleDelete(run)} className="p-2 rounded-lg text-red-500 hover:text-red-700 hover:bg-red-50 transition" title="Delete">
+                                <button onClick={() => setPendingDelete(run)} className="p-2 rounded-lg text-red-500 hover:text-red-700 hover:bg-red-50 transition" title="Delete">
                                     <TrashIcon className="h-4 w-4" />
                                 </button>
                             </div>
                         </li>
                     ))}
                 </ul>
+            )}
+
+            {pendingDelete && (
+                <ConfirmDialog
+                    title="Delete dyno run"
+                    message={`Delete "${pendingDelete.title}"?`}
+                    confirmLabel="Delete"
+                    busy={deleting}
+                    onConfirm={() => void handleDelete()}
+                    onClose={() => setPendingDelete(null)}
+                />
             )}
         </div>
     );
