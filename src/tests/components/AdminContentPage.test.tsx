@@ -95,7 +95,7 @@ describe('AdminContentPage', () => {
         expect(saved[1]).toMatchObject({ type: 'leaderboard', heading: 'Leader Board', visible: true });
         expect(boardsOf(saved)).toEqual([
             { title: 'Max measured whp', metric: 'hubPowerWhp', limit: 5 },
-            { title: 'whp per litre calculated for 100 kPa', metric: 'hubPowerPerLitre', limit: 5 },
+            { title: 'Theoretical naturally aspirated power per litre', metric: 'hubPowerPerLitre', limit: 5 },
         ]);
     });
 

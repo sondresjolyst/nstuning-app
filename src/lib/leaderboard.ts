@@ -6,6 +6,8 @@ export interface LeaderboardMetric {
     name: string;
     /** The small caps label above the figure. */
     label: string;
+    /** How the figure is worked out, shown under the board title. */
+    formula?: string;
     /** Power or torque, shown above the number. */
     quantity: 'Power' | 'Torque';
     unit: string;
@@ -19,9 +21,9 @@ const perLitre = (value: number | null | undefined, run: DynoRun) =>
 // Every metric a board can rank by. A new metric is one more entry here.
 export const LEADERBOARD_METRICS = {
     hubPowerWhp: { name: 'Measured whp', label: 'Measured at hub', quantity: 'Power', unit: 'whp', value: run => run.hubPowerAfterWhp ?? null },
-    hubPowerPerLitre: { name: 'whp per litre at 100 kPa', label: 'Per litre at 100 kPa', quantity: 'Power', unit: 'whp/L', value: run => perLitre(run.hubPowerAfterWhp, run) },
+    hubPowerPerLitre: { name: 'whp per litre at 100 kPa', label: 'Theoretical naturally aspirated power per litre', formula: 'whp / litre / ((boost kPa + 100) / 100)', quantity: 'Power', unit: 'whp/L', value: run => perLitre(run.hubPowerAfterWhp, run) },
     hubTorqueWnm: { name: 'Measured wNm', label: 'Measured at hub', quantity: 'Torque', unit: 'wNm', value: run => run.hubTorqueAfterWnm ?? null },
-    hubTorquePerLitre: { name: 'wNm per litre at 100 kPa', label: 'Per litre at 100 kPa', quantity: 'Torque', unit: 'wNm/L', value: run => perLitre(run.hubTorqueAfterWnm, run) },
+    hubTorquePerLitre: { name: 'wNm per litre at 100 kPa', label: 'Theoretical naturally aspirated torque per litre', formula: 'wNm / litre / ((boost kPa + 100) / 100)', quantity: 'Torque', unit: 'wNm/L', value: run => perLitre(run.hubTorqueAfterWnm, run) },
     enginePowerHp: { name: 'Calculated engine hp', label: 'Calculated engine', quantity: 'Power', unit: 'hp', value: run => run.enginePowerAfterHp ?? null },
     engineTorqueNm: { name: 'Calculated engine Nm', label: 'Calculated engine', quantity: 'Torque', unit: 'Nm', value: run => run.engineTorqueAfterNm ?? null },
 } satisfies Record<string, LeaderboardMetric>;
@@ -41,7 +43,7 @@ export interface LeaderboardBoard {
 
 export const defaultBoards = (): LeaderboardBoard[] => [
     { title: 'Max measured whp', metric: 'hubPowerWhp', limit: DEFAULT_BOARD_LIMIT },
-    { title: 'whp per litre calculated for 100 kPa', metric: 'hubPowerPerLitre', limit: DEFAULT_BOARD_LIMIT },
+    { title: 'Theoretical naturally aspirated power per litre', metric: 'hubPowerPerLitre', limit: DEFAULT_BOARD_LIMIT },
 ];
 
 export function metricOf(id: unknown): LeaderboardMetric | null {

@@ -29,7 +29,9 @@ const renderRun = async (run: object) => {
 
 afterEach(() => vi.restoreAllMocks());
 
-const groupLabels = ['Measured at hub', 'Per litre at 100 kPa', 'Calculated engine'];
+const PER_LITRE = 'Theoretical naturally aspirated power per litre';
+const groupLabels = ['Measured at hub', PER_LITRE, 'Calculated engine'];
+const perLitreTiles = () => screen.getByText(PER_LITRE).nextElementSibling!.nextElementSibling!;
 
 describe('dyno run detail', () => {
     it('shows hub, then per litre, then calculated engine', async () => {
@@ -40,18 +42,22 @@ describe('dyno run detail', () => {
 
     it('works out per litre figures from the wheel figures at 100 kPa', async () => {
         await renderRun(volvo);
-        const perLitre = screen.getByText('Per litre at 100 kPa').nextElementSibling!;
-        expect(perLitre.textContent).toBe('Power43.9 whp/LTorque69.1 wNm/L');
+        expect(perLitreTiles().textContent).toBe('Power43.9 whp/LTorque69.1 wNm/L');
+    });
+
+    it('shows the formula under the per litre heading', async () => {
+        await renderRun(volvo);
+        expect(screen.getByText(PER_LITRE).nextElementSibling).toHaveTextContent('whp or wNm / litre / ((boost kPa + 100) / 100)');
     });
 
     it('treats a missing pressure as 100 kPa', async () => {
         await renderRun({ ...volvo, absolutePressureKpa: null });
-        expect(screen.getByText('Per litre at 100 kPa').nextElementSibling!.textContent).toBe('Power77.3 whp/LTorque121.6 wNm/L');
+        expect(perLitreTiles().textContent).toBe('Power77.3 whp/LTorque121.6 wNm/L');
     });
 
     it('hides per litre figures without a displacement', async () => {
         await renderRun({ ...volvo, displacementCc: null });
-        expect(screen.queryByText('Per litre at 100 kPa')).not.toBeInTheDocument();
+        expect(screen.queryByText(PER_LITRE)).not.toBeInTheDocument();
         expect(screen.getByText('Calculated engine')).toBeInTheDocument();
     });
 });

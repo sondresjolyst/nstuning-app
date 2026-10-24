@@ -40,8 +40,9 @@ describe('leaderboard metrics', () => {
 
     it('labels and units match the run detail page', () => {
         expect(LEADERBOARD_METRICS.hubPowerWhp).toMatchObject({ label: 'Measured at hub', quantity: 'Power', unit: 'whp' });
-        expect(LEADERBOARD_METRICS.hubPowerPerLitre).toMatchObject({ label: 'Per litre at 100 kPa', quantity: 'Power', unit: 'whp/L' });
-        expect(LEADERBOARD_METRICS.hubTorquePerLitre).toMatchObject({ quantity: 'Torque', unit: 'wNm/L' });
+        expect(LEADERBOARD_METRICS.hubPowerPerLitre).toMatchObject({ label: 'Theoretical naturally aspirated power per litre', formula: 'whp / litre / ((boost kPa + 100) / 100)', quantity: 'Power', unit: 'whp/L' });
+        expect(LEADERBOARD_METRICS.hubTorquePerLitre).toMatchObject({ label: 'Theoretical naturally aspirated torque per litre', formula: 'wNm / litre / ((boost kPa + 100) / 100)', quantity: 'Torque', unit: 'wNm/L' });
+        expect(LEADERBOARD_METRICS.hubPowerWhp).not.toHaveProperty('formula');
         expect(LEADERBOARD_METRICS.enginePowerHp.unit).toBe('hp');
         expect(LEADERBOARD_METRICS.engineTorqueNm.unit).toBe('Nm');
     });
@@ -57,7 +58,7 @@ describe('leaderboard metrics', () => {
     it('defaults to the max whp and whp per litre boards of five', () => {
         expect(defaultBoards()).toEqual([
             { title: 'Max measured whp', metric: 'hubPowerWhp', limit: 5 },
-            { title: 'whp per litre calculated for 100 kPa', metric: 'hubPowerPerLitre', limit: 5 },
+            { title: 'Theoretical naturally aspirated power per litre', metric: 'hubPowerPerLitre', limit: 5 },
         ]);
         expect(defaultBoards().every(b => LEADERBOARD_METRIC_IDS.includes(b.metric))).toBe(true);
     });

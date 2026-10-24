@@ -7,11 +7,12 @@ import { StatLabel, StatValue, statTileClass } from './Stat';
 function Board({ title, metric, entries }: { title: string; metric: LeaderboardMetric; entries: LeaderboardEntry[] }) {
     return (
         <div className="min-w-0">
-            {title && <h3 className="font-bold text-gray-900 mb-3 break-words">{title}</h3>}
+            {title && <h3 className="font-bold text-gray-900 break-words">{title}</h3>}
+            {metric.formula && <p className="mt-0.5 text-xs text-gray-500 break-words">{metric.formula}</p>}
             {entries.length === 0 ? (
-                <p className="text-gray-500">No runs yet.</p>
+                <p className="mt-3 text-gray-500">No runs yet.</p>
             ) : (
-                <ol className="space-y-4">
+                <ol className="mt-3 space-y-4">
                     {entries.map(({ run, value }, i) => {
                         const cover = coverImageSrc(run);
                         return (

@@ -68,7 +68,8 @@ export default async function DynoRunDetail({ params }: { params: Promise<{ slug
 
             {(whpPerLitre != null || wnmPerLitre != null) && (
                 <>
-                    <p className="mt-4 text-xs font-semibold uppercase tracking-wide text-gray-500">Per litre at 100 kPa</p>
+                    <p className="mt-4 text-xs font-semibold uppercase tracking-wide text-gray-500">Theoretical naturally aspirated power per litre</p>
+                    <p className="mt-0.5 text-xs text-gray-500">whp or wNm / litre / ((boost kPa + 100) / 100)</p>
                     <div className="mt-2 grid grid-cols-2 gap-4">
                         <Stat label="Power" after={whpPerLitre} unit="whp/L" />
                         <Stat label="Torque" after={wnmPerLitre} unit="wNm/L" />

@@ -40,12 +40,18 @@ describe('LeaderboardBoards', () => {
             '3.Measured at hubPower193 whpPorsche 911',
         ]);
 
-        const perLitre = within(board('whp per litre calculated for 100 kPa')).getAllByRole('listitem');
+        const perLitre = within(board('Theoretical naturally aspirated power per litre')).getAllByRole('listitem');
         expect(perLitre.map(li => li.textContent)).toEqual([
-            '1.Per litre at 100 kPaPower72.2 whp/LBMW E36',
-            '2.Per litre at 100 kPaPower53.6 whp/LPorsche 911',
-            '3.Per litre at 100 kPaPower43.9 whp/LVolvo 242',
+            '1.Theoretical naturally aspirated power per litrePower72.2 whp/LBMW E36',
+            '2.Theoretical naturally aspirated power per litrePower53.6 whp/LPorsche 911',
+            '3.Theoretical naturally aspirated power per litrePower43.9 whp/LVolvo 242',
         ]);
+    });
+
+    it('shows the metric formula under the board title, and none for a plain metric', () => {
+        render(<LeaderboardBoards section={section()} runs={runs} />);
+        expect(within(board('Theoretical naturally aspirated power per litre')).getByText('whp / litre / ((boost kPa + 100) / 100)')).toBeInTheDocument();
+        expect(within(board('Max measured whp')).queryByText(/litre/)).not.toBeInTheDocument();
     });
 
     it('links each card to its run and shows the cover thumbnail', () => {
@@ -94,7 +100,7 @@ describe('LeaderboardBoards', () => {
 
     it('says no runs yet on a board that has none, while another has runs', () => {
         render(<LeaderboardBoards section={section()} runs={[run(9, { hubPowerAfterWhp: 150 })]} />);
-        expect(within(board('whp per litre calculated for 100 kPa')).getByText('No runs yet.')).toBeInTheDocument();
+        expect(within(board('Theoretical naturally aspirated power per litre')).getByText('No runs yet.')).toBeInTheDocument();
         expect(within(board('Max measured whp')).getAllByRole('listitem')).toHaveLength(1);
     });
 
