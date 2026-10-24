@@ -4,18 +4,24 @@ import Link from 'next/link';
 import { useBranding } from '@sjolystinnovation/app-kit/branding';
 import { brregUrl } from '@sjolystinnovation/app-kit/company';
 import { formatOrgNumber, type CompanyInfo } from '@/lib/companyInfo';
+import { mailtoHref, telHref } from '@/lib/contactLinks';
 
 const linkClass = 'underline underline-offset-4 hover:text-gray-900';
+
+function MaybeLink({ href, children }: { href: string | null; children: string }) {
+    return href ? <a href={href} className={linkClass}>{children}</a> : <span>{children}</span>;
+}
 
 // Ehandelsloven § 8 wants the name, address, email, register, org number and VAT status easy to find.
 export default function Footer({ company }: { company: CompanyInfo }) {
     const year = new Date().getFullYear();
     const { logoUrl } = useBranding();
     const legalName = company.legalName || company.name;
+    const registerUrl = brregUrl(company.orgNumber);
     const contact = [
         company.address && <span key="address">{company.address}</span>,
-        company.email && <a key="email" href={`mailto:${company.email}`} className={linkClass}>{company.email}</a>,
-        company.phone && <a key="phone" href={`tel:${company.phone.replace(/\s/g, '')}`} className={linkClass}>{company.phone}</a>,
+        company.email && <MaybeLink key="email" href={mailtoHref(company.email)}>{company.email}</MaybeLink>,
+        company.phone && <MaybeLink key="phone" href={telHref(company.phone)}>{company.phone}</MaybeLink>,
     ].filter(Boolean);
 
     return (
@@ -56,10 +62,20 @@ export default function Footer({ company }: { company: CompanyInfo }) {
                         <p>
                             {/* Foretaksregisterloven § 10-2 wants the register next to the org number. */}
                             Org.nr.{' '}
-                            <a href={brregUrl(company.orgNumber)} target="_blank" rel="noopener noreferrer" className={linkClass}>
-                                {formatOrgNumber(company)}
-                            </a>{' '}
+                            {registerUrl ? (
+                                <a href={registerUrl} target="_blank" rel="noopener noreferrer" className={linkClass}>
+                                    {formatOrgNumber(company)}
+                                </a>
+                            ) : (
+                                <span>{formatOrgNumber(company)}</span>
+                            )}{' '}
                             Foretaksregisteret
+                            {!company.vatRegistered && (
+                                <>
+                                    <span aria-hidden="true"> · </span>
+                                    Not VAT registered
+                                </>
+                            )}
                         </p>
                     )}
                     {contact.length > 0 && (
