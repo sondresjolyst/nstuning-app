@@ -11,6 +11,7 @@ import { imageUrl } from '@/services/imageService';
 import FeaturedRuns from './FeaturedRuns';
 import ContactForm from './ContactForm';
 import StatsBand from './StatsBand';
+import Leaderboard from './Leaderboard';
 
 function Image({ imageId, alt, className }: SectionImageProps) {
     // eslint-disable-next-line @next/next/no-img-element
@@ -30,6 +31,7 @@ const renderers: SectionRenderers<Section> = {
         </section>
     ),
     stats: section => <StatsBand section={section} />,
+    leaderboard: section => <Leaderboard section={section} />,
 };
 
 export default function SectionRenderer({ section }: { section: Section }) {

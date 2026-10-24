@@ -2,11 +2,12 @@
 
 import { useEffect, useState } from 'react';
 import { toast } from '@sjolystinnovation/app-kit/toast';
-import { SectionsEditor, StatsSectionEditor, type SectionEditorProps, type SectionEditors } from '@sjolystinnovation/app-kit/sections';
+import { SectionsEditor, SHARED_SECTION_TYPES, StatsSectionEditor, type SectionEditorProps, type SectionEditors } from '@sjolystinnovation/app-kit/sections';
 import ContentService from '@/services/contentService';
 import ImageService, { imageUrl } from '@/services/imageService';
-import { createSection, type Section, type StatSource, type StatsSection } from '@/types/content';
+import { createSection, type Section, type SectionType, type StatSource, type StatsSection } from '@/types/content';
 import { DEFAULT_SECTIONS } from '@/lib/defaultSections';
+import LeaderboardEditor from '@/components/LeaderboardEditor';
 
 function StatsEditor(props: SectionEditorProps<StatsSection>) {
     return (
@@ -20,7 +21,11 @@ function StatsEditor(props: SectionEditorProps<StatsSection>) {
     );
 }
 
-const editors: SectionEditors<Section> = { stats: StatsEditor };
+const editors: SectionEditors<Section> = { stats: StatsEditor, leaderboard: LeaderboardEditor };
+
+const types: SectionType[] = [...SHARED_SECTION_TYPES, 'leaderboard'];
+
+const typeLabels = { leaderboard: 'Leader board' };
 
 const images = { upload: (file: File) => ImageService.upload(file), src: imageUrl };
 
@@ -75,6 +80,8 @@ export default function AdminContentPage() {
                 createSection={createSection}
                 initialAddType="feature"
                 editors={editors}
+                types={types}
+                typeLabels={typeLabels}
                 images={images}
             />
 

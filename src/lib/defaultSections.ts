@@ -1,5 +1,6 @@
 import { Section } from '@/types/content';
 import { COMPANY } from '@/lib/company';
+import { defaultBoards } from '@/lib/leaderboard';
 
 export const DEFAULT_SECTIONS: Section[] = [
     {
@@ -12,6 +13,13 @@ export const DEFAULT_SECTIONS: Section[] = [
         primaryHref: '#contact',
         secondaryLabel: 'See results',
         secondaryHref: '/dyno-runs',
+    },
+    {
+        id: 'default-leaderboard',
+        type: 'leaderboard',
+        visible: true,
+        heading: 'Leader Board',
+        boards: defaultBoards(),
     },
     {
         id: 'default-stats',
