@@ -8,6 +8,8 @@ import { slugSegment } from '@/lib/slug';
 import { REVALIDATE_TARGETS } from '@/lib/cacheTags';
 import { COMPANY } from '@/lib/company';
 import ReportViewer from '@/components/ReportViewer';
+import Stat from '@/components/Stat';
+import { perLitreAt100kPa } from '@/lib/perLitre';
 
 export const revalidate = 60;
 
@@ -28,39 +30,13 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     };
 }
 
-function Stat({ label, before, after, unit }: { label: string; before?: number | null; after?: number | null; unit: string }) {
-    if (after == null) return null;
-    const gain = before != null ? after - before : null;
-    return (
-        <div className="rounded-xl border border-gray-200 p-4">
-            <p className="text-xs uppercase tracking-wide text-gray-500">{label}</p>
-            <p className="mt-1 text-2xl font-extrabold text-gray-900">{after} <span className="text-sm font-medium text-gray-500">{unit}</span></p>
-            {before != null && (
-                <p className="text-xs text-gray-500 mt-0.5">
-                    from {before} {unit}{gain != null && gain > 0 ? ` · +${gain}` : ''}
-                </p>
-            )}
-        </div>
-    );
-}
-
-
-// Specific output per litre, normalised to 100 kPa absolute manifold pressure.
-// NA (≈100 kPa) divides by 1; e.g. 200 kPa absolute halves the figure.
-function perLitreAt100kPa(value?: number | null, displacementCc?: number | null, kPa?: number | null): number | null {
-    if (value == null || !displacementCc) return null;
-    const litres = displacementCc / 1000;
-    const ratio = (kPa && kPa > 0 ? kPa : 100) / 100;
-    return Math.round((value / litres / ratio) * 10) / 10;
-}
-
 export default async function DynoRunDetail({ params }: { params: Promise<{ slug: string }> }) {
     const { slug } = await params;
     const run = await getRun(slug);
     if (!run) notFound();
 
-    const hpPerLitre = perLitreAt100kPa(run.enginePowerAfterHp, run.displacementCc, run.absolutePressureKpa);
-    const nmPerLitre = perLitreAt100kPa(run.engineTorqueAfterNm, run.displacementCc, run.absolutePressureKpa);
+    const whpPerLitre = perLitreAt100kPa(run.hubPowerAfterWhp, run.displacementCc, run.absolutePressureKpa);
+    const wnmPerLitre = perLitreAt100kPa(run.hubTorqueAfterWnm, run.displacementCc, run.absolutePressureKpa);
 
     const carLine = [carLineOf(run), run.engine && `Engine ${run.engine}`, run.fuelType && `Fuel ${run.fuelType}`]
         .filter(Boolean).join(' · ');
@@ -90,31 +66,22 @@ export default async function DynoRunDetail({ params }: { params: Promise<{ slug
                 <Stat label="Torque" before={run.hubTorqueBeforeWnm} after={run.hubTorqueAfterWnm} unit="wNm" />
             </div>
 
+            {(whpPerLitre != null || wnmPerLitre != null) && (
+                <>
+                    <p className="mt-4 text-xs font-semibold uppercase tracking-wide text-gray-500">Theoretical naturally aspirated power per litre</p>
+                    <p className="mt-0.5 text-xs text-gray-500">whp or wNm / litre / ((boost kPa + 100) / 100)</p>
+                    <div className="mt-2 grid grid-cols-2 gap-4">
+                        <Stat label="Power" after={whpPerLitre} unit="whp/L" />
+                        <Stat label="Torque" after={wnmPerLitre} unit="wNm/L" />
+                    </div>
+                </>
+            )}
+
             <p className="mt-4 text-xs font-semibold uppercase tracking-wide text-gray-500">Calculated engine</p>
             <div className="mt-2 grid grid-cols-2 gap-4">
                 <Stat label="Power" before={run.enginePowerBeforeHp} after={run.enginePowerAfterHp} unit="hp" />
                 <Stat label="Torque" before={run.engineTorqueBeforeNm} after={run.engineTorqueAfterNm} unit="Nm" />
             </div>
-
-            {(hpPerLitre != null || nmPerLitre != null) && (
-                <>
-                    <p className="mt-4 text-xs font-semibold uppercase tracking-wide text-gray-500">Per litre at 100 kPa</p>
-                    <div className="mt-2 grid grid-cols-2 gap-4">
-                        {hpPerLitre != null && (
-                            <div className="rounded-xl border border-gray-200 p-4">
-                                <p className="text-xs uppercase tracking-wide text-gray-500">Power</p>
-                                <p className="mt-1 text-2xl font-extrabold text-gray-900">{hpPerLitre} <span className="text-sm font-medium text-gray-500">hp/L</span></p>
-                            </div>
-                        )}
-                        {nmPerLitre != null && (
-                            <div className="rounded-xl border border-gray-200 p-4">
-                                <p className="text-xs uppercase tracking-wide text-gray-500">Torque</p>
-                                <p className="mt-1 text-2xl font-extrabold text-gray-900">{nmPerLitre} <span className="text-sm font-medium text-gray-500">Nm/L</span></p>
-                            </div>
-                        )}
-                    </div>
-                </>
-            )}
 
             {run.description && (
                 <div className="mt-8 space-y-4 text-gray-700">

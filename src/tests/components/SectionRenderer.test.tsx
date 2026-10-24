@@ -5,6 +5,7 @@ import type { Section } from '@/types/content';
 
 vi.mock('@/components/ContactForm', () => ({ default: () => <form data-testid="contact-form" /> }));
 vi.mock('@/components/FeaturedRuns', () => ({ default: ({ limit }: { limit: number }) => <div data-testid="runs" data-limit={limit} /> }));
+vi.mock('@/components/Leaderboard', () => ({ default: ({ section }: { section: { heading: string } }) => <div data-testid="leaderboard">{section.heading}</div> }));
 vi.mock('@/components/StatsBand', () => ({ default: ({ section }: { section: { heading: string } }) => <div data-testid="stats">{section.heading}</div> }));
 
 const base = { id: 's1', visible: true };
@@ -47,5 +48,11 @@ describe('SectionRenderer', () => {
         const section: Section = { ...base, type: 'stats', heading: 'Numbers', items: [] };
         render(<SectionRenderer section={section} />);
         expect(screen.getByTestId('stats')).toHaveTextContent('Numbers');
+    });
+
+    it('renders the leader board', () => {
+        const section: Section = { ...base, type: 'leaderboard', heading: 'Leader Board', boards: [] };
+        render(<SectionRenderer section={section} />);
+        expect(screen.getByTestId('leaderboard')).toHaveTextContent('Leader Board');
     });
 });

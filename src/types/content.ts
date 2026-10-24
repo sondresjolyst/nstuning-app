@@ -1,8 +1,15 @@
-import { cloneSection, createSectionFactory, type SectionOf, type Sections } from '@sjolystinnovation/app-kit/sections';
+import { cloneSection, createSectionFactory, type BaseSection, type SectionOf, type Sections } from '@sjolystinnovation/app-kit/sections';
+import { defaultBoards, type LeaderboardBoard } from '@/lib/leaderboard';
 
 export type StatSource = 'dynoRuns' | 'brandsTuned';
 
-export type Section = Sections<Record<never, never>, StatSource>;
+/** Ranked dyno runs, one board per metric, side by side. */
+export interface LeaderboardSection extends BaseSection<'leaderboard'> {
+    heading: string;
+    boards: LeaderboardBoard[];
+}
+
+export type Section = Sections<Record<never, never>, StatSource> | LeaderboardSection;
 export type SectionType = Section['type'];
 export type StatsSection = SectionOf<Section, 'stats'>;
 
@@ -15,6 +22,7 @@ export const createSection = createSectionFactory<Section>({
     cta: { heading: 'Ready to find your power?', text: '', primaryLabel: 'Book a dyno run', primaryHref: '#contact' },
     stats: { heading: '', items: [{ source: 'dynoRuns', value: '', label: 'Dyno runs published' }] },
     image: { imageId: null, alt: '', caption: '', layout: 'standard', text: '' },
+    leaderboard: { heading: 'Leader Board', boards: defaultBoards() },
 });
 
 export { cloneSection };
