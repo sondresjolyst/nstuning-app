@@ -38,10 +38,10 @@ describe('leaderboard metrics', () => {
         expect(LEADERBOARD_METRICS.hubPowerPerLitre.value(r)).toBe(100);
     });
 
-    it('labels and units match the run detail page', () => {
-        expect(LEADERBOARD_METRICS.hubPowerWhp).toMatchObject({ label: 'Measured at hub', quantity: 'Power', unit: 'whp' });
-        expect(LEADERBOARD_METRICS.hubPowerPerLitre).toMatchObject({ label: 'Theoretical naturally aspirated power per litre', formula: 'whp / litre / ((boost kPa + 100) / 100)', quantity: 'Power', unit: 'whp/L' });
-        expect(LEADERBOARD_METRICS.hubTorquePerLitre).toMatchObject({ label: 'Theoretical naturally aspirated torque per litre', formula: 'wNm / litre / ((boost kPa + 100) / 100)', quantity: 'Torque', unit: 'wNm/L' });
+    it('names and units match the run detail page', () => {
+        expect(LEADERBOARD_METRICS.hubPowerWhp).toMatchObject({ name: 'Measured at hub', quantity: 'Power', unit: 'whp' });
+        expect(LEADERBOARD_METRICS.hubPowerPerLitre).toMatchObject({ name: 'Theoretical naturally aspirated power per litre', formula: 'whp / litre / ((boost kPa + 100) / 100)', quantity: 'Power', unit: 'whp/L' });
+        expect(LEADERBOARD_METRICS.hubTorquePerLitre).toMatchObject({ name: 'Theoretical naturally aspirated torque per litre', formula: 'wNm / litre / ((boost kPa + 100) / 100)', quantity: 'Torque', unit: 'wNm/L' });
         expect(LEADERBOARD_METRICS.hubPowerWhp).not.toHaveProperty('formula');
         expect(LEADERBOARD_METRICS.enginePowerHp.unit).toBe('hp');
         expect(LEADERBOARD_METRICS.engineTorqueNm.unit).toBe('Nm');

@@ -18,21 +18,21 @@ function Board({ title, metric, entries }: { title: string; metric: LeaderboardM
                         return (
                             <li key={run.id} className="flex items-start gap-3">
                                 <span aria-hidden="true" className="w-6 shrink-0 pt-4 text-lg font-black text-gray-900 tabular-nums">{i + 1}.</span>
-                                <Link href={`/dyno-runs/${run.slug}`} className="group block min-w-0 flex-1">
-                                    <div className={`${statTileClass} flex items-center justify-between gap-4 transition group-hover:border-gray-300 group-hover:shadow-sm`}>
-                                        <div className="min-w-0">
-                                            <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">{metric.label}</p>
-                                            <div className="mt-2">
-                                                <StatLabel>{metric.quantity}</StatLabel>
-                                                <StatValue value={value} unit={metric.unit} />
-                                            </div>
+                                <Link
+                                    href={`/dyno-runs/${run.slug}`}
+                                    className={`${statTileClass} group flex min-w-0 flex-1 items-center justify-between gap-4 transition hover:border-gray-300 hover:shadow-sm`}
+                                >
+                                    <div className="min-w-0">
+                                        <p className="text-sm font-semibold text-gray-900 break-words group-hover:text-gray-700">{run.title}</p>
+                                        <div className="mt-2">
+                                            <StatLabel>{metric.quantity}</StatLabel>
+                                            <StatValue value={value} unit={metric.unit} />
                                         </div>
-                                        {cover && (
-                                            // eslint-disable-next-line @next/next/no-img-element
-                                            <img src={cover} srcSet={coverImageSrcSet(run)} sizes="112px" alt="" className="h-16 w-24 sm:h-20 sm:w-28 shrink-0 rounded-lg border border-gray-200 object-cover" />
-                                        )}
                                     </div>
-                                    <p className="mt-1.5 text-sm font-semibold text-gray-700 break-words group-hover:text-gray-900">{run.title}</p>
+                                    {cover && (
+                                        // eslint-disable-next-line @next/next/no-img-element
+                                        <img src={cover} srcSet={coverImageSrcSet(run)} sizes="112px" alt="" className="h-16 w-24 sm:h-20 sm:w-28 shrink-0 rounded-lg border border-gray-200 object-cover" />
+                                    )}
                                 </Link>
                             </li>
                         );

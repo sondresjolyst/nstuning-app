@@ -36,16 +36,16 @@ describe('LeaderboardBoards', () => {
 
         const whp = within(board('Max measured whp')).getAllByRole('listitem');
         expect(whp.map(li => li.textContent)).toEqual([
-            '1.Measured at hubPower265 whpVolvo 242',
-            '2.Measured at hubPower215 whpBMW E36',
-            '3.Measured at hubPower193 whpPorsche 911',
+            '1.Volvo 242Power265 whp',
+            '2.BMW E36Power215 whp',
+            '3.Porsche 911Power193 whp',
         ]);
 
         const perLitre = within(board('Theoretical naturally aspirated power per litre')).getAllByRole('listitem');
         expect(perLitre.map(li => li.textContent)).toEqual([
-            '1.Theoretical naturally aspirated power per litrePower72.2 whp/LBMW E36',
-            '2.Theoretical naturally aspirated power per litrePower53.6 whp/LPorsche 911',
-            '3.Theoretical naturally aspirated power per litrePower43.9 whp/LVolvo 242',
+            '1.BMW E36Power72.2 whp/L',
+            '2.Porsche 911Power53.6 whp/L',
+            '3.Volvo 242Power43.9 whp/L',
         ]);
     });
 
@@ -65,11 +65,35 @@ describe('LeaderboardBoards', () => {
         expect(uppercaseUnitText(container)).toEqual([]);
     });
 
-    it('links each card to its run and shows the cover thumbnail', () => {
+    it('makes each whole card one link, with the car name, figure and thumbnail inside', () => {
         render(<LeaderboardBoards section={section()} runs={runs} />);
-        const first = within(board('Max measured whp')).getAllByRole('link')[0];
+        const items = within(board('Max measured whp')).getAllByRole('listitem');
+        const links = items.map(li => within(li).getAllByRole('link'));
+        expect(links.every(l => l.length === 1)).toBe(true);
+        const first = links[0][0];
         expect(first).toHaveAttribute('href', '/dyno-runs/run-2');
+        expect(first.textContent).toBe('Volvo 242Power265 whp');
         expect(first.querySelector('img')).toHaveAttribute('src', 'http://api.test/api/content-images/volvo');
+        const name = first.firstElementChild!.firstElementChild!;
+        expect(name).toHaveTextContent('Volvo 242');
+        // The car name is shown in normal case.
+        expect(name.closest('.uppercase')).toBeNull();
+    });
+
+    it('puts nothing under a card, so a car name cannot be read as the next card', () => {
+        render(<LeaderboardBoards section={section()} runs={runs} />);
+        for (const li of within(board('Max measured whp')).getAllByRole('listitem')) {
+            const link = within(li).getByRole('link');
+            expect(link.nextElementSibling).toBeNull();
+            expect(li.children).toHaveLength(2);
+            expect(li.firstElementChild).toHaveAttribute('aria-hidden', 'true');
+        }
+    });
+
+    it('drops the metric label inside the cards, since the board title says it', () => {
+        render(<LeaderboardBoards section={section()} runs={runs} />);
+        expect(screen.queryByText('Measured at hub')).not.toBeInTheDocument();
+        expect(within(board('Theoretical naturally aspirated power per litre')).getAllByText('Theoretical naturally aspirated power per litre')).toHaveLength(1);
     });
 
     it('respects each board limit and order', () => {

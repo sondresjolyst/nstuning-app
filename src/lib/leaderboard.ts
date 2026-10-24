@@ -2,8 +2,8 @@ import type { DynoRun } from '@/services/dynoRunService';
 import { perLitreAt100kPa } from './perLitre';
 
 export interface LeaderboardMetric {
-    /** The small caps label above the figure. */
-    label: string;
+    /** The name in the editor's metric list, before the unit. */
+    name: string;
     /** How the figure is worked out, shown under the board title. */
     formula?: string;
     /** Power or torque, shown above the number. */
@@ -18,12 +18,12 @@ const perLitre = (value: number | null | undefined, run: DynoRun) =>
 
 // Every metric a board can rank by. A new metric is one more entry here.
 export const LEADERBOARD_METRICS = {
-    hubPowerWhp: { label: 'Measured at hub', quantity: 'Power', unit: 'whp', value: run => run.hubPowerAfterWhp ?? null },
-    hubPowerPerLitre: { label: 'Theoretical naturally aspirated power per litre', formula: 'whp / litre / ((boost kPa + 100) / 100)', quantity: 'Power', unit: 'whp/L', value: run => perLitre(run.hubPowerAfterWhp, run) },
-    hubTorqueWnm: { label: 'Measured at hub', quantity: 'Torque', unit: 'wNm', value: run => run.hubTorqueAfterWnm ?? null },
-    hubTorquePerLitre: { label: 'Theoretical naturally aspirated torque per litre', formula: 'wNm / litre / ((boost kPa + 100) / 100)', quantity: 'Torque', unit: 'wNm/L', value: run => perLitre(run.hubTorqueAfterWnm, run) },
-    enginePowerHp: { label: 'Calculated engine', quantity: 'Power', unit: 'hp', value: run => run.enginePowerAfterHp ?? null },
-    engineTorqueNm: { label: 'Calculated engine', quantity: 'Torque', unit: 'Nm', value: run => run.engineTorqueAfterNm ?? null },
+    hubPowerWhp: { name: 'Measured at hub', quantity: 'Power', unit: 'whp', value: run => run.hubPowerAfterWhp ?? null },
+    hubPowerPerLitre: { name: 'Theoretical naturally aspirated power per litre', formula: 'whp / litre / ((boost kPa + 100) / 100)', quantity: 'Power', unit: 'whp/L', value: run => perLitre(run.hubPowerAfterWhp, run) },
+    hubTorqueWnm: { name: 'Measured at hub', quantity: 'Torque', unit: 'wNm', value: run => run.hubTorqueAfterWnm ?? null },
+    hubTorquePerLitre: { name: 'Theoretical naturally aspirated torque per litre', formula: 'wNm / litre / ((boost kPa + 100) / 100)', quantity: 'Torque', unit: 'wNm/L', value: run => perLitre(run.hubTorqueAfterWnm, run) },
+    enginePowerHp: { name: 'Calculated engine', quantity: 'Power', unit: 'hp', value: run => run.enginePowerAfterHp ?? null },
+    engineTorqueNm: { name: 'Calculated engine', quantity: 'Torque', unit: 'Nm', value: run => run.engineTorqueAfterNm ?? null },
 } satisfies Record<string, LeaderboardMetric>;
 
 export type LeaderboardMetricId = keyof typeof LEADERBOARD_METRICS;
@@ -44,8 +44,8 @@ export const defaultBoards = (): LeaderboardBoard[] => [
     { title: 'Theoretical naturally aspirated power per litre', metric: 'hubPowerPerLitre', limit: DEFAULT_BOARD_LIMIT },
 ];
 
-/** The metric's name in the editor's list: its label with the unit. */
-export const metricName = (metric: LeaderboardMetric) => `${metric.label} (${metric.unit})`;
+/** The metric's name in the editor's list, with the unit. */
+export const metricName = (metric: LeaderboardMetric) => `${metric.name} (${metric.unit})`;
 
 export function metricOf(id: unknown): LeaderboardMetric | null {
     return typeof id === 'string' && Object.prototype.hasOwnProperty.call(LEADERBOARD_METRICS, id)
