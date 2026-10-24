@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import DynoRunDetail from '@/app/dyno-runs/[slug]/page';
+import { uppercaseUnitText } from '@/tests/unitCasing';
 
 vi.mock('@/components/ReportViewer', () => ({ default: () => null }));
 
@@ -48,6 +49,12 @@ describe('dyno run detail', () => {
     it('shows the formula under the per litre heading', async () => {
         await renderRun(volvo);
         expect(screen.getByText(PER_LITRE).nextElementSibling).toHaveTextContent('whp or wNm / litre / ((boost kPa + 100) / 100)');
+    });
+
+    it('keeps units and the formula out of uppercase styling', async () => {
+        await renderRun(volvo);
+        expect(screen.getByText(/boost kPa/)).toBeInTheDocument();
+        expect(uppercaseUnitText(document.body)).toEqual([]);
     });
 
     it('treats a missing pressure as 100 kPa', async () => {

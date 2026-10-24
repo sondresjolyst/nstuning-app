@@ -1,7 +1,8 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen, within } from '@testing-library/react';
 import LeaderboardBoards from '@/components/LeaderboardBoards';
-import { defaultBoards } from '@/lib/leaderboard';
+import { LEADERBOARD_METRIC_IDS, defaultBoards } from '@/lib/leaderboard';
+import { uppercaseUnitText } from '@/tests/unitCasing';
 import type { DynoRun } from '@/services/dynoRunService';
 import type { LeaderboardSection } from '@/types/content';
 
@@ -52,6 +53,16 @@ describe('LeaderboardBoards', () => {
         render(<LeaderboardBoards section={section()} runs={runs} />);
         expect(within(board('Theoretical naturally aspirated power per litre')).getByText('whp / litre / ((boost kPa + 100) / 100)')).toBeInTheDocument();
         expect(within(board('Max measured whp')).queryByText(/litre/)).not.toBeInTheDocument();
+    });
+
+    it('keeps units and formulas out of uppercase styling for every metric', () => {
+        const boards = LEADERBOARD_METRIC_IDS.map(metric => ({ title: metric, metric, limit: 5 }));
+        const full = run(7, {
+            hubPowerAfterWhp: 200, hubTorqueAfterWnm: 300, enginePowerAfterHp: 250, engineTorqueAfterNm: 350, displacementCc: 2000, absolutePressureKpa: 150,
+        });
+        const { container } = render(<LeaderboardBoards section={section({ boards })} runs={[full]} />);
+        expect(screen.getAllByText(/boost kPa/)).toHaveLength(2);
+        expect(uppercaseUnitText(container)).toEqual([]);
     });
 
     it('links each card to its run and shows the cover thumbnail', () => {
