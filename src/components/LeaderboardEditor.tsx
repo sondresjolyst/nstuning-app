@@ -64,12 +64,12 @@ export default function LeaderboardEditor({ section, patch, strings }: SectionEd
                             <div className="flex-1 min-w-[10rem]">
                                 <TextInput label="Title" value={board.title} onChange={e => update(i, { title: e.target.value })} />
                             </div>
-                            <label className="text-xs text-gray-600">
+                            <label className="min-w-0 max-w-full text-xs text-gray-600">
                                 Metric
                                 <select
                                     value={board.metric}
                                     onChange={e => update(i, { metric: e.target.value })}
-                                    className="mt-1 block rounded-lg border border-gray-300 px-3 py-2 text-sm"
+                                    className="mt-1 block w-full max-w-full rounded-lg border border-gray-300 px-3 py-2 text-sm"
                                 >
                                     {!metricOf(board.metric) && <option value={board.metric}>Unknown metric</option>}
                                     {LEADERBOARD_METRIC_IDS.map(id => (
