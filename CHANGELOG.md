@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.8.0](https://github.com/sondresjolyst/nstuning-app/compare/v1.7.4...v1.8.0) (2026-10-24)
+
+
+### Features
+
+* **leaderboard:** add front page leaderboard section and use wheel figures for per-litre stats ([#235](https://github.com/sondresjolyst/nstuning-app/issues/235)) ([3b7d32c](https://github.com/sondresjolyst/nstuning-app/commit/3b7d32cfc08a99ee602e34b8a31e7972019f24b4))
+
 ## [1.7.4](https://github.com/sondresjolyst/nstuning-app/compare/v1.7.3...v1.7.4) (2026-10-23)
 
 
