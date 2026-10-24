@@ -6,13 +6,17 @@ import { StatLabel, StatValue, statTileClass } from './Stat';
 
 function Board({ title, metric, entries }: { title: string; metric: LeaderboardMetric; entries: LeaderboardEntry[] }) {
     return (
-        <div className="min-w-0">
-            {title && <h3 className="font-bold text-gray-900 break-words">{title}</h3>}
-            {metric.formula && <p className="mt-0.5 text-xs text-gray-500 break-words">{metric.formula}</p>}
+        // From md up each board spans a header row and a list row of the section grid, so the headers
+        // share one height and the first cards of every board line up.
+        <div className="grid min-w-0 gap-y-3 md:row-span-2 md:grid-rows-subgrid">
+            <div className={title || metric.formula ? 'min-w-0' : 'hidden md:block'}>
+                {title && <h3 className="font-bold text-gray-900 break-words">{title}</h3>}
+                {metric.formula && <p className="mt-0.5 text-xs text-gray-500 break-words">{metric.formula}</p>}
+            </div>
             {entries.length === 0 ? (
-                <p className="mt-3 text-gray-500">No runs yet.</p>
+                <p className="text-gray-500">No runs yet.</p>
             ) : (
-                <ol className="mt-3 space-y-4">
+                <ol className="min-w-0 space-y-4">
                     {entries.map(({ run, value }, i) => {
                         const cover = coverImageSrc(run);
                         return (
@@ -54,7 +58,7 @@ export default function LeaderboardBoards({ section, runs }: { section: Leaderbo
     return (
         <section className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
             {section.heading && <h2 className="min-w-0 break-words text-2xl font-bold text-gray-900 mb-6">{section.heading}</h2>}
-            <div className={`grid gap-8 md:grid-cols-2 ${boards.length >= 3 ? 'lg:grid-cols-3' : ''}`}>
+            <div className={`grid gap-x-8 gap-y-8 md:grid-cols-2 ${boards.length >= 3 ? 'lg:grid-cols-3' : ''}`}>
                 {boards.map((board, i) => <Board key={i} {...board} />)}
             </div>
         </section>

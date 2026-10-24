@@ -27,7 +27,7 @@ const runs = [
 const section = (fields: Partial<LeaderboardSection> = {}): LeaderboardSection =>
     ({ id: 'lb', type: 'leaderboard', visible: true, heading: 'Leader Board', boards: defaultBoards(), ...fields });
 
-const board = (name: string) => screen.getByRole('heading', { name }).parentElement!;
+const board = (name: string) => screen.getByRole('heading', { name }).parentElement!.parentElement!;
 
 describe('LeaderboardBoards', () => {
     it('renders the two default boards with ranked cards', () => {
@@ -63,6 +63,30 @@ describe('LeaderboardBoards', () => {
         const { container } = render(<LeaderboardBoards section={section({ boards })} runs={[full]} />);
         expect(screen.getAllByText(/boost kPa/)).toHaveLength(2);
         expect(uppercaseUnitText(container)).toEqual([]);
+    });
+
+    it('lines up the boards on wider screens with a header row and a list row per board', () => {
+        const boards = [...defaultBoards(), { title: 'Torque', metric: 'hubTorqueWnm' as const, limit: 5 }];
+        render(<LeaderboardBoards section={section({ boards })} runs={[...runs, run(5, { hubPowerAfterWhp: 100 })]} />);
+        const grid = board('Max measured whp').parentElement!;
+        expect(grid).toHaveClass('grid', 'md:grid-cols-2', 'lg:grid-cols-3');
+        expect(grid.children).toHaveLength(3);
+        for (const column of grid.children) {
+            expect(column).toHaveClass('grid', 'md:row-span-2', 'md:grid-rows-subgrid');
+            expect(column.children).toHaveLength(2);
+        }
+        // Torque has no runs, so its list row holds the empty message.
+        expect(board('Torque').children[1]).toHaveTextContent('No runs yet.');
+        // The formula sits in the header row, so a board without one still starts its cards on the same row.
+        expect(board('Theoretical naturally aspirated power per litre').children[0]).toHaveTextContent('boost kPa');
+        expect(board('Max measured whp').children[1].tagName).toBe('OL');
+    });
+
+    it('keeps an empty header out of the stacked mobile layout', () => {
+        render(<LeaderboardBoards section={section({ boards: [{ title: '', metric: 'hubPowerWhp', limit: 5 }] })} runs={runs} />);
+        const column = screen.getByRole('list').parentElement!;
+        expect(column.children[0]).toHaveClass('hidden', 'md:block');
+        expect(column.children[0]).toBeEmptyDOMElement();
     });
 
     it('makes each whole card one link, with the car name, figure and thumbnail inside', () => {
