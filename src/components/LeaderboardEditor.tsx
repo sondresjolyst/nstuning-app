@@ -5,7 +5,7 @@ import { ArrowDownIcon, ArrowUpIcon, PlusIcon, TrashIcon } from '@heroicons/reac
 import { SectionField, type SectionEditorProps } from '@sjolystinnovation/app-kit/sections';
 import { TextInput } from '@sjolystinnovation/app-kit/ui';
 import {
-    DEFAULT_BOARD_LIMIT, LEADERBOARD_METRICS, LEADERBOARD_METRIC_IDS, MAX_BOARD_LIMIT, boardLimit, metricOf, normaliseBoards,
+    DEFAULT_BOARD_LIMIT, LEADERBOARD_METRICS, LEADERBOARD_METRIC_IDS, MAX_BOARD_LIMIT, boardLimit, metricName, metricOf, normaliseBoards,
     type LeaderboardBoard, type StoredBoard,
 } from '@/lib/leaderboard';
 import type { LeaderboardSection } from '@/types/content';
@@ -73,7 +73,7 @@ export default function LeaderboardEditor({ section, patch, strings }: SectionEd
                                 >
                                     {!metricOf(board.metric) && <option value={board.metric}>Unknown metric</option>}
                                     {LEADERBOARD_METRIC_IDS.map(id => (
-                                        <option key={id} value={id}>{LEADERBOARD_METRICS[id].name}</option>
+                                        <option key={id} value={id}>{metricName(LEADERBOARD_METRICS[id])}</option>
                                     ))}
                                 </select>
                             </label>

@@ -117,6 +117,15 @@ describe('AdminContentPage', () => {
         const first = await screen.findByRole('group', { name: 'Board 1' });
         const options = within(within(first).getByLabelText('Metric')).getAllByRole('option').map(o => (o as HTMLOptionElement).value);
         expect(options).toEqual(['hubPowerWhp', 'hubPowerPerLitre', 'hubTorqueWnm', 'hubTorquePerLitre', 'enginePowerHp', 'engineTorqueNm']);
+        const names = within(within(first).getByLabelText('Metric')).getAllByRole('option').map(o => o.textContent);
+        expect(names).toEqual([
+            'Measured at hub (whp)',
+            'Theoretical naturally aspirated power per litre (whp/L)',
+            'Measured at hub (wNm)',
+            'Theoretical naturally aspirated torque per litre (wNm/L)',
+            'Calculated engine (hp)',
+            'Calculated engine (Nm)',
+        ]);
     });
 
     it('lets the runs shown field be cleared and retyped, and clamps it on blur', async () => {
