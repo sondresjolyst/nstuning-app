@@ -73,6 +73,19 @@ describe('LeaderboardBoards', () => {
         expect(screen.getByRole('heading', { name: 'Max measured whp' })).toBeInTheDocument();
     });
 
+    it('skips stored board entries that are not objects', () => {
+        const boards = [null, 'x', { title: 'Max measured whp', metric: 'hubPowerWhp', limit: 1 }] as unknown as LeaderboardSection['boards'];
+        render(<LeaderboardBoards section={section({ boards })} runs={runs} />);
+        expect(screen.getAllByRole('heading', { level: 3 }).map(h => h.textContent)).toEqual(['Max measured whp']);
+        expect(within(board('Max measured whp')).getAllByRole('listitem')).toHaveLength(1);
+    });
+
+    it('hides the rank number from screen readers, since the list already numbers the cards', () => {
+        render(<LeaderboardBoards section={section()} runs={runs} />);
+        const rank = within(board('Max measured whp')).getByText('1.');
+        expect(rank).toHaveAttribute('aria-hidden', 'true');
+    });
+
     it('survives stored boards that are not a list', () => {
         const broken = { ...section(), boards: 'nope' } as unknown as LeaderboardSection;
         const { container } = render(<LeaderboardBoards section={broken} runs={runs} />);

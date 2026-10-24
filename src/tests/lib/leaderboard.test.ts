@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import {
-    LEADERBOARD_METRICS, LEADERBOARD_METRIC_IDS, boardLimit, defaultBoards, metricOf, rankRuns,
+    LEADERBOARD_METRICS, LEADERBOARD_METRIC_IDS, boardLimit, defaultBoards, metricOf, normaliseBoards, rankRuns,
 } from '@/lib/leaderboard';
 import type { DynoRun } from '@/services/dynoRunService';
 
@@ -72,6 +72,28 @@ describe('leaderboard metrics', () => {
         expect(boardLimit(undefined)).toBe(5);
         expect(boardLimit(NaN)).toBe(5);
     });
+
+    it('drops stored boards that are not objects and fills in missing fields', () => {
+        expect(normaliseBoards([
+            null,
+            'hubPowerWhp',
+            42,
+            ['x'],
+            { title: 'A', metric: 'hubPowerWhp', limit: 3 },
+            { metric: 'quarterMile' },
+            { title: 7, metric: null, limit: 99 },
+        ])).toEqual([
+            { title: 'A', metric: 'hubPowerWhp', limit: 3 },
+            { title: '', metric: 'quarterMile', limit: 5 },
+            { title: '', metric: '', limit: 20 },
+        ]);
+    });
+
+    it('treats stored boards that are not a list as none', () => {
+        expect(normaliseBoards(undefined)).toEqual([]);
+        expect(normaliseBoards('nope')).toEqual([]);
+        expect(normaliseBoards({ title: 'A' })).toEqual([]);
+    });
 });
 
 describe('rankRuns', () => {
@@ -113,6 +135,24 @@ describe('rankRuns', () => {
         expect(ranked.map(e => e.value)).toEqual([100, 75]);
     });
 
+    it('counts the dyno date as newer before the upload time', () => {
+        const runs = [
+            run({ slug: 'uploaded-later', hubPowerAfterWhp: 100, dynoDate: '2026-01-01', createdAt: '2026-09-01T00:00:00Z' }),
+            run({ slug: 'dynoed-later', hubPowerAfterWhp: 100, dynoDate: '2026-05-01', createdAt: '2026-02-01T00:00:00Z' }),
+        ];
+        expect(slugs(rankRuns(runs, LEADERBOARD_METRICS.hubPowerWhp))).toEqual(['dynoed-later', 'uploaded-later']);
+    });
+
+    it('falls back to the higher id when everything else ties', () => {
+        const runs = [
+            run({ id: 10, slug: 'id-10', hubPowerAfterWhp: 100 }),
+            run({ id: 30, slug: 'id-30', hubPowerAfterWhp: 100 }),
+            run({ id: 20, slug: 'id-20', hubPowerAfterWhp: 100 }),
+        ];
+        expect(slugs(rankRuns(runs, LEADERBOARD_METRICS.hubPowerWhp))).toEqual(['id-30', 'id-20', 'id-10']);
+        expect(slugs(rankRuns([...runs].reverse(), LEADERBOARD_METRICS.hubPowerWhp))).toEqual(['id-30', 'id-20', 'id-10']);
+    });
+
     it('breaks a tie on the higher whp, then on the newer run', () => {
         const runs = [
             run({ slug: 'old-low', hubPowerAfterWhp: 100, displacementCc: 1000, createdAt: '2026-01-01T00:00:00Z' }),
@@ -124,8 +164,10 @@ describe('rankRuns', () => {
     });
 
     it('does not reorder the input', () => {
-        const runs = [run({ slug: 'a', hubPowerAfterWhp: 1 }), run({ slug: 'b', hubPowerAfterWhp: 2 })];
-        rankRuns(runs, LEADERBOARD_METRICS.hubPowerWhp);
-        expect(slugs(runs.map(r => ({ run: r })))).toEqual(['a', 'b']);
+        const runs = [run({ slug: 'a', hubPowerAfterWhp: 1 }), run({ slug: 'b', hubPowerAfterWhp: 2 }), run({ slug: 'c', hubPowerAfterWhp: 3 })];
+        const order = () => runs.map(r => r.slug);
+        expect(order()).toEqual(['a', 'b', 'c']);
+        expect(slugs(rankRuns(runs, LEADERBOARD_METRICS.hubPowerWhp))).toEqual(['c', 'b', 'a']);
+        expect(order()).toEqual(['a', 'b', 'c']);
     });
 });

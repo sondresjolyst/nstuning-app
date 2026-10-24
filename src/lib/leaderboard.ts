@@ -45,7 +45,7 @@ export const defaultBoards = (): LeaderboardBoard[] => [
 ];
 
 export function metricOf(id: unknown): LeaderboardMetric | null {
-    return typeof id === 'string' && Object.hasOwn(LEADERBOARD_METRICS, id)
+    return typeof id === 'string' && Object.prototype.hasOwnProperty.call(LEADERBOARD_METRICS, id)
         ? LEADERBOARD_METRICS[id as LeaderboardMetricId]
         : null;
 }
@@ -56,17 +56,39 @@ export function boardLimit(limit: unknown): number {
     return Math.min(MAX_BOARD_LIMIT, Math.max(1, Math.floor(limit)));
 }
 
+/** A board as stored. The metric is kept as it is, so the editor can show one it does not know. */
+export interface StoredBoard {
+    title: string;
+    metric: string;
+    limit: number;
+}
+
+/**
+ * The stored boards with the shape a board needs. Stored content is not validated, so entries that
+ * are not objects are dropped and missing fields get their defaults.
+ */
+export function normaliseBoards(boards: unknown): StoredBoard[] {
+    if (!Array.isArray(boards)) return [];
+    return boards
+        .filter((board): board is Record<string, unknown> => typeof board === 'object' && board !== null && !Array.isArray(board))
+        .map(board => ({
+            title: typeof board.title === 'string' ? board.title : '',
+            metric: typeof board.metric === 'string' ? board.metric : '',
+            limit: boardLimit(board.limit),
+        }));
+}
+
 export interface LeaderboardEntry {
     run: DynoRun;
     value: number;
 }
 
 const whpOf = (run: DynoRun) => run.hubPowerAfterWhp ?? 0;
-const timeOf = (run: DynoRun) => Date.parse(run.createdAt) || 0;
+const timeOf = (run: DynoRun) => Date.parse(run.dynoDate ?? run.createdAt) || 0;
 
-// Ties go to the higher whp, then to the newer run.
+// Ties go to the higher whp, then to the newer run by dyno date or upload, then to the higher id.
 const byValue = (a: LeaderboardEntry, b: LeaderboardEntry) =>
-    b.value - a.value || whpOf(b.run) - whpOf(a.run) || timeOf(b.run) - timeOf(a.run);
+    b.value - a.value || whpOf(b.run) - whpOf(a.run) || timeOf(b.run) - timeOf(a.run) || b.run.id - a.run.id;
 
 /** The published runs ranked by the metric, best first. */
 export function rankRuns(runs: DynoRun[], metric: LeaderboardMetric, limit = DEFAULT_BOARD_LIMIT): LeaderboardEntry[] {

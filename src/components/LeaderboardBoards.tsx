@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { coverImageSrc, coverImageSrcSet, type DynoRun } from '@/services/dynoRunService';
-import { boardLimit, metricOf, rankRuns, type LeaderboardEntry, type LeaderboardMetric } from '@/lib/leaderboard';
+import { metricOf, normaliseBoards, rankRuns, type LeaderboardEntry, type LeaderboardMetric } from '@/lib/leaderboard';
 import type { LeaderboardSection } from '@/types/content';
 import { StatLabel, StatValue, statTileClass } from './Stat';
 
@@ -16,7 +16,7 @@ function Board({ title, metric, entries }: { title: string; metric: LeaderboardM
                         const cover = coverImageSrc(run);
                         return (
                             <li key={run.id} className="flex items-start gap-3">
-                                <span className="w-6 shrink-0 pt-4 text-lg font-black text-gray-900 tabular-nums">{i + 1}.</span>
+                                <span aria-hidden="true" className="w-6 shrink-0 pt-4 text-lg font-black text-gray-900 tabular-nums">{i + 1}.</span>
                                 <Link href={`/dyno-runs/${run.slug}`} className="group block min-w-0 flex-1">
                                     <div className={`${statTileClass} flex items-center justify-between gap-4 transition group-hover:border-gray-300 group-hover:shadow-sm`}>
                                         <div className="min-w-0">
@@ -44,11 +44,9 @@ function Board({ title, metric, entries }: { title: string; metric: LeaderboardM
 
 // Stored content is not validated, so a board with an unknown metric is left out instead of breaking the page.
 export default function LeaderboardBoards({ section, runs }: { section: LeaderboardSection; runs: DynoRun[] }) {
-    const boards = (Array.isArray(section.boards) ? section.boards : []).flatMap(board => {
-        const metric = metricOf(board?.metric);
-        if (!metric) return [];
-        const title = typeof board.title === 'string' ? board.title : '';
-        return [{ title, metric, entries: rankRuns(runs, metric, boardLimit(board.limit)) }];
+    const boards = normaliseBoards(section.boards).flatMap(board => {
+        const metric = metricOf(board.metric);
+        return metric ? [{ title: board.title, metric, entries: rankRuns(runs, metric, board.limit) }] : [];
     });
     if (boards.every(board => board.entries.length === 0)) return null;
 

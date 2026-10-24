@@ -86,7 +86,7 @@ describe('AdminContentPage', () => {
         content.updateHome.mockResolvedValue(undefined);
         render(<AdminContentPage />);
         const addList = await screen.findByDisplayValue('Feature');
-        expect(within(addList).getByRole('option', { name: 'Leader board' })).toBeInTheDocument();
+        expect(within(addList).getByRole('option', { name: 'Leader Board' })).toBeInTheDocument();
         fireEvent.change(addList, { target: { value: 'leaderboard' } });
         fireEvent.click(screen.getByRole('button', { name: /Add section/i }));
         expect(await screen.findByRole('group', { name: 'Board 2' })).toBeInTheDocument();
@@ -117,6 +117,40 @@ describe('AdminContentPage', () => {
         const first = await screen.findByRole('group', { name: 'Board 1' });
         const options = within(within(first).getByLabelText('Metric')).getAllByRole('option').map(o => (o as HTMLOptionElement).value);
         expect(options).toEqual(['hubPowerWhp', 'hubPowerPerLitre', 'hubTorqueWnm', 'hubTorquePerLitre', 'enginePowerHp', 'engineTorqueNm']);
+    });
+
+    it('lets the runs shown field be cleared and retyped, and clamps it on blur', async () => {
+        content.getHome.mockResolvedValue([leaderboard]);
+        content.updateHome.mockResolvedValue(undefined);
+        render(<AdminContentPage />);
+        const first = await screen.findByRole('group', { name: 'Board 1' });
+        const limit = within(first).getByLabelText('Runs shown');
+        fireEvent.change(limit, { target: { value: '' } });
+        expect(limit).toHaveValue(null);
+        fireEvent.change(limit, { target: { value: '12' } });
+        expect(limit).toHaveValue(12);
+        fireEvent.change(limit, { target: { value: '99' } });
+        fireEvent.blur(limit);
+        expect(limit).toHaveValue(20);
+
+        const second = within(screen.getByRole('group', { name: 'Board 2' })).getByLabelText('Runs shown');
+        fireEvent.change(second, { target: { value: '' } });
+        fireEvent.blur(second);
+        expect(second).toHaveValue(5);
+
+        expect(boardsOf(await savedSections()).map(b => b.limit)).toEqual([20, 5]);
+    });
+
+    it('opens stored boards that are null or not objects without crashing', async () => {
+        const stored = { ...leaderboard, boards: [null, 'x', { title: 'Kept', metric: 'hubPowerWhp', limit: 2 }] } as unknown as Section;
+        content.getHome.mockResolvedValue([stored]);
+        content.updateHome.mockResolvedValue(undefined);
+        render(<AdminContentPage />);
+        const first = await screen.findByRole('group', { name: 'Board 1' });
+        expect(within(first).getByLabelText('Title')).toHaveValue('Kept');
+        expect(screen.queryByRole('group', { name: 'Board 2' })).not.toBeInTheDocument();
+        fireEvent.change(within(first).getByLabelText('Title'), { target: { value: 'Kept too' } });
+        expect(boardsOf(await savedSections())).toEqual([{ title: 'Kept too', metric: 'hubPowerWhp', limit: 2 }]);
     });
 
     it('adds, reorders and removes boards', async () => {

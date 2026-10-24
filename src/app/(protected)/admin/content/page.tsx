@@ -25,7 +25,7 @@ const editors: SectionEditors<Section> = { stats: StatsEditor, leaderboard: Lead
 
 const types: SectionType[] = [...SHARED_SECTION_TYPES, 'leaderboard'];
 
-const typeLabels = { leaderboard: 'Leader board' };
+const typeLabels = { leaderboard: 'Leader Board' };
 
 const images = { upload: (file: File) => ImageService.upload(file), src: imageUrl };
 
