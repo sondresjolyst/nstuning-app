@@ -2,25 +2,36 @@
 
 import Link from 'next/link';
 import { useBranding } from '@sjolystinnovation/app-kit/branding';
-import { COMPANY } from '@/lib/company';
+import { brregUrl } from '@sjolystinnovation/app-kit/company';
+import { formatOrgNumber, type CompanyInfo } from '@/lib/companyInfo';
 
-export default function Footer() {
+const linkClass = 'underline underline-offset-4 hover:text-gray-900';
+
+// Ehandelsloven § 8 wants the name, address, email, register, org number and VAT status easy to find.
+export default function Footer({ company }: { company: CompanyInfo }) {
     const year = new Date().getFullYear();
     const { logoUrl } = useBranding();
+    const legalName = company.legalName || company.name;
+    const contact = [
+        company.address && <span key="address">{company.address}</span>,
+        company.email && <a key="email" href={`mailto:${company.email}`} className={linkClass}>{company.email}</a>,
+        company.phone && <a key="phone" href={`tel:${company.phone.replace(/\s/g, '')}`} className={linkClass}>{company.phone}</a>,
+    ].filter(Boolean);
+
     return (
         <footer className="border-t border-gray-200 bg-white">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 flex flex-col sm:flex-row items-center justify-between gap-3">
                 <div className="flex items-center gap-2.5">
                     {logoUrl ? (
                         // eslint-disable-next-line @next/next/no-img-element
-                        <img src={logoUrl} alt={COMPANY.name} className="h-7 w-auto" />
+                        <img src={logoUrl} alt={company.name} className="h-7 w-auto" />
                     ) : (
                         <>
                             <span className="inline-flex items-center justify-center h-7 px-2 rounded-md bg-primary text-primary-foreground font-extrabold text-sm">
                                 NS
                             </span>
-                            <span className="text-sm font-semibold text-gray-900">{COMPANY.name}</span>
-                            <span className="text-sm text-gray-500">— {COMPANY.legalName}</span>
+                            <span className="text-sm font-semibold text-gray-900">{company.name}</span>
+                            <span className="text-sm text-gray-500">— {legalName}</span>
                         </>
                     )}
                 </div>
@@ -32,17 +43,31 @@ export default function Footer() {
                     <Link href="/cookies" className="hover:text-gray-900">Cookie Policy</Link>
                 </nav>
 
-                <p className="text-xs text-gray-400">
-                    © {year} {COMPANY.name} · Created by{' '}
-                    <a
-                        href="https://www.sjolystinnovation.no/"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-gray-500 hover:text-gray-900 hover:underline"
-                    >
-                        Sjølyst Innovation AS
-                    </a>
-                </p>
+                <div className="min-w-0 max-w-full space-y-0.5 text-center text-xs text-gray-600 break-words sm:text-right">
+                    <p>
+                        © {year} {legalName}
+                        <span aria-hidden="true"> · </span>
+                        Created by{' '}
+                        <a href="https://www.sjolystinnovation.no/" target="_blank" rel="noopener noreferrer" className={linkClass}>
+                            Sjølyst Innovation AS
+                        </a>
+                    </p>
+                    {company.orgNumber && (
+                        <p>
+                            {/* Foretaksregisterloven § 10-2 wants the register next to the org number. */}
+                            Org.nr.{' '}
+                            <a href={brregUrl(company.orgNumber)} target="_blank" rel="noopener noreferrer" className={linkClass}>
+                                {formatOrgNumber(company)}
+                            </a>{' '}
+                            Foretaksregisteret
+                        </p>
+                    )}
+                    {contact.length > 0 && (
+                        <p>
+                            {contact.flatMap((item, i) => (i === 0 ? [item] : [<span key={`sep-${i}`} aria-hidden="true"> · </span>, item]))}
+                        </p>
+                    )}
+                </div>
             </div>
         </footer>
     );
