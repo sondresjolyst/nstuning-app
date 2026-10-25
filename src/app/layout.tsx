@@ -30,7 +30,7 @@ export const metadata: Metadata = {
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
     const branding = await publicGetOptional<Branding>("/branding", { tags: [REVALIDATE_TARGETS.branding] }) ?? {};
     return (
-        <html lang="no">
+        <html lang="en">
             <Script src="/register-sw.js" />
             <body className="min-h-screen flex flex-col bg-background text-foreground">
                 <Providers initialBranding={branding}>
