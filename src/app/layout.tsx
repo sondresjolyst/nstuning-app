@@ -8,6 +8,7 @@ import { COMPANY } from "@/lib/company";
 import { publicGetOptional } from "@/lib/publicApi";
 import { Branding } from "@/services/brandingService";
 import { REVALIDATE_TARGETS } from "@/lib/cacheTags";
+import { getCompanyInfo } from "@/lib/companyInfo";
 
 export const metadata: Metadata = {
     metadataBase: new URL(COMPANY.url),
@@ -28,7 +29,10 @@ export const metadata: Metadata = {
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-    const branding = await publicGetOptional<Branding>("/branding", { tags: [REVALIDATE_TARGETS.branding] }) ?? {};
+    const [branding, company] = await Promise.all([
+        publicGetOptional<Branding>("/branding", { tags: [REVALIDATE_TARGETS.branding] }).then(b => b ?? {}),
+        getCompanyInfo(),
+    ]);
     return (
         <html lang="en">
             <Script src="/register-sw.js" />
@@ -36,7 +40,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                 <Providers initialBranding={branding}>
                     <Navbar />
                     <main className="flex-1">{children}</main>
-                    <Footer />
+                    <Footer company={company} />
                 </Providers>
             </body>
         </html>
