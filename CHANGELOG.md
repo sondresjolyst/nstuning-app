@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.9.1](https://github.com/sondresjolyst/nstuning-app/compare/v1.9.0...v1.9.1) (2026-10-25)
+
+
+### Bug Fixes
+
+* **auth:** use the app-kit credentials sign-in ([#251](https://github.com/sondresjolyst/nstuning-app/issues/251)) ([e9877ec](https://github.com/sondresjolyst/nstuning-app/commit/e9877ecf47bd08e8286d8bba787d5cd3b7351f8f))
+
 ## [1.9.0](https://github.com/sondresjolyst/nstuning-app/compare/v1.8.1...v1.9.0) (2026-10-25)
 
 
