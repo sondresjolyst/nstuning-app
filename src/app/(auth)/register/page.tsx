@@ -1,7 +1,7 @@
 "use client";
 import { useState } from 'react';
 import { zodFieldErrors } from '@sjolystinnovation/app-kit/validation';
-import { signIn } from 'next-auth/react';
+import { refusedForCsrf, signInWithCredentials } from '@sjolystinnovation/app-kit/session/react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Alert, PasswordInput, TextInput } from '@sjolystinnovation/app-kit/ui';
@@ -32,8 +32,9 @@ export default function RegisterPage() {
         setSubmitting(true);
         try {
             await UserService.register(parsed.data);
-            const result = await signIn('credentials', { email: form.email, password: form.password, redirect: false });
-            if (result?.error) {
+            const result = await signInWithCredentials({ email: form.email, password: form.password });
+            // The account exists now, so a refused sign-in sends the user to sign in by hand.
+            if (result?.error || !result?.ok || refusedForCsrf(result.url)) {
                 router.push('/login');
                 return;
             }
