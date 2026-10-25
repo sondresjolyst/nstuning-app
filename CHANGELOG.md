@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.8.1](https://github.com/sondresjolyst/nstuning-app/compare/v1.8.0...v1.8.1) (2026-10-25)
+
+
+### Bug Fixes
+
+* **layout:** set html lang to en to match the English pages ([#249](https://github.com/sondresjolyst/nstuning-app/issues/249)) ([c2799d0](https://github.com/sondresjolyst/nstuning-app/commit/c2799d05640742475b6707e7ab27dac3855c42f1))
+
+
+### Dependencies
+
+* **npm:** bump `vite` from 8.0.16 to 8.3.5 ([#240](https://github.com/sondresjolyst/nstuning-app/issues/240)) ([ab07759](https://github.com/sondresjolyst/nstuning-app/commit/ab07759d3c35121efede134630aa22cf8e4f8149))
+* **npm:** bump `zod` from 4.6.5 to 4.6.7 ([#246](https://github.com/sondresjolyst/nstuning-app/issues/246)) ([420a70f](https://github.com/sondresjolyst/nstuning-app/commit/420a70fd541240c3496ea5128ce20e5cf60ac293))
+* **npm:** bump the react group with 2 updates ([#243](https://github.com/sondresjolyst/nstuning-app/issues/243)) ([6ca8ab8](https://github.com/sondresjolyst/nstuning-app/commit/6ca8ab85f2a0c524c9be2bc0a54e4c56ba2eb85d))
+* **npm:** bump the testing group with 3 updates ([#245](https://github.com/sondresjolyst/nstuning-app/issues/245)) ([11be2b7](https://github.com/sondresjolyst/nstuning-app/commit/11be2b7567f4c1aa6e4b3ac20d60e6228aab0e90))
+
 ## [1.8.0](https://github.com/sondresjolyst/nstuning-app/compare/v1.7.4...v1.8.0) (2026-10-24)
 
 

@@ -34,7 +34,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         getCompanyInfo(),
     ]);
     return (
-        <html lang="no">
+        <html lang="en">
             <Script src="/register-sw.js" />
             <body className="min-h-screen flex flex-col bg-background text-foreground">
                 <Providers initialBranding={branding}>
