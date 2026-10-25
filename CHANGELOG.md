@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.9.0](https://github.com/sondresjolyst/nstuning-app/compare/v1.8.1...v1.9.0) (2026-10-25)
+
+
+### Features
+
+* **footer:** show company details required by ehandelsloven § 8 ([#239](https://github.com/sondresjolyst/nstuning-app/issues/239)) ([9402794](https://github.com/sondresjolyst/nstuning-app/commit/9402794bad275b4fc0a043f1d4aad5cdf8a78e5a))
+
 ## [1.8.1](https://github.com/sondresjolyst/nstuning-app/compare/v1.8.0...v1.8.1) (2026-10-25)
 
 
