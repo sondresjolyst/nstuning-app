@@ -1,5 +1,26 @@
 # Changelog
 
+## [1.9.2](https://github.com/sondresjolyst/nstuning-app/compare/v1.9.1...v1.9.2) (2026-11-01)
+
+
+### Dependencies
+
+* **docker:** pin node docker tag to 9481667 ([#257](https://github.com/sondresjolyst/nstuning-app/issues/257)) ([25794a2](https://github.com/sondresjolyst/nstuning-app/commit/25794a2df3df6e2c712d85441bea7218190e3f91))
+* **npm:** update @heroicons/react from ^2.2.0 to 2.2.0 ([7731bba](https://github.com/sondresjolyst/nstuning-app/commit/7731bbaed577c288cffa6aaa04df2c676b604425))
+* **npm:** update axios from ^1.20.0 to 1.20.0 ([7731bba](https://github.com/sondresjolyst/nstuning-app/commit/7731bbaed577c288cffa6aaa04df2c676b604425))
+* **npm:** update dependency postcss to ^8.5.32 ([#259](https://github.com/sondresjolyst/nstuning-app/issues/259)) ([27d39b9](https://github.com/sondresjolyst/nstuning-app/commit/27d39b971fabd126f8dd9eda2478eeebc37710f7))
+* **npm:** update next from ^16.4.3 to 16.4.3 ([7731bba](https://github.com/sondresjolyst/nstuning-app/commit/7731bbaed577c288cffa6aaa04df2c676b604425))
+* **npm:** update next to ^16.4.3 ([#260](https://github.com/sondresjolyst/nstuning-app/issues/260)) ([08d83d9](https://github.com/sondresjolyst/nstuning-app/commit/08d83d94f20f4aeaf33ee6149a6ce1447805a9f0))
+* **npm:** update next-auth from ^4.24.15 to 4.24.15 ([7731bba](https://github.com/sondresjolyst/nstuning-app/commit/7731bbaed577c288cffa6aaa04df2c676b604425))
+* **npm:** update react from ^19.3.1 to 19.3.1 ([7731bba](https://github.com/sondresjolyst/nstuning-app/commit/7731bbaed577c288cffa6aaa04df2c676b604425))
+* **npm:** update react-dom from ^19.3.1 to 19.3.1 ([7731bba](https://github.com/sondresjolyst/nstuning-app/commit/7731bbaed577c288cffa6aaa04df2c676b604425))
+* **npm:** update react-markdown from ^10.1.0 to 10.1.0 ([7731bba](https://github.com/sondresjolyst/nstuning-app/commit/7731bbaed577c288cffa6aaa04df2c676b604425))
+* **npm:** update react-pdf from ^11.0.0 to 11.0.0 ([7731bba](https://github.com/sondresjolyst/nstuning-app/commit/7731bbaed577c288cffa6aaa04df2c676b604425))
+* **npm:** update rehype-sanitize from ^6.0.0 to 6.0.0 ([7731bba](https://github.com/sondresjolyst/nstuning-app/commit/7731bbaed577c288cffa6aaa04df2c676b604425))
+* **npm:** update remark-gfm from ^4.0.1 to 4.0.1 ([7731bba](https://github.com/sondresjolyst/nstuning-app/commit/7731bbaed577c288cffa6aaa04df2c676b604425))
+* **npm:** update sonner from ^2.0.8 to 2.0.8 ([7731bba](https://github.com/sondresjolyst/nstuning-app/commit/7731bbaed577c288cffa6aaa04df2c676b604425))
+* **npm:** update zod from ^4.6.7 to 4.6.7 ([7731bba](https://github.com/sondresjolyst/nstuning-app/commit/7731bbaed577c288cffa6aaa04df2c676b604425))
+
 ## [1.9.1](https://github.com/sondresjolyst/nstuning-app/compare/v1.9.0...v1.9.1) (2026-10-25)
 
 
