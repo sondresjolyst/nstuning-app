@@ -17,7 +17,7 @@ jobs:
   release-please:
     name: Release Please
     if: ${{ github.event_name == 'push' }}
-    uses: equinor/ops-actions/.github/workflows/release-please-manifest.yml@def1359ccd977da6f0720b22328ba6ac02b380ae # v9.43.2
+    uses: equinor/ops-actions/.github/workflows/release-please-manifest.yml@dae4f55b517888e44a342a5f7d3dfac40580a127 # v9.44.0
     permissions:
       contents: write
       pull-requests: write
@@ -83,7 +83,7 @@ jobs:
     if: ${{ always() && needs.get-tag.result == 'success' && needs.deploy-prod.result == 'success' }}
     permissions:
       contents: read
-    uses: sondresjolyst/tumogroup-charts/.github/workflows/update-chart.yml@main
+    uses: sondresjolyst/tumogroup-charts/.github/workflows/update-chart.yml@99e94acd4249a65fb85de3cebcde3a5c8648794b # main
     secrets:
       CHARTS_PAT: ${{ secrets.CHARTS_PAT }}
     with:
