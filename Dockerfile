@@ -1,4 +1,4 @@
-FROM node:26.12.1-slim AS builder
+FROM node:26.13.0-slim@sha256:e4db4c914bf8ad241bd24804fc25d272d89bad97e68cdc8a1414862790a02c39 AS builder
 
 ARG NEXT_PUBLIC_API_URL
 ENV NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
@@ -20,7 +20,7 @@ ENV NODE_ENV=production
 
 RUN npm run build
 
-FROM node:26.12.1-slim AS runner
+FROM node:26.13.0-slim@sha256:e4db4c914bf8ad241bd24804fc25d272d89bad97e68cdc8a1414862790a02c39 AS runner
 
 WORKDIR /app
 
