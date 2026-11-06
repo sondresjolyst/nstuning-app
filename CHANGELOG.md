@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.9.3](https://github.com/sondresjolyst/nstuning-app/compare/v1.9.2...v1.9.3) (2026-11-06)
+
+
+### Dependencies
+
+* **docker:** update node from 26.12.1-slim to 26.13.0-slim ([1cb6e4b](https://github.com/sondresjolyst/nstuning-app/commit/1cb6e4bf0ac9f0cc44b8a4baaa9b3c11eb3fc991))
+* **npm:** update @sjolystinnovation/app-kit from ^1.6.1 to 1.6.1 ([2a089cc](https://github.com/sondresjolyst/nstuning-app/commit/2a089cc0eab47433b0f4bb32d92c151dab435141))
+
 ## [1.9.2](https://github.com/sondresjolyst/nstuning-app/compare/v1.9.1...v1.9.2) (2026-11-01)
 
 
