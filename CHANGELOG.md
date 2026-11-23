@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.9.5](https://github.com/sondresjolyst/nstuning-app/compare/v1.9.4...v1.9.5) (2026-11-22)
+
+
+### Dependencies
+
+* **npm:** update @sjolystinnovation/app-kit from 1.6.1 to 1.7.0 ([b368f1f](https://github.com/sondresjolyst/nstuning-app/commit/b368f1f435d269ed45fe1bf99113e58e92579e5c))
+* **npm:** update axios from 1.21.0 to 1.21.1 ([6e230a8](https://github.com/sondresjolyst/nstuning-app/commit/6e230a843415cc23d7dbf96b4000be46d05deafd))
+* **npm:** update next from 16.4.5 to 16.4.6 ([6e230a8](https://github.com/sondresjolyst/nstuning-app/commit/6e230a843415cc23d7dbf96b4000be46d05deafd))
+* **npm:** update react-pdf from 11.0.0 to 11.1.0 ([6e230a8](https://github.com/sondresjolyst/nstuning-app/commit/6e230a843415cc23d7dbf96b4000be46d05deafd))
+
 ## [1.9.4](https://github.com/sondresjolyst/nstuning-app/compare/v1.9.3...v1.9.4) (2026-11-15)
 
 
